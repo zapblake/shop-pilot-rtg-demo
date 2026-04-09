@@ -22,171 +22,227 @@
   margin-right: 420px;
 }
 
-.utilityBar {
-  background: #f8fafc;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 12px;
-  color: #4b5563;
-  padding: 10px 24px;
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.utilityLeft,
-.utilityRight {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.siteHeader {
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 220px;
-  gap: 20px;
-  align-items: center;
-  padding: 18px 24px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.logoMark {
-  color: var(--rtg-accent);
-  font-weight: 800;
-  font-size: 32px;
-  letter-spacing: -0.04em;
-}
-
-.searchShell input {
-  width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 999px;
-  padding: 14px 18px;
-  font-size: 15px;
+.mainHeader {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   background: #fff;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.headerActions {
+.headerRow {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 48px 220px minmax(0, 1fr) 90px;
+  gap: 16px;
+  align-items: center;
+}
+
+.iconButton {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.logoWrap {
+  color: #111827;
+}
+
+.logoSvg {
+  width: 100%;
+  height: auto;
+}
+
+.searchWrap {
+  display: flex;
+}
+
+.searchWrap input {
+  width: 100%;
+  border: 1px solid #9ca3af;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  padding: 12px 14px;
+  font-size: 15px;
+}
+
+.searchWrap button {
+  min-width: 44px;
+  border: none;
+  background: #00529f;
+  color: white;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}
+
+.headerIcons {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
-  font-size: 14px;
-  color: #374151;
+  gap: 12px;
+  font-size: 22px;
 }
 
-.categoryNav {
+.desktopNav {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 10px 16px;
   display: flex;
-  gap: 24px;
-  align-items: center;
-  padding: 14px 24px;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
-  color: #374151;
-  overflow-x: auto;
-}
-
-.categoryActive {
-  color: var(--rtg-accent);
+  justify-content: center;
+  gap: 22px;
+  font-size: 13px;
   font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
-.browserContent {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.activeNav {
+  color: #00274a;
+}
+
+.salesNav {
+  color: #e11f21;
+}
+
+.generatedPage {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
 }
 
 .breadcrumbs {
   display: flex;
   gap: 8px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.heroBanner {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
-  gap: 20px;
-  padding: 28px;
-  background: linear-gradient(135deg, #fff7f8 0%, #ffffff 55%);
-  border: 1px solid #f3d0d7;
-  border-radius: 28px;
-}
-
-.eyebrow {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-weight: 700;
-  color: var(--rtg-accent);
-  margin-bottom: 12px;
-}
-
-.heroCopy h1 {
-  max-width: 13ch;
-  font-size: 54px;
-  line-height: 0.98;
-  letter-spacing: -0.05em;
-}
-
-.subcopy {
-  margin-top: 16px;
-  max-width: 56ch;
-  color: #4b5563;
-  font-size: 17px;
-  line-height: 1.7;
-}
-
-.heroPromoGrid {
-  display: grid;
-  gap: 14px;
-}
-
-.heroPromoCard {
-  border-radius: 22px;
-  padding: 22px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.05);
-}
-
-.heroPromoCard strong {
-  display: block;
-  font-size: 18px;
-  line-height: 1.45;
-}
-
-.heroPromoCard span {
-  display: block;
-  margin-top: 8px;
-  color: #6b7280;
-  line-height: 1.6;
-}
-
-.filterRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
   align-items: center;
+  color: #00529f;
+  font-size: 16px;
+  padding: 12px 0 10px;
 }
 
-.filterRow button,
-.chipsSection button {
-  border: 1px solid #d1d5db;
+.pillTabsWrap {
+  position: sticky;
+  top: 126px;
+  z-index: 20;
+  padding: 8px 0 14px;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(180deg, #fff 70%, rgba(255,255,255,0));
+}
+
+.pillTabs {
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
   border-radius: 999px;
-  padding: 10px 14px;
-  font: inherit;
-  background: white;
+  background: #f5f5f5;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pillTabs button {
+  border: none;
+  background: transparent;
+  color: #00274a;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 12px 24px;
   cursor: pointer;
 }
 
-.sortPill {
-  margin-left: auto;
-  border: 1px solid #d1d5db;
-  border-radius: 999px;
-  padding: 10px 14px;
+.pillActive {
+  background: #00529f !important;
+  color: white !important;
+}
+
+.heroAsset,
+.largeBanner,
+.smallBanner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.heroAsset {
+  height: 320px;
+  margin-bottom: 24px;
+}
+
+.coverImage {
+  object-fit: cover;
+}
+
+.sizeRail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.sizeTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
   background: #fff;
-  color: #374151;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  font-weight: 700;
+}
+
+.sizeIconWrap {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.brandStrip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.brandLogoCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: white;
+  min-height: 88px;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.brandLogo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.contentBannerGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.largeBanner {
+  height: 320px;
+}
+
+.bannerStack {
+  display: grid;
+  gap: 18px;
+}
+
+.smallBanner {
+  height: 151px;
 }
 
 .resultsMeta {
@@ -195,6 +251,7 @@
   gap: 12px;
   color: #4b5563;
   font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .productGrid {
@@ -221,8 +278,8 @@
 }
 
 .productTileActive {
-  border-color: rgba(200, 16, 46, 0.35);
-  box-shadow: 0 18px 34px rgba(200, 16, 46, 0.1);
+  border-color: rgba(0, 82, 159, 0.35);
+  box-shadow: 0 18px 34px rgba(0, 82, 159, 0.1);
 }
 
 .productImagePlaceholder {
@@ -245,7 +302,7 @@
 }
 
 .productTileBody p {
-  color: var(--rtg-accent);
+  color: #00529f;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -368,7 +425,7 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-weight: 700;
-  color: var(--rtg-accent);
+  color: #00529f;
   margin-bottom: 6px;
 }
 
@@ -408,7 +465,7 @@
 
 .messageUser {
   align-self: flex-end;
-  background: var(--rtg-accent);
+  background: #00529f;
   color: white;
 }
 
@@ -421,7 +478,12 @@
 }
 
 .chipsSection button {
-  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font: inherit;
+  background: white;
+  cursor: pointer;
 }
 
 .contextCard,
@@ -483,7 +545,7 @@
 }
 
 .candidateCard p {
-  color: var(--rtg-accent);
+  color: #00529f;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -502,22 +564,24 @@
 }
 
 @media (max-width: 1200px) {
-  .productGrid {
+  .productGrid,
+  .brandStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sizeRail {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 980px) {
-  .siteHeader {
+  .contentBannerGrid,
+  .headerRow {
     grid-template-columns: 1fr;
   }
 
-  .headerActions {
+  .headerIcons {
     justify-content: flex-start;
-  }
-
-  .heroBanner {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -536,23 +600,14 @@
     transform: translateX(calc(min(420px, 100vw - 48px) + 1px));
   }
 
-  .browserContent,
-  .siteHeader,
-  .utilityBar,
-  .categoryNav {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .productGrid {
+  .productGrid,
+  .brandStrip,
+  .sizeRail {
     grid-template-columns: 1fr;
   }
 
-  .heroCopy h1 {
-    font-size: 40px;
-  }
-
-  .resultsMeta {
-    display: grid;
+  .pillTabs button {
+    font-size: 16px;
+    padding: 10px 18px;
   }
 }
