@@ -1367,3 +1367,9 @@
 .reasonList em {
   border-radius: 8px;
 }
+
+.messageThinking {
+  border: 1px solid #c7e7d5;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+  color: #14532d;
+}

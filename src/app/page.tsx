@@ -564,8 +564,8 @@ export default function Home() {
                   </div>
                 ))}
                 {isLoading ? (
-                  <div className={styles.messageAssistant}>
-                    <p>Refining the shortlist…</p>
+                  <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
+                    <p>Considering…</p>
                   </div>
                 ) : null}
               </div>
