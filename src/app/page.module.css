@@ -1,176 +1,419 @@
 .page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f4f7fb 0%, #eef2f7 100%);
+  background: linear-gradient(180deg, #edf3fb 0%, #e5edf8 100%);
   color: #0f172a;
 }
 
-.main {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 56px 24px 72px;
+.stage {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+}
+
+.browserShell {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  margin: 24px 0 24px 24px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
 }
 
-.hero {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 24px;
-  align-items: stretch;
+.browserTopbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(248, 250, 252, 0.85);
 }
 
-.heroCopy,
-.statGrid,
-.infoCard,
-.productCard {
-  background: rgba(255, 255, 255, 0.88);
+.browserDots {
+  display: flex;
+  gap: 8px;
+}
+
+.browserDots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.browserUrl {
+  flex: 1;
+  border-radius: 999px;
+  background: white;
   border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 24px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(12px);
+  padding: 10px 16px;
+  color: #64748b;
+  font-size: 14px;
 }
 
-.heroCopy {
+.browserContent {
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
-.kicker {
+.mockSiteHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.eyebrow {
   font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: #2563eb;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
-.heroCopy h1 {
+.mockSiteHeader h1 {
+  max-width: 14ch;
   font-size: 48px;
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  margin-bottom: 16px;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
 }
 
-.description {
-  max-width: 60ch;
-  font-size: 18px;
-  line-height: 1.7;
-  color: #475569;
-}
-
-.statGrid {
-  padding: 24px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-.statCard {
-  padding: 18px 20px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
-  border: 1px solid rgba(37, 99, 235, 0.12);
-}
-
-.statCard strong {
-  display: block;
-  margin-top: 8px;
-  font-size: 32px;
-  line-height: 1;
-}
-
-.statLabel {
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #64748b;
-}
-
-.section {
+.mockActions {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.sectionHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sectionHeader h2 {
-  font-size: 28px;
-  letter-spacing: -0.03em;
-}
-
-.sectionHeader p {
-  color: #64748b;
-  font-size: 16px;
-}
-
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.infoCard,
-.productCard {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.infoCard h3,
-.productCard h3 {
-  font-size: 22px;
-  letter-spacing: -0.03em;
+.mockActions button,
+.modeRow button,
+.overlayHeader button,
+.reopenButton,
+.chipsSection button {
+  border: none;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font: inherit;
+  cursor: pointer;
+  transition: 0.18s ease;
 }
 
-.infoCard p,
-.productCard p {
-  color: #475569;
-  line-height: 1.6;
+.mockActions button {
+  background: white;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  color: #334155;
 }
 
-.infoCard span,
-.productCard strong {
-  color: #0f172a;
-  font-weight: 600;
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 
-.productBrand {
+.productTile {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.productImagePlaceholder {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #e0ecff 0%, #f8fbff 100%);
+  color: #1d4ed8;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.productTileBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.productTileBody p {
+  color: #1d4ed8;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #1d4ed8;
 }
 
-.metaRow {
+.productTileBody h3 {
+  font-size: 24px;
+  letter-spacing: -0.04em;
+}
+
+.productTileBody strong {
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.tagRow {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.metaRow span {
-  padding: 8px 12px;
-  border-radius: 999px;
+.tagRow span {
   background: #eff6ff;
   color: #1d4ed8;
-  font-size: 14px;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
-@media (max-width: 980px) {
-  .hero,
-  .cardGrid {
+.overlayPanel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 20px 20px 20px 0;
+  transition: width 0.2s ease, transform 0.2s ease;
+}
+
+.open {
+  width: 420px;
+}
+
+.closed {
+  width: 140px;
+}
+
+.overlayHeader,
+.chatSurface,
+.contextCard,
+.recommendationSection,
+.modeRow,
+.chipsSection {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.overlayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 22px;
+  border-radius: 24px 24px 18px 18px;
+}
+
+.overlayKicker {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 6px;
+}
+
+.overlayHeader h2 {
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.overlayHeader button,
+.reopenButton {
+  background: #0f172a;
+  color: white;
+}
+
+.modeRow {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+}
+
+.modeRow button {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.modeActive {
+  background: #2563eb !important;
+  color: white !important;
+}
+
+.chatSurface {
+  margin-top: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.messageAssistant,
+.messageUser {
+  max-width: 88%;
+  border-radius: 18px;
+  padding: 14px 16px;
+  line-height: 1.6;
+}
+
+.messageAssistant {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.messageUser {
+  align-self: flex-end;
+  background: #2563eb;
+  color: white;
+}
+
+.chipsSection {
+  margin-top: 12px;
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-radius: 18px;
+}
+
+.chipsSection button {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.contextCard,
+.recommendationSection {
+  margin-top: 12px;
+  padding: 18px;
+  border-radius: 18px;
+}
+
+.contextCard h3,
+.recommendationSection h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+
+.contextCard dl {
+  display: grid;
+  gap: 12px;
+}
+
+.contextCard div {
+  display: grid;
+  gap: 4px;
+}
+
+.contextCard dt {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.contextCard dd {
+  line-height: 1.5;
+  color: #0f172a;
+}
+
+.sectionHeader {
+  margin-bottom: 12px;
+}
+
+.sectionHeader p {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.candidateList {
+  display: grid;
+  gap: 12px;
+}
+
+.candidateCard {
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.candidateCard p {
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.candidateCard h4 {
+  margin-top: 6px;
+  font-size: 18px;
+}
+
+.candidateCard span {
+  display: block;
+  margin-top: 6px;
+  color: #475569;
+}
+
+.reopenButton {
+  margin-top: 16px;
+  width: 100%;
+}
+
+@media (max-width: 1180px) {
+  .stage {
     grid-template-columns: 1fr;
   }
 
-  .heroCopy h1 {
-    font-size: 38px;
+  .overlayPanel {
+    position: relative;
+    height: auto;
+    width: auto;
+    padding: 0 24px 24px;
+  }
+
+  .open,
+  .closed {
+    width: auto;
+  }
+
+  .browserShell {
+    margin-right: 24px;
+  }
+}
+
+@media (max-width: 800px) {
+  .browserShell {
+    margin: 16px;
+  }
+
+  .browserContent,
+  .overlayPanel {
+    padding: 16px;
+  }
+
+  .mockSiteHeader,
+  .productGrid {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .mockSiteHeader h1 {
+    font-size: 36px;
   }
 }
