@@ -188,12 +188,21 @@ function getBestFor(theme: ThemeRecord) {
 }
 
 function renderMessageText(text: string) {
-  const parts = text.split(/(\*\*.*?\*\*)/g);
-  return parts.map((part, index) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>;
-    }
-    return <span key={`${part}-${index}`}>{part}</span>;
+  const blocks = text.split(/\n{2,}/).filter(Boolean);
+
+  return blocks.map((block, blockIndex) => {
+    const parts = block.split(/(\*\*.*?\*\*)/g).filter(Boolean);
+
+    return (
+      <p key={`block-${blockIndex}`}>
+        {parts.map((part, index) => {
+          if (part.startsWith("**") && part.endsWith("**")) {
+            return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>;
+          }
+          return <span key={`${part}-${index}`}>{part}</span>;
+        })}
+      </p>
+    );
   });
 }
 
@@ -298,14 +307,37 @@ export default function Home() {
         setCurrentTheme(payload.matches[0].theme);
       }
 
+      const assistantId = `assistant-${Date.now()}`;
+      const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
+
       setMessages((current) => [
         ...current,
         {
-          id: `assistant-${Date.now()}`,
+          id: assistantId,
           role: "assistant",
-          text: payload.reply ?? "I’ve got enough to keep refining the recommendation.",
+          text: "",
         },
       ]);
+
+      let charIndex = 0;
+      const streamReply = () => {
+        charIndex += Math.max(1, Math.round(fullReply.length / 55));
+        const nextText = fullReply.slice(0, charIndex);
+
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === assistantId
+              ? { ...message, text: nextText }
+              : message,
+          ),
+        );
+
+        if (charIndex < fullReply.length) {
+          window.setTimeout(streamReply, 18);
+        }
+      };
+
+      streamReply();
     } catch {
       setMessages((current) => [
         ...current,

@@ -1286,3 +1286,19 @@
 .sectionHeader p {
   font-size: 12px;
 }
+
+.messageAssistant,
+.messageUser {
+  display: grid;
+  gap: 6px;
+}
+
+.messageAssistant p,
+.messageUser p {
+  margin: 0;
+}
+
+.messageAssistant strong,
+.messageUser strong {
+  font-weight: 800;
+}
