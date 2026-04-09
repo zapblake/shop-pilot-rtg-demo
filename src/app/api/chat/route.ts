@@ -41,7 +41,7 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
   if (lower.includes("compare") && first && second) {
     return {
       reply: emphasizeQuestion(
-        `Absolutely. I’d compare ${first.displayName} and ${second.displayName} this way: ${first.displayName} looks like the stronger overall fit right now, while ${second.displayName} gives you a solid alternative if you want a slightly different feel or value balance. Want me to narrow that to feel, cooling, or price first?`,
+        `Absolutely. I’d compare ${first.displayName} and ${second.displayName} this way: ${first.displayName} looks like the stronger overall fit right now, while ${second.displayName} gives you a solid alternative if you want a slightly different feel or value balance. Want me to narrow that to feel, cooling, or pressure relief first?`,
       ),
       mode: "comparison",
     };
@@ -50,8 +50,8 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
   return {
     reply: emphasizeQuestion(
       first
-        ? `That gives me a clearer read. ${first.displayName} is leading the set right now. What matters more for the next step, cooler sleep, pressure relief, easier movement, or price?`
-        : "That gives me a clearer read. What matters more for the next step, cooler sleep, pressure relief, easier movement, or price?",
+        ? `That gives me a clearer read. ${first.displayName} is leading the set right now. What matters more for the next step, cooler sleep, pressure relief, or easier movement?`
+        : "That gives me a clearer read. What matters more for the next step, cooler sleep, pressure relief, or easier movement?",
     ),
     mode: matches.length ? "product-evaluation" : "guided-discovery",
   };
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
       .slice(0, 3)
       .map(
         (match: MatchResult, index: number) =>
-          `${index + 1}. ${match.displayName} (${match.brand}, ${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"}, ${match.priceFrom ? `$${match.priceFrom}` : "price TBD"})`,
+          `${index + 1}. ${match.displayName} (${match.brand}, ${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"})`,
       )
       .join("\n");
 
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nTop candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, compare the top options naturally. End with one useful next question unless the shopper explicitly asked for comparison only.`,
+          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nTop candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. Do not mention price or budget unless the shopper explicitly asks about it. If compare intent is present, compare the top options naturally. End with one useful next question unless the shopper explicitly asked for comparison only.`,
         },
       ],
     });

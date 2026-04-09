@@ -1362,3 +1362,8 @@
   object-fit: cover;
   padding: 6px;
 }
+
+.compareCallouts em,
+.reasonList em {
+  border-radius: 8px;
+}
