@@ -71,6 +71,7 @@ const starterMessages: ChatMessage[] = [
 ];
 const starterMatches: MatchResult[] = [];
 const startingSizeOptions = ["Queen", "King", "Not Sure", "Other"];
+const otherSizeOptions = ["California King", "Full", "Twin", "Twin XL", "RV King", "Short Queen"];
 const firmnessStops = [
   { value: 0, label: "Plush" },
   { value: 25, label: "Medium-plush" },
@@ -219,6 +220,7 @@ export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>(storedSession?.messages ?? starterMessages);
   const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
   const [showOpeningOptions, setShowOpeningOptions] = useState(false);
+  const [showOtherSizes, setShowOtherSizes] = useState(false);
   const [selectedFirmnessValue, setSelectedFirmnessValue] = useState(50);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
@@ -603,13 +605,34 @@ export default function Home() {
                     <button
                       key={option}
                       type="button"
-                      className={styles.openingChip}
+                      className={`${styles.openingChip}${showOtherSizes && option === "Other" ? ` ${styles.openingChipActive}` : ""}`}
                       style={{ animationDelay: `${index * 60}ms` }}
-                      onClick={() => submitMessage(option)}
+                      onClick={() => {
+                        if (option === "Other") {
+                          setShowOtherSizes((v) => !v);
+                        } else {
+                          submitMessage(option);
+                        }
+                      }}
                     >
                       {option}
                     </button>
                   ))}
+                  {showOtherSizes ? (
+                    <div className={styles.otherSizesRow}>
+                      {otherSizeOptions.map((size, index) => (
+                        <button
+                          key={size}
+                          type="button"
+                          className={styles.openingChip}
+                          style={{ animationDelay: `${index * 50}ms` }}
+                          onClick={() => submitMessage(size)}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                 </section>
               ) : null}
 

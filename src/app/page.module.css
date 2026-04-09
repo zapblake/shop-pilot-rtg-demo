@@ -1398,3 +1398,20 @@
 .reasonList em {
   padding: 5px 7px;
 }
+
+.otherSizesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  padding-top: 4px;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 4px;
+  animation: fadeSlideIn 0.18s ease both;
+}
+
+.openingChipActive {
+  border-color: #169162 !important;
+  color: #169162 !important;
+  background: #f0fdf4 !important;
+}
