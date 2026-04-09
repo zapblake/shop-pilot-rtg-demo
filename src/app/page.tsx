@@ -427,7 +427,8 @@ export default function Home() {
     setDraftMessage("");
     setIsLoading(true);
 
-    if (!options?.skipBackgroundMatch) {
+    const runBackgroundMatch = () => {
+      if (options?.skipBackgroundMatch) return;
       const requestVersion = ++matchRequestVersionRef.current;
       void fetchMatches({
         message: trimmed,
@@ -449,7 +450,7 @@ export default function Home() {
         .catch(() => {
           // quietly preserve current recommendations if background matching fails
         });
-    }
+    };
 
     try {
       const response = await fetch("/api/chat", {
@@ -502,6 +503,8 @@ export default function Home() {
 
         streamReply();
       }
+
+      window.setTimeout(runBackgroundMatch, options?.skipAssistantReply ? 0 : 140);
     } catch {
       setMessages((current) => [
         ...current,
