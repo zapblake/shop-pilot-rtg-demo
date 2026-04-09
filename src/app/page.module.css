@@ -15,7 +15,7 @@
 .siteSurface {
   min-height: 100vh;
   background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
-  transition: width 0.28s ease, margin-right 0.28s ease;
+  transition: width 0.34s cubic-bezier(0.22, 1, 0.36, 1), margin-right 0.34s cubic-bezier(0.22, 1, 0.36, 1);
   width: 100%;
 }
 
@@ -232,7 +232,7 @@
   z-index: 20;
   height: 100vh;
   width: 0;
-  transition: width 0.28s ease;
+  transition: width 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .edgeTab {
@@ -281,7 +281,7 @@
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
-  transition: opacity 0.22s ease;
+  transition: opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .overlayBodyOpen {
