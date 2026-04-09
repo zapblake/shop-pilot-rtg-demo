@@ -521,8 +521,8 @@ export default function Home() {
                       <Image
                         src="/assets/rtg-chat-logo.png"
                         alt="Shop Pilot avatar"
-                        width={32}
-                        height={32}
+                        width={40}
+                        height={40}
                         className={styles.chatAvatar}
                       />
                     ) : null}

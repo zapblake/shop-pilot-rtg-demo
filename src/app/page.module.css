@@ -1121,3 +1121,20 @@
   box-shadow: 0 4px 12px rgba(0, 82, 159, 0.22);
   cursor: pointer;
 }
+
+.chatAvatar {
+  width: 40px;
+  height: 40px;
+}
+
+.messageAssistant,
+.messageUser {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.messageAssistant p,
+.messageUser p {
+  font-size: 14px;
+  line-height: 1.45;
+}
