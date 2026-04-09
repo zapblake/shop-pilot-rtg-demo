@@ -73,7 +73,10 @@ export async function POST(request: Request) {
 
   try {
     const anthropic = new Anthropic({ apiKey });
-    const topMatches = matches.slice(0, 3).map((match, index) => `${index + 1}. ${match.displayName} (${match.brand}, ${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"}, ${match.priceFrom ? `$${match.priceFrom}` : "price TBD"})`).join("\n");
+    const topMatches = matches
+      .slice(0, 3)
+      .map((match: MatchResult, index: number) => `${index + 1}. ${match.displayName} (${match.brand}, ${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"}, ${match.priceFrom ? `$${match.priceFrom}` : "price TBD"})`)
+      .join("\n");
 
     const completion = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
