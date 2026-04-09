@@ -207,9 +207,15 @@ async function rerankWithAi({
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
-  const shopperInput = String(body?.message ?? "").toLowerCase();
-  const memorySummary = String(body?.memorySummary ?? "").toLowerCase();
-  const combinedInput = `${shopperInput} ${memorySummary}`.trim();
+  const shopperInput = String(body?.message ?? "");
+  const memorySummary = String(body?.memorySummary ?? "");
+  const transcriptText = Array.isArray(body?.conversationTranscript)
+    ? body.conversationTranscript
+        .slice(-12)
+        .map((entry: { role?: string; text?: string }) => `${String(entry.role ?? "user")}: ${String(entry.text ?? "")}`)
+        .join(" ")
+    : "";
+  const combinedInput = `${shopperInput} ${memorySummary} ${transcriptText}`.toLowerCase().trim();
 
   const requestedBrand = brandTerms.find((brand) => combinedInput.includes(brand));
   const requestedSize = shopperSizeFromInput(combinedInput);
@@ -218,7 +224,7 @@ export async function POST(request: Request) {
   const topCandidates = heuristicRanked.slice(0, MAX_CANDIDATES_FOR_AI);
   const { usedAi, reranked } = await rerankWithAi({
     candidates: topCandidates,
-    shopperMessage: String(body?.message ?? ""),
+    shopperMessage: `${String(body?.message ?? "")}\nRecent conversation: ${transcriptText}`,
     memorySummary: String(body?.memorySummary ?? ""),
   });
 

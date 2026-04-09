@@ -16,6 +16,7 @@ type RouteBody = {
   memorySummary?: string;
   matches?: MatchResult[];
   conversationMode?: string;
+  conversationTranscript?: { role: "assistant" | "user"; text: string }[];
 };
 
 function emphasizeQuestion(text: string) {
@@ -62,23 +63,10 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
   };
 }
 
-async function getMatches(request: Request, body: RouteBody) {
-  const origin = new URL(request.url).origin;
-  const response = await fetch(`${origin}/api/match`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-    cache: "no-store",
-  });
-
-  const matchPayload = await response.json();
-  return matchPayload.matches ?? [];
-}
-
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as RouteBody;
   const message = String(body?.message ?? "").trim();
-  const matches = await getMatches(request, body);
+  const matches = body.matches ?? [];
   const fallback = buildFallbackReply(message, matches);
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -86,7 +74,6 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reply: fallback.reply,
       mode: fallback.mode,
-      matches,
       liveModel: false,
     });
   }
@@ -97,19 +84,24 @@ export async function POST(request: Request) {
       .slice(0, 3)
       .map(
         (match: MatchResult, index: number) =>
-          `${index + 1}. Candidate ${index + 1} (${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"})`,
+          `${index + 1}. ${match.displayName} (${match.brand}, ${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"})`,
       )
+      .join("\n");
+
+    const transcript = (body.conversationTranscript ?? [])
+      .slice(-8)
+      .map((entry) => `${entry.role.toUpperCase()}: ${entry.text}`)
       .join("\n");
 
     const completion = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 220,
       system:
-        "You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary and candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply. Do not mention price or budget unless the shopper explicitly asks about it. Instead of listing recommendations in chat, tell the shopper they can scroll down now to see their current recommendations. Always end with one clear shopper-facing question in double asterisks.",
+        "You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply. Do not mention price or budget unless the shopper explicitly asks about it. Instead of listing recommendations in chat, tell the shopper they can scroll down now to see their current recommendations. Always end with one clear shopper-facing question in double asterisks.",
       messages: [
         {
           role: "user",
-          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nTop candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options. If the shopper mentions a specific brand, do not say the store does not carry it unless that is certain from the provided candidates. Keep the reply generic and grounded in the current recommendation state.`,
+          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nRecent transcript:\n${transcript || "No recent transcript"}\n\nCurrent top candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options. If the shopper mentions a specific brand, do not say the store does not carry it unless that is certain from the provided candidates. Keep the reply generic and grounded in the current recommendation state.`,
         },
       ],
     });
@@ -123,14 +115,12 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reply: text || fallback.reply,
       mode: /compare/i.test(message) && matches.length > 1 ? "comparison" : fallback.mode,
-      matches,
       liveModel: true,
     });
   } catch {
     return NextResponse.json({
       reply: fallback.reply,
       mode: fallback.mode,
-      matches,
       liveModel: false,
     });
   }

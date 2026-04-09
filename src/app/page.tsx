@@ -25,6 +25,12 @@ type ChatMessage = {
   text: string;
 };
 
+type MessageOptions = {
+  skipAssistantReply?: boolean;
+  overrideMemorySummary?: string;
+  skipBackgroundMatch?: boolean;
+};
+
 type MatchResult = {
   theme: string;
   displayName: string;
@@ -210,6 +216,28 @@ function renderMessageText(text: string) {
   });
 }
 
+async function fetchMatches({
+  message,
+  memorySummary,
+  conversationTranscript,
+}: {
+  message: string;
+  memorySummary: string;
+  conversationTranscript: ChatMessage[];
+}) {
+  const response = await fetch("/api/match", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message,
+      memorySummary,
+      conversationTranscript: conversationTranscript.map(({ role, text }) => ({ role, text })),
+    }),
+  });
+
+  return response.json();
+}
+
 export default function Home() {
   const storedSession = getStoredSession();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -217,6 +245,7 @@ export default function Home() {
   const overlayBodyRef = useRef<HTMLDivElement | null>(null);
   const queuedMessagesRef = useRef<string[]>([]);
   const inactivityTimerRef = useRef<number | null>(null);
+  const matchRequestVersionRef = useRef(0);
   const [showScrollNudge, setShowScrollNudge] = useState(false);
   const [showMatchNudge, setShowMatchNudge] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -321,44 +350,60 @@ export default function Home() {
     return undefined;
   }, [messages]);
 
-  async function processMessage(messageText: string, options?: { skipAssistantReply?: boolean; overrideMemorySummary?: string }) {
+  async function processMessage(messageText: string, options?: MessageOptions) {
+    const trimmed = messageText.trim();
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      text: messageText.trim(),
+      text: trimmed,
     };
+
+    const transcriptForTurn = [...messages, userMessage];
+    const nextMemorySummary = options?.overrideMemorySummary ?? buildMemorySummary(transcriptForTurn, matches);
 
     setMessages((current) => [...current, userMessage]);
     setDraftMessage("");
     setIsLoading(true);
+
+    if (!options?.skipBackgroundMatch) {
+      const requestVersion = ++matchRequestVersionRef.current;
+      void fetchMatches({
+        message: trimmed,
+        memorySummary: nextMemorySummary,
+        conversationTranscript: transcriptForTurn,
+      })
+        .then((matchPayload) => {
+          if (requestVersion !== matchRequestVersionRef.current) return;
+          const incomingMatches: MatchResult[] = matchPayload.matches ?? [];
+          setMatches(incomingMatches);
+          if (incomingMatches.length > 0) {
+            setShowMatchNudge(true);
+            window.setTimeout(() => setShowMatchNudge(false), 1500);
+            setCurrentTheme(incomingMatches[0]?.theme ?? null);
+          }
+        })
+        .catch(() => {
+          // quietly preserve current recommendations if background matching fails
+        });
+    }
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: messageText,
+          message: trimmed,
           currentTheme,
           shopperId: shopperMemory?.shopperId,
           conversationMode,
-          memorySummary: options?.overrideMemorySummary ?? memorySummary,
+          memorySummary: nextMemorySummary,
+          matches,
+          conversationTranscript: transcriptForTurn.map(({ role, text }) => ({ role, text })),
         }),
       });
 
       const payload = await response.json();
       setConversationMode(payload.mode ?? "guided-discovery");
-      const incomingMatches: MatchResult[] = payload.matches ?? [];
-      setMatches(incomingMatches);
-
-      // Flash the nudge for 1.5s when recommendations first arrive
-      if (incomingMatches.length > 0) {
-        setShowMatchNudge(true);
-        window.setTimeout(() => setShowMatchNudge(false), 1500);
-      }
-
-      if (payload.matches?.[0]?.theme) {
-        setCurrentTheme(payload.matches[0].theme);
-      }
 
       if (!options?.skipAssistantReply) {
         const assistantId = `assistant-${Date.now()}`;
@@ -418,7 +463,7 @@ export default function Home() {
     }
   }
 
-  async function submitMessage(messageText: string, options?: { skipAssistantReply?: boolean; overrideMemorySummary?: string }) {
+  async function submitMessage(messageText: string, options?: MessageOptions) {
     const trimmed = messageText.trim();
     if (!trimmed) return;
 
@@ -470,7 +515,12 @@ export default function Home() {
 
     setFirmnessAnswered(true);
     const combinedMessage = `${selectedSize}. I want a ${selectedFirmness.label} feel.`;
-    const nextSummary = `Returning shopper is ${selectedSize.toLowerCase()}-size shopper and prefers a ${selectedFirmness.label.toLowerCase()} feel. ${matches[0]?.displayName ? `Current lead recommendation: ${matches[0].displayName}.` : "No lead recommendation yet."}`;
+    const syntheticTranscript = [
+      ...messages,
+      { id: `synthetic-size-${Date.now()}`, role: "user" as const, text: selectedSize },
+      { id: `synthetic-firmness-${Date.now()}`, role: "user" as const, text: `I want a ${selectedFirmness.label} feel.` },
+    ];
+    const nextSummary = buildMemorySummary(syntheticTranscript, matches);
     await submitMessage(combinedMessage, { overrideMemorySummary: nextSummary });
   }
 
