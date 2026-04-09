@@ -210,7 +210,10 @@ function renderMessageText(text: string) {
 export default function Home() {
   const storedSession = getStoredSession();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const chatBottomRef = useRef<HTMLDivElement | null>(null);
   const queuedMessagesRef = useRef<string[]>([]);
+  const inactivityTimerRef = useRef<number | null>(null);
+  const [showScrollNudge, setShowScrollNudge] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
@@ -264,6 +267,28 @@ export default function Home() {
 
   useEffect(() => {
     inputRef.current?.focus();
+  }, []);
+
+  // Auto-scroll chat bottom into view whenever messages change
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [messages]);
+
+  // Reset inactivity timer; show scroll nudge after 30s of shopper idle time
+  const resetInactivityTimer = () => {
+    if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
+    setShowScrollNudge(false);
+    inactivityTimerRef.current = window.setTimeout(() => {
+      setShowScrollNudge(true);
+    }, 30_000);
+  };
+
+  useEffect(() => {
+    resetInactivityTimer();
+    return () => {
+      if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -350,7 +375,10 @@ export default function Home() {
       ]);
     } finally {
       setIsLoading(false);
-      window.setTimeout(() => inputRef.current?.focus(), 20);
+      window.setTimeout(() => {
+        inputRef.current?.focus();
+        chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 20);
 
       const nextQueuedMessage = queuedMessagesRef.current.shift();
       if (nextQueuedMessage) {
