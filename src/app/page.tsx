@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
 import styles from "./page.module.css";
@@ -42,6 +42,8 @@ type PersistedSession = {
   currentTheme: string | null;
   memorySummary: string;
 };
+
+type ThemeRecord = (typeof mattressThemes)[number];
 
 const featuredThemes = mattressThemes.slice(0, 6);
 const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
@@ -157,6 +159,34 @@ function getComparisonNote(matches: MatchResult[], mode: ConversationMode) {
   return `${matches[0].displayName} leads right now, with ${matches[1].displayName} as the best alternate depending on whether the shopper prioritizes feel or value.`;
 }
 
+function getThemeDetails(themeName: string | null) {
+  if (!themeName) return null;
+  return mattressThemes.find((theme) => theme.theme === themeName) ?? null;
+}
+
+function getMatchTheme(match: MatchResult) {
+  return getThemeDetails(match.theme);
+}
+
+function getFeatureScore(label: string | null | undefined) {
+  if (!label) return 0;
+  const lookup: Record<string, number> = {
+    ultimate: 5,
+    premier: 4,
+    enhanced: 3,
+    core: 2,
+    basic: 1,
+  };
+  return lookup[label.toLowerCase()] ?? 0;
+}
+
+function getBestFor(theme: ThemeRecord) {
+  const positions = theme.bestForSleepPositions?.length
+    ? theme.bestForSleepPositions.join(", ")
+    : "most sleep styles";
+  return `Best for ${positions}`;
+}
+
 export default function Home() {
   const storedSession = getStoredSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -269,6 +299,8 @@ export default function Home() {
   }
 
   const comparisonNote = getComparisonNote(matches, conversationMode);
+  const compareThemes = useMemo(() => matches.slice(0, 3).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
+  const compareWinner = compareThemes[0] ?? null;
 
   return (
     <div className={styles.page}>
@@ -371,8 +403,12 @@ export default function Home() {
                   className={`${styles.productTile} ${currentTheme === theme.theme ? styles.productTileActive : ""}`}
                   onClick={() => setCurrentTheme(theme.theme)}
                 >
-                  <div className={styles.productImagePlaceholder}>
-                    <span>{theme.brand}</span>
+                  <div className={styles.productTileImageWrap}>
+                    {theme.heroImage ? (
+                      <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.productTileImage} />
+                    ) : (
+                      <div className={styles.productImagePlaceholder}><span>{theme.brand}</span></div>
+                    )}
                   </div>
                   <div className={styles.productTileBody}>
                     <p>{theme.brand}</p>
@@ -474,8 +510,46 @@ export default function Home() {
             </section>
 
             {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
-
             <p className={styles.compareNote}>Note: we still need to define the right trigger and moment for offering compare in the shopper journey.</p>
+
+            {compareThemes.length >= 2 ? (
+              <section className={styles.compareSection}>
+                <div className={styles.sectionHeader}>
+                  <h3>Compare top options</h3>
+                  <p>Side-by-side based on the shopper’s current priorities</p>
+                </div>
+                <div className={styles.compareGrid}>
+                  {compareThemes.map((theme, index) => (
+                    <article key={theme.theme} className={`${styles.compareCard} ${index === 0 ? styles.compareCardLead : ""}`}>
+                      <div className={styles.compareImageWrap}>
+                        {theme.heroImage ? (
+                          <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.compareImage} />
+                        ) : null}
+                        {index === 0 ? <span className={styles.compareWinnerPill}>Top fit</span> : null}
+                      </div>
+                      <div className={styles.compareCardBody}>
+                        <p>{theme.brand}</p>
+                        <h4>{theme.displayName}</h4>
+                        <strong>{theme.priceRange?.min ? `From $${theme.priceRange.min.toLocaleString()}` : "Price TBD"}</strong>
+                        <div className={styles.compareStats}>
+                          <div><span>Feel</span><b>{theme.comfort || "TBD"}</b></div>
+                          <div><span>Type</span><b>{theme.type || "TBD"}</b></div>
+                          <div><span>Cooling</span><b>{theme.temperatureManagement?.label || "TBD"}</b></div>
+                          <div><span>Support</span><b>{theme.supportLevel?.label || "TBD"}</b></div>
+                        </div>
+                        <div className={styles.compareCallouts}>
+                          <em>{getBestFor(theme)}</em>
+                          <em>Pressure relief: {theme.pressureRelief?.label || "TBD"}</em>
+                        </div>
+                        {compareWinner?.theme === theme.theme ? (
+                          <div className={styles.compareWinnerNote}>Best current fit based on the shopper’s stated priorities.</div>
+                        ) : null}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             <section className={styles.recommendationSection}>
               <div className={styles.sectionHeader}>
@@ -483,22 +557,41 @@ export default function Home() {
                 <p>Tailored to what the shopper has told us so far</p>
               </div>
               <div className={styles.candidateList}>
-                {matches.map((match, index) => (
-                  <article key={match.theme} className={styles.candidateCard}>
-                    <div className={styles.candidateTopRow}>
-                      <p>{match.brand}</p>
-                      {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
-                    </div>
-                    <h4>{match.displayName}</h4>
-                    <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
-                    <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
-                    <div className={styles.reasonList}>
-                      {getFitReasons(match, memorySummary).map((reason) => (
-                        <em key={reason}>{reason}</em>
-                      ))}
-                    </div>
-                  </article>
-                ))}
+                {matches.map((match, index) => {
+                  const theme = getMatchTheme(match);
+                  const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
+                  const supportScore = getFeatureScore(theme?.supportLevel?.label);
+                  const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
+
+                  return (
+                    <article key={match.theme} className={styles.candidateCard}>
+                      <div className={styles.candidateImageWrap}>
+                        {theme?.heroImage ? (
+                          <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
+                        ) : null}
+                      </div>
+                      <div className={styles.candidateCardBody}>
+                        <div className={styles.candidateTopRow}>
+                          <p>{match.brand}</p>
+                          {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
+                        </div>
+                        <h4>{match.displayName}</h4>
+                        <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
+                        <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
+                        <div className={styles.miniMetrics}>
+                          <div><span>Cooling</span><b>{coolingScore || "-"}</b></div>
+                          <div><span>Support</span><b>{supportScore || "-"}</b></div>
+                          <div><span>Relief</span><b>{pressureScore || "-"}</b></div>
+                        </div>
+                        <div className={styles.reasonList}>
+                          {getFitReasons(match, memorySummary).map((reason) => (
+                            <em key={reason}>{reason}</em>
+                          ))}
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </section>
           </div>
