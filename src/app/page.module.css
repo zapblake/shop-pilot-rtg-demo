@@ -231,8 +231,10 @@
   right: 0;
   z-index: 20;
   height: 100vh;
-  width: 0;
-  transition: width 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 420px;
+  overflow: hidden;
+  transform: translateX(calc(100% - 58px));
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .edgeTab {
@@ -281,25 +283,20 @@
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
-  transition: opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 1;
 }
 
-.overlayBodyOpen {
-  opacity: 1;
+.overlayBodyOpen,
+.overlayBodyClosed {
   pointer-events: auto;
 }
 
-.overlayBodyClosed {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .open {
-  width: 420px;
+  transform: translateX(0);
 }
 
 .closed {
-  width: 0;
+  transform: translateX(calc(100% - 58px));
 }
 
 .overlayHeader,
@@ -488,7 +485,12 @@
     margin-right: 320px;
   }
 
+  .overlayPanel,
   .overlayBody {
     width: min(420px, calc(100vw - 48px));
+  }
+
+  .closed {
+    transform: translateX(calc(100% - 58px));
   }
 }
