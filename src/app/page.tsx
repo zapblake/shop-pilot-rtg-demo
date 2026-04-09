@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
 import styles from "./page.module.css";
@@ -64,17 +64,7 @@ const starterMessages: ChatMessage[] = [
   {
     id: "assistant-1",
     role: "assistant",
-    text: "Welcome in. I can help narrow things down quickly without making this feel like homework.",
-  },
-  {
-    id: "user-1",
-    role: "user",
-    text: "I sleep on my side, get hot, and want to stay under about $2,000.",
-  },
-  {
-    id: "assistant-2",
-    role: "assistant",
-    text: "Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.",
+    text: "What matters most for your mattress, cooler sleep, pressure relief, support, or price?",
   },
 ];
 const starterMatches: MatchResult[] = featuredThemes.slice(0, 3).map((theme, index) => ({
@@ -279,21 +269,6 @@ export default function Home() {
     await submitMessage(draftMessage);
   }
 
-  const runtimeContext = useMemo(() => {
-    const theme = featuredThemes.find((item) => item.theme === currentTheme) ?? null;
-
-    return {
-      shopperId: shopperMemory?.shopperId ?? "loading",
-      pageType: "category",
-      currentUrl: "https://www.roomstogo.com/mattress",
-      currentTheme: theme?.theme ?? null,
-      currentProductSummary: theme
-        ? `${theme.displayName} · ${theme.type || "Type TBD"} · ${theme.comfort || "Comfort TBD"}`
-        : null,
-      conversationMode,
-      priorConversationSummary: memorySummary,
-    };
-  }, [conversationMode, currentTheme, memorySummary, shopperMemory]);
 
   return (
     <div className={styles.page}>
@@ -430,13 +405,6 @@ export default function Home() {
           </button>
 
           <div className={styles.overlayBody}>
-            <div className={styles.overlayHeader}>
-              <div>
-                <p className={styles.overlayKicker}>RTG Chat</p>
-                <h2>Shop Pilot</h2>
-              </div>
-              <p className={styles.headerMicrocopy}>Helpful, calm, and context-aware.</p>
-            </div>
 
             <section className={styles.chatSurface}>
               <div className={styles.messageList}>
@@ -476,7 +444,7 @@ export default function Home() {
             <section className={styles.recommendationSection}>
               <div className={styles.sectionHeader}>
                 <h3>Top matches right now</h3>
-                <p>Now remembers prior signals and explains why each match fits</p>
+                <p>Tailored to what the shopper has told us so far</p>
               </div>
               <div className={styles.candidateList}>
                 {matches.map((match) => (
@@ -495,27 +463,6 @@ export default function Home() {
               </div>
             </section>
 
-            <section className={styles.contextCard}>
-              <h3>Internal runtime state</h3>
-              <dl>
-                <div>
-                  <dt>Shopper ID</dt>
-                  <dd>{runtimeContext.shopperId}</dd>
-                </div>
-                <div>
-                  <dt>Experience mode</dt>
-                  <dd>{runtimeContext.conversationMode}</dd>
-                </div>
-                <div>
-                  <dt>Current theme</dt>
-                  <dd>{runtimeContext.currentTheme ?? "None"}</dd>
-                </div>
-                <div>
-                  <dt>Memory summary</dt>
-                  <dd>{runtimeContext.priorConversationSummary}</dd>
-                </div>
-              </dl>
-            </section>
           </div>
         </aside>
       </main>

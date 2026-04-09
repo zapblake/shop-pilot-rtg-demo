@@ -402,52 +402,20 @@
   transform: translateX(421px);
 }
 
-.overlayHeader,
-.chatSurface,
-.contextCard,
-.recommendationSection,
-.chipsSection {
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
-}
 
-.overlayHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 20px 22px;
-  border-radius: 24px 24px 18px 18px;
-}
 
-.overlayKicker {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-weight: 700;
-  color: #00529f;
-  margin-bottom: 6px;
-}
 
-.overlayHeader h2 {
-  font-size: 28px;
-  letter-spacing: -0.04em;
-}
 
-.headerMicrocopy {
-  max-width: 16ch;
-  text-align: right;
-  color: #6b7280;
-  font-size: 13px;
-  line-height: 1.5;
-}
 
 .chatSurface {
   padding: 18px;
-  border-radius: 18px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
 .messageList {
@@ -510,6 +478,9 @@
   flex-wrap: wrap;
   gap: 10px;
   border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
 .chipsSection button {
@@ -521,41 +492,11 @@
   cursor: pointer;
 }
 
-.contextCard,
-.recommendationSection {
-  padding: 18px;
-  border-radius: 18px;
-}
 
-.contextCard h3,
-.recommendationSection h3 {
-  font-size: 18px;
-  margin-bottom: 12px;
-  letter-spacing: -0.03em;
-}
 
-.contextCard dl {
-  display: grid;
-  gap: 12px;
-}
 
-.contextCard div {
-  display: grid;
-  gap: 4px;
-}
 
-.contextCard dt {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #6b7280;
-  font-weight: 700;
-}
 
-.contextCard dd {
-  line-height: 1.5;
-  color: #111827;
-}
 
 .sectionHeader {
   margin-bottom: 12px;
