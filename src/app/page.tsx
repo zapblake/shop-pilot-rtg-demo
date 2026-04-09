@@ -642,7 +642,7 @@ export default function Home() {
             {showDynamicSections ? (
               <>
                 <section className={styles.suggestedSection}>
-                  <span className={styles.suggestedLabel}>Suggested</span>
+                  <span className={styles.suggestedLabel}>Easy Reply</span>
                   <div className={styles.chipsSection}>
                     <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
                     <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling</button>
