@@ -1373,3 +1373,12 @@
   background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
   color: #14532d;
 }
+
+
+.compareGrid {
+  grid-auto-columns: minmax(calc(50% - 6px), 1fr);
+}
+
+.compareCard {
+  min-width: 0;
+}
