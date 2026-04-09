@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
 import styles from "./page.module.css";
@@ -66,18 +66,11 @@ const starterMessages: ChatMessage[] = [
   {
     id: "assistant-1",
     role: "assistant",
-    text: "What matters most for your mattress, cooler sleep, pressure relief, support, or price?",
+    text: "👋 Hi, I’m Shop Pilot. I can help you narrow things down without making this feel like homework. **What size mattress are you looking for?**",
   },
 ];
-const starterMatches: MatchResult[] = featuredThemes.slice(0, 3).map((theme, index) => ({
-  theme: theme.theme,
-  displayName: theme.displayName,
-  brand: theme.brand,
-  type: theme.type,
-  comfort: theme.comfort,
-  priceFrom: theme.priceRange?.min ?? null,
-  score: 3 - index,
-}));
+const starterMatches: MatchResult[] = [];
+const startingSizeOptions = ["Queen", "King", "Not Sure", "Other"];
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -117,8 +110,8 @@ function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
     userText.includes("side") ? "side-sleeper" : null,
     userText.includes("back") ? "back-sleeper" : null,
     userText.includes("hot") || userText.includes("cool") ? "cooling-conscious" : null,
-    userText.includes("medium") ? "medium-feel" : null,
-    userText.includes("firm") ? "firm-feel" : null,
+    userText.includes("queen") ? "queen-size shopper" : null,
+    userText.includes("king") ? "king-size shopper" : null,
     userText.includes("budget") || userText.includes("under") || userText.includes("$") ? "budget-aware" : null,
     userText.includes("pressure") ? "pressure-relief focused" : null,
   ].filter(Boolean);
@@ -187,8 +180,19 @@ function getBestFor(theme: ThemeRecord) {
   return `Best for ${positions}`;
 }
 
+function renderMessageText(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>;
+    }
+    return <span key={`${part}-${index}`}>{part}</span>;
+  });
+}
+
 export default function Home() {
   const storedSession = getStoredSession();
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
@@ -197,6 +201,7 @@ export default function Home() {
   const [matches, setMatches] = useState<MatchResult[]>(storedSession?.matches ?? starterMatches);
   const [messages, setMessages] = useState<ChatMessage[]>(storedSession?.messages ?? starterMessages);
   const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
+  const [showOpeningOptions, setShowOpeningOptions] = useState(false);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -236,6 +241,20 @@ export default function Home() {
       } satisfies PersistedSession),
     );
   }, [conversationMode, currentTheme, matches, messages]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (messages.length === 1 && messages[0]?.id === "assistant-1") {
+      const timer = window.setTimeout(() => setShowOpeningOptions(true), 420);
+      return () => window.clearTimeout(timer);
+    }
+
+    setShowOpeningOptions(false);
+    return undefined;
+  }, [messages]);
 
   async function submitMessage(messageText: string) {
     if (!messageText.trim() || isLoading) return;
@@ -290,6 +309,7 @@ export default function Home() {
       ]);
     } finally {
       setIsLoading(false);
+      window.setTimeout(() => inputRef.current?.focus(), 20);
     }
   }
 
@@ -301,6 +321,7 @@ export default function Home() {
   const comparisonNote = getComparisonNote(matches, conversationMode);
   const compareThemes = useMemo(() => matches.slice(0, 3).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
+  const showDynamicSections = matches.length > 0;
 
   return (
     <div className={styles.page}>
@@ -454,6 +475,11 @@ export default function Home() {
                   setConversationMode("guided-discovery");
                   setCurrentTheme(featuredThemes[0]?.theme ?? null);
                   setDraftMessage("");
+                  setShowOpeningOptions(false);
+                  window.setTimeout(() => {
+                    setShowOpeningOptions(true);
+                    inputRef.current?.focus();
+                  }, 420);
                 }}
                 aria-label="Restart chat"
                 title="Restart chat"
@@ -479,7 +505,7 @@ export default function Home() {
                       />
                     ) : null}
                     <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
-                      <p>{message.text}</p>
+                      <p>{renderMessageText(message.text)}</p>
                     </div>
                   </div>
                 ))}
@@ -490,8 +516,25 @@ export default function Home() {
                 ) : null}
               </div>
 
+              {showOpeningOptions ? (
+                <section className={styles.openingOptions}>
+                  {startingSizeOptions.map((option, index) => (
+                    <button
+                      key={option}
+                      type="button"
+                      className={styles.openingChip}
+                      style={{ animationDelay: `${index * 60}ms` }}
+                      onClick={() => submitMessage(option)}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </section>
+              ) : null}
+
               <form className={styles.composer} onSubmit={handleSubmit}>
                 <input
+                  ref={inputRef}
                   value={draftMessage}
                   onChange={(event) => setDraftMessage(event.target.value)}
                   placeholder="Tell Shop Pilot what matters most to you"
@@ -501,99 +544,103 @@ export default function Home() {
               </form>
             </section>
 
-            <section className={styles.chipsSection}>
-              <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
-              <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling matters</button>
-              <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
-              <button type="button" onClick={() => submitMessage("Keep me under $2,000.")}>Budget under $2k</button>
-              <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare options</button>
-            </section>
+            {showDynamicSections ? (
+              <>
+                <section className={styles.chipsSection}>
+                  <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
+                  <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling matters</button>
+                  <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
+                  <button type="button" onClick={() => submitMessage("Keep me under $2,000.")}>Budget under $2k</button>
+                  <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare options</button>
+                </section>
 
-            {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
-            <p className={styles.compareNote}>Note: we still need to define the right trigger and moment for offering compare in the shopper journey.</p>
+                {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
+                <p className={styles.compareNote}>Note: we still need to define the right trigger and moment for offering compare in the shopper journey.</p>
 
-            {compareThemes.length >= 2 ? (
-              <section className={styles.compareSection}>
-                <div className={styles.sectionHeader}>
-                  <h3>Compare top options</h3>
-                  <p>Side-by-side based on the shopper’s current priorities</p>
-                </div>
-                <div className={styles.compareGrid}>
-                  {compareThemes.map((theme, index) => (
-                    <article key={theme.theme} className={`${styles.compareCard} ${index === 0 ? styles.compareCardLead : ""}`}>
-                      <div className={styles.compareImageWrap}>
-                        {theme.heroImage ? (
-                          <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.compareImage} />
-                        ) : null}
-                        {index === 0 ? <span className={styles.compareWinnerPill}>Top fit</span> : null}
-                      </div>
-                      <div className={styles.compareCardBody}>
-                        <p>{theme.brand}</p>
-                        <h4>{theme.displayName}</h4>
-                        <strong>{theme.priceRange?.min ? `From $${theme.priceRange.min.toLocaleString()}` : "Price TBD"}</strong>
-                        <div className={styles.compareStats}>
-                          <div><span>Feel</span><b>{theme.comfort || "TBD"}</b></div>
-                          <div><span>Type</span><b>{theme.type || "TBD"}</b></div>
-                          <div><span>Cooling</span><b>{theme.temperatureManagement?.label || "TBD"}</b></div>
-                          <div><span>Support</span><b>{theme.supportLevel?.label || "TBD"}</b></div>
-                        </div>
-                        <div className={styles.compareCallouts}>
-                          <em>{getBestFor(theme)}</em>
-                          <em>Pressure relief: {theme.pressureRelief?.label || "TBD"}</em>
-                        </div>
-                        {compareWinner?.theme === theme.theme ? (
-                          <div className={styles.compareWinnerNote}>Best current fit based on the shopper’s stated priorities.</div>
-                        ) : null}
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
+                {compareThemes.length >= 2 ? (
+                  <section className={styles.compareSection}>
+                    <div className={styles.sectionHeader}>
+                      <h3>Compare top options</h3>
+                      <p>Side-by-side based on the shopper’s current priorities</p>
+                    </div>
+                    <div className={styles.compareGrid}>
+                      {compareThemes.map((theme, index) => (
+                        <article key={theme.theme} className={`${styles.compareCard} ${index === 0 ? styles.compareCardLead : ""}`}>
+                          <div className={styles.compareImageWrap}>
+                            {theme.heroImage ? (
+                              <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.compareImage} />
+                            ) : null}
+                            {index === 0 ? <span className={styles.compareWinnerPill}>Top fit</span> : null}
+                          </div>
+                          <div className={styles.compareCardBody}>
+                            <p>{theme.brand}</p>
+                            <h4>{theme.displayName}</h4>
+                            <strong>{theme.priceRange?.min ? `From $${theme.priceRange.min.toLocaleString()}` : "Price TBD"}</strong>
+                            <div className={styles.compareStats}>
+                              <div><span>Feel</span><b>{theme.comfort || "TBD"}</b></div>
+                              <div><span>Type</span><b>{theme.type || "TBD"}</b></div>
+                              <div><span>Cooling</span><b>{theme.temperatureManagement?.label || "TBD"}</b></div>
+                              <div><span>Support</span><b>{theme.supportLevel?.label || "TBD"}</b></div>
+                            </div>
+                            <div className={styles.compareCallouts}>
+                              <em>{getBestFor(theme)}</em>
+                              <em>Pressure relief: {theme.pressureRelief?.label || "TBD"}</em>
+                            </div>
+                            {compareWinner?.theme === theme.theme ? (
+                              <div className={styles.compareWinnerNote}>Best current fit based on the shopper’s stated priorities.</div>
+                            ) : null}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                <section className={styles.recommendationSection}>
+                  <div className={styles.sectionHeader}>
+                    <h3>Top matches right now</h3>
+                    <p>Tailored to what the shopper has told us so far</p>
+                  </div>
+                  <div className={styles.candidateList}>
+                    {matches.map((match, index) => {
+                      const theme = getMatchTheme(match);
+                      const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
+                      const supportScore = getFeatureScore(theme?.supportLevel?.label);
+                      const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
+
+                      return (
+                        <article key={match.theme} className={styles.candidateCard}>
+                          <div className={styles.candidateImageWrap}>
+                            {theme?.heroImage ? (
+                              <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
+                            ) : null}
+                          </div>
+                          <div className={styles.candidateCardBody}>
+                            <div className={styles.candidateTopRow}>
+                              <p>{match.brand}</p>
+                              {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
+                            </div>
+                            <h4>{match.displayName}</h4>
+                            <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
+                            <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
+                            <div className={styles.miniMetrics}>
+                              <div><span>Cooling</span><b>{coolingScore || "-"}</b></div>
+                              <div><span>Support</span><b>{supportScore || "-"}</b></div>
+                              <div><span>Relief</span><b>{pressureScore || "-"}</b></div>
+                            </div>
+                            <div className={styles.reasonList}>
+                              {getFitReasons(match, memorySummary).map((reason) => (
+                                <em key={reason}>{reason}</em>
+                              ))}
+                            </div>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+              </>
             ) : null}
-
-            <section className={styles.recommendationSection}>
-              <div className={styles.sectionHeader}>
-                <h3>Top matches right now</h3>
-                <p>Tailored to what the shopper has told us so far</p>
-              </div>
-              <div className={styles.candidateList}>
-                {matches.map((match, index) => {
-                  const theme = getMatchTheme(match);
-                  const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
-                  const supportScore = getFeatureScore(theme?.supportLevel?.label);
-                  const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
-
-                  return (
-                    <article key={match.theme} className={styles.candidateCard}>
-                      <div className={styles.candidateImageWrap}>
-                        {theme?.heroImage ? (
-                          <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
-                        ) : null}
-                      </div>
-                      <div className={styles.candidateCardBody}>
-                        <div className={styles.candidateTopRow}>
-                          <p>{match.brand}</p>
-                          {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
-                        </div>
-                        <h4>{match.displayName}</h4>
-                        <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
-                        <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
-                        <div className={styles.miniMetrics}>
-                          <div><span>Cooling</span><b>{coolingScore || "-"}</b></div>
-                          <div><span>Support</span><b>{supportScore || "-"}</b></div>
-                          <div><span>Relief</span><b>{pressureScore || "-"}</b></div>
-                        </div>
-                        <div className={styles.reasonList}>
-                          {getFitReasons(match, memorySummary).map((reason) => (
-                            <em key={reason}>{reason}</em>
-                          ))}
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
           </div>
         </aside>
       </main>
