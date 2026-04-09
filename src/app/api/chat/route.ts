@@ -63,11 +63,6 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
 }
 
 async function getMatches(request: Request, body: RouteBody) {
-  const message = String(body?.message ?? "").trim();
-  const shouldCallMatchAgent = /side|back|stomach|cool|hot|firm|plush|medium|budget|under|compare|recommend|pressure|support|value|relief|shoulder|hip|price|queen|king|full|twin|helix|sealy|tempur|serta|beautyrest|purple|sleepy'?s/i.test(message);
-
-  if (!shouldCallMatchAgent) return [] as MatchResult[];
-
   const origin = new URL(request.url).origin;
   const response = await fetch(`${origin}/api/match`, {
     method: "POST",
