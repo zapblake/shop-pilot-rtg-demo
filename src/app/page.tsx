@@ -11,15 +11,16 @@ type ConversationMode =
   | "comparison"
   | "resume";
 
-const featuredThemes = mattressThemes.slice(0, 4);
-const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
-
 type ShopperMemory = {
   shopperId: string;
   firstSeenAt: string;
   lastSeenAt: string;
   summary: string;
 };
+
+const featuredThemes = mattressThemes.slice(0, 6);
+const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
+const RTG_ACCENT = "#c8102e";
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -71,7 +72,6 @@ export default function Home() {
       shopperId: shopperMemory?.shopperId ?? "loading",
       pageType: "category",
       currentUrl: "https://www.roomstogo.com/mattress",
-      currentSku: null,
       currentTheme: theme?.theme ?? null,
       currentProductSummary: theme
         ? `${theme.displayName} · ${theme.type || "Type TBD"} · ${theme.comfort || "Comfort TBD"}`
@@ -83,55 +83,88 @@ export default function Home() {
         comfortPreference: "medium",
         budgetBand: "under-2000",
       },
-      shortlistedThemes: featuredThemes.slice(0, 3).map((item) => item.theme),
-      compareSet: featuredThemes.slice(0, 2).map((item) => item.theme),
       priorConversationSummary: shopperMemory?.summary ?? "Loading shopper memory",
-      topCandidateThemes: featuredThemes.slice(0, 3).map((item) => item.theme),
-      recentInteractionTimestamp: shopperMemory?.lastSeenAt ?? "loading",
     };
   }, [conversationMode, currentTheme, shopperMemory]);
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} style={{ ["--rtg-accent" as string]: RTG_ACCENT }}>
       <main className={styles.viewport}>
         <section className={`${styles.siteSurface} ${isOpen ? styles.siteSurfaceShifted : ""}`}>
-          <div className={styles.browserTopbar}>
-            <div className={styles.browserDots}>
-              <span />
-              <span />
-              <span />
+          <div className={styles.utilityBar}>
+            <div className={styles.utilityLeft}>
+              <span>Internet Assistance: (888) 709-5380</span>
+              <span>All Other Inquiries: (800) 766-6786</span>
             </div>
-            <div className={styles.browserUrl}>roomstogo.com/mattress</div>
+            <div className={styles.utilityRight}>
+              <span>Find a Showroom</span>
+              <span>Track Order</span>
+              <span>Help</span>
+            </div>
           </div>
 
+          <header className={styles.siteHeader}>
+            <div className={styles.logoBlock}>
+              <div className={styles.logoMark}>Rooms To Go</div>
+            </div>
+            <div className={styles.searchShell}>
+              <input value="mattress" readOnly aria-label="Search Rooms To Go" />
+            </div>
+            <div className={styles.headerActions}>
+              <span>Account</span>
+              <span>Favorites</span>
+              <span>Cart</span>
+            </div>
+          </header>
+
+          <nav className={styles.categoryNav}>
+            <span>Furniture</span>
+            <span>Kids</span>
+            <span>Patio</span>
+            <span className={styles.categoryActive}>Mattresses</span>
+            <span>Decor</span>
+            <span>Sale</span>
+          </nav>
+
           <div className={styles.browserContent}>
-            <div className={styles.mockSiteHeader}>
-              <div>
-                <p className={styles.eyebrow}>Rooms To Go Mattress</p>
-                <h1>Find the right mattress for how you actually sleep.</h1>
-                <p className={styles.subcopy}>
-                  Premium guidance, brand-safe recommendations, and a calmer path to the right fit.
-                </p>
-              </div>
-              <div className={styles.mockActions}>
-                <button type="button">Shop by comfort</button>
-                <button type="button">Compare brands</button>
-              </div>
+            <div className={styles.breadcrumbs}>
+              <span>Home</span>
+              <span>/</span>
+              <span>Mattresses</span>
             </div>
 
-            <div className={styles.heroBand}>
-              <div className={styles.heroCard}>
-                <p>Cooling help</p>
-                <strong>Hot sleeper options that do not feel clinical</strong>
+            <section className={styles.heroBanner}>
+              <div className={styles.heroCopy}>
+                <p className={styles.eyebrow}>Affordable Mattresses at Rooms To Go</p>
+                <h1>Shop premium sleep brands with an easier path to the right fit.</h1>
+                <p className={styles.subcopy}>
+                  Explore cooling, comfort, support, and price with a cleaner buying experience, then let Shop Pilot guide the decision without slowing the shopper down.
+                </p>
               </div>
-              <div className={styles.heroCard}>
-                <p>Support</p>
-                <strong>Guided picks for side sleepers and pressure relief</strong>
+              <div className={styles.heroPromoGrid}>
+                <div className={styles.heroPromoCard}>
+                  <strong>Free delivery setup on many models</strong>
+                  <span>Simple, reassuring, and shopper-friendly.</span>
+                </div>
+                <div className={styles.heroPromoCard}>
+                  <strong>Top online and legacy retail brands</strong>
+                  <span>Presented in a more premium guided flow.</span>
+                </div>
               </div>
-              <div className={styles.heroCard}>
-                <p>Budget clarity</p>
-                <strong>Quick narrowing without bouncing between tabs</strong>
-              </div>
+            </section>
+
+            <section className={styles.filterRow}>
+              <button type="button">Size</button>
+              <button type="button">Comfort</button>
+              <button type="button">Brand</button>
+              <button type="button">Price</button>
+              <button type="button">Features</button>
+              <div className={styles.sortPill}>Sort: Featured</div>
+            </section>
+
+            <div className={styles.resultsMeta}>
+              <strong>486 mattresses</strong>
+              <span>Showing a curated high-fidelity demo slice</span>
             </div>
 
             <div className={styles.productGrid}>
@@ -174,7 +207,7 @@ export default function Home() {
             <span className={styles.edgeLabel}>Shop Pilot</span>
           </button>
 
-          <div className={`${styles.overlayBody} ${isOpen ? styles.overlayBodyOpen : styles.overlayBodyClosed}`}>
+          <div className={styles.overlayBody}>
             <div className={styles.overlayHeader}>
               <div>
                 <p className={styles.overlayKicker}>RTG Chat</p>
