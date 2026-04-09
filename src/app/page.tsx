@@ -14,9 +14,8 @@ type ConversationMode =
 const featuredThemes = mattressThemes.slice(0, 4);
 
 export default function Home() {
-  const [isOpen, setIsOpen] = useState(true);
-  const [conversationMode, setConversationMode] =
-    useState<ConversationMode>("guided-discovery");
+  const [isOpen, setIsOpen] = useState(false);
+  const [conversationMode] = useState<ConversationMode>("guided-discovery");
   const [currentTheme, setCurrentTheme] = useState(featuredThemes[0]?.theme ?? null);
 
   const runtimeContext = useMemo(() => {
@@ -102,34 +101,23 @@ export default function Home() {
         </section>
 
         <aside className={`${styles.overlayPanel} ${isOpen ? styles.open : styles.closed}`}>
-          <div className={styles.overlayHeader}>
-            <div>
-              <p className={styles.overlayKicker}>RTG Chat</p>
-              <h2>Shop Pilot</h2>
-            </div>
-            <button type="button" onClick={() => setIsOpen((value) => !value)}>
-              {isOpen ? "Collapse" : "Open"}
-            </button>
-          </div>
+          <button
+            type="button"
+            className={styles.edgeTab}
+            onClick={() => setIsOpen((value) => !value)}
+            aria-label={isOpen ? "Collapse Shop Pilot" : "Open Shop Pilot"}
+          >
+            <span className={styles.edgeCaret}>{isOpen ? ">" : "<"}</span>
+            <span className={styles.edgeLabel}>Shop Pilot</span>
+          </button>
 
           {isOpen ? (
             <>
-              <div className={styles.modeRow}>
-                {[
-                  ["guided-discovery", "Discovery"],
-                  ["product-evaluation", "Product"],
-                  ["comparison", "Compare"],
-                  ["resume", "Resume"],
-                ].map(([value, label]) => (
-                  <button
-                    key={value}
-                    type="button"
-                    className={conversationMode === value ? styles.modeActive : ""}
-                    onClick={() => setConversationMode(value as ConversationMode)}
-                  >
-                    {label}
-                  </button>
-                ))}
+              <div className={styles.overlayHeader}>
+                <div>
+                  <p className={styles.overlayKicker}>RTG Chat</p>
+                  <h2>Shop Pilot</h2>
+                </div>
               </div>
 
               <section className={styles.chatSurface}>
@@ -165,7 +153,7 @@ export default function Home() {
                 <dl>
                   <div>
                     <dt>Mode</dt>
-                    <dd>{runtimeContext.conversationMode}</dd>
+                    <dd>Adaptive guided assistance</dd>
                   </div>
                   <div>
                     <dt>Page</dt>
@@ -200,11 +188,7 @@ export default function Home() {
                 </div>
               </section>
             </>
-          ) : (
-            <button type="button" className={styles.reopenButton} onClick={() => setIsOpen(true)}>
-              Reopen Shop Pilot
-            </button>
-          )}
+          ) : null}
         </aside>
       </main>
     </div>
