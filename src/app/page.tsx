@@ -278,7 +278,7 @@ export default function Home() {
             <div className={styles.headerRow}>
               <button type="button" className={styles.iconButton}>☰</button>
               <div className={styles.logoWrap}>
-                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={190} height={40} className={styles.headerBrandImage} />
+                <Image src="/assets/rooms-to-go-logo.png" alt="Rooms To Go" width={190} height={40} className={styles.headerBrandImage} />
               </div>
               <div className={styles.searchWrap}>
                 <input value="Find your furniture" readOnly aria-label="Search" />
@@ -409,9 +409,23 @@ export default function Home() {
               <div className={styles.panelBrandCluster}>
                 <Image src="/assets/rtg-chat-logo.png" alt="Shop Pilot" width={138} height={42} className={styles.panelLogoImage} />
                 <div className={styles.panelBrandDivider} />
-                <Image src="/assets/rooms-to-go-logo.png" alt="Rooms To Go" width={114} height={42} className={styles.panelPartnerImage} />
+                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={140} height={36} className={styles.panelPartnerImage} />
               </div>
-              <button type="button" className={styles.panelGhostButton} onClick={() => submitMessage("Compare the top two options.")}>Compare top picks</button>
+              <button
+                type="button"
+                className={styles.panelIconButton}
+                onClick={() => {
+                  setMessages(starterMessages);
+                  setMatches(starterMatches);
+                  setConversationMode("guided-discovery");
+                  setCurrentTheme(featuredThemes[0]?.theme ?? null);
+                  setDraftMessage("");
+                }}
+                aria-label="Restart chat"
+                title="Restart chat"
+              >
+                ↻
+              </button>
             </div>
 
             <section className={styles.chatSurface}>
@@ -419,9 +433,20 @@ export default function Home() {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}
+                    className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
                   >
-                    <p>{message.text}</p>
+                    {message.role === "assistant" ? (
+                      <Image
+                        src="/assets/rtg-chat-logo.png"
+                        alt="Shop Pilot avatar"
+                        width={32}
+                        height={32}
+                        className={styles.chatAvatar}
+                      />
+                    ) : null}
+                    <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
+                      <p>{message.text}</p>
+                    </div>
                   </div>
                 ))}
                 {isLoading ? (
@@ -451,6 +476,8 @@ export default function Home() {
             </section>
 
             {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
+
+            <p className={styles.compareNote}>Note: we still need to define the right trigger and moment for offering compare in the shopper journey.</p>
 
             <section className={styles.recommendationSection}>
               <div className={styles.sectionHeader}>
