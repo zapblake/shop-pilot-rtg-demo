@@ -196,8 +196,10 @@
 }
 
 .overlayPanel {
-  position: sticky;
+  position: fixed;
   top: 0;
+  right: 0;
+  z-index: 20;
   height: 100vh;
   padding: 20px 20px 20px 0;
   transition: width 0.24s ease, transform 0.24s ease;
@@ -429,25 +431,19 @@
   }
 
   .overlayPanel {
-    position: relative;
-    height: auto;
-    width: auto;
-    padding: 0 24px 24px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    padding: 20px 20px 20px 0;
   }
 
-  .edgeTab {
-    position: relative;
-    top: auto;
-    right: auto;
-    transform: none;
-    writing-mode: initial;
-    margin-bottom: 12px;
-    border-radius: 16px;
+  .open {
+    width: min(432px, calc(100vw - 24px));
   }
 
-  .open,
   .closed {
-    width: auto;
+    width: 72px;
   }
 
   .browserShell {
@@ -458,11 +454,23 @@
 @media (max-width: 800px) {
   .browserShell {
     margin: 16px;
+    margin-right: 72px;
   }
 
-  .browserContent,
-  .overlayPanel {
+  .browserContent {
     padding: 16px;
+  }
+
+  .overlayPanel {
+    padding: 16px 0 16px 0;
+  }
+
+  .open {
+    width: min(400px, calc(100vw - 12px));
+  }
+
+  .closed {
+    width: 64px;
   }
 
   .mockSiteHeader,
