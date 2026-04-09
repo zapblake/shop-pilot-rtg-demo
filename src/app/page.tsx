@@ -859,7 +859,6 @@ export default function Home() {
                     <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
                     <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling</button>
                     <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
-                    <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare</button>
                   </div>
                 </section>
 

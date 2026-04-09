@@ -509,9 +509,9 @@
   flex-wrap: wrap;
   gap: 8px;
   border-radius: 18px;
-  background: rgba(255, 248, 179, 0.96);
-  border: 1px solid #facc15;
-  box-shadow: 0 14px 30px rgba(250, 204, 21, 0.14);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
 }
 
 .chipsSection button {
@@ -1206,7 +1206,7 @@
 .suggestedSection {
   position: relative;
   border: 1px solid #facc15;
-  background: #fff7b3;
+  background: #fffdf2;
   border-radius: 18px;
   padding: 18px 12px 12px;
 }
@@ -1219,17 +1219,17 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #92400e;
+  color: #a16207;
 }
 
 .chipsSection button {
   border-color: #facc15;
-  background: #fff59d;
+  background: #fffdf2;
 }
 
 .chipsSection button:hover {
   border-color: #eab308;
-  background: #ffe95c;
+  background: #fef9c3;
 }
 
 
