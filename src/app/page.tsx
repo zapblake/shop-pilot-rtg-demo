@@ -106,7 +106,7 @@ function getStoredSession(): PersistedSession | null {
 function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
   const userText = messages
     .filter((message) => message.role === "user")
-    .slice(-3)
+    .slice(-4)
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
@@ -118,6 +118,7 @@ function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
     userText.includes("medium") ? "medium-feel" : null,
     userText.includes("firm") ? "firm-feel" : null,
     userText.includes("budget") || userText.includes("under") || userText.includes("$") ? "budget-aware" : null,
+    userText.includes("pressure") ? "pressure-relief focused" : null,
   ].filter(Boolean);
 
   const topMatch = matches[0]?.displayName;
@@ -131,12 +132,16 @@ function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
 function getFitReasons(match: MatchResult, summary: string) {
   const reasons = [];
   const lowerSummary = summary.toLowerCase();
+  const descriptor = [match.type, match.comfort, match.displayName].join(" ").toLowerCase();
 
-  if ((lowerSummary.includes("cool") || lowerSummary.includes("hot")) && [match.type, match.comfort, match.displayName].join(" ").toLowerCase().match(/cool|foam|hybrid/)) {
+  if ((lowerSummary.includes("cool") || lowerSummary.includes("hot")) && descriptor.match(/cool|foam|hybrid/)) {
     reasons.push("Cooling fit");
   }
-  if (lowerSummary.includes("side") && [match.comfort, match.displayName].join(" ").toLowerCase().match(/plush|medium/)) {
-    reasons.push("Good for side sleeping");
+  if (lowerSummary.includes("side") && descriptor.match(/plush|medium/)) {
+    reasons.push("Great for side sleeping");
+  }
+  if (lowerSummary.includes("pressure") && descriptor.match(/foam|plush|medium/)) {
+    reasons.push("Pressure-relief friendly");
   }
   if (lowerSummary.includes("budget") || lowerSummary.includes("under") || lowerSummary.includes("$") || lowerSummary.includes("budget-aware")) {
     if ((match.priceFrom ?? 999999) < 2000) reasons.push("Budget aligned");
@@ -144,6 +149,12 @@ function getFitReasons(match: MatchResult, summary: string) {
   if (!reasons.length) reasons.push("Strong overall match");
 
   return reasons.slice(0, 3);
+}
+
+function getComparisonNote(matches: MatchResult[], mode: ConversationMode) {
+  if (mode !== "comparison" || matches.length < 2) return null;
+
+  return `${matches[0].displayName} leads right now, with ${matches[1].displayName} as the best alternate depending on whether the shopper prioritizes feel or value.`;
 }
 
 function RoomsToGoLogo() {
@@ -155,6 +166,18 @@ function RoomsToGoLogo() {
       <path fill="#169162" d="M265.2 11.4c-1.6-3.9-5.4-6.6-9.9-6.6-1.5 0-2.8.3-4.1.8-3.9 1.6-6.6 5.4-6.6 9.9 0 4.4 2.7 8.3 6.6 9.9 1.3.5 2.6.8 4.1.8 4.5 0 8.3-2.7 9.9-6.6.3-.6.5-1.3.6-2 .1-.7.2-1.4.2-2.1 0-1.5-.3-2.9-.8-4.1z" />
       <path fill="#fff" d="M252.3 24.2V6.7l8.8 8.7z" />
     </svg>
+  );
+}
+
+function ShopPilotMark() {
+  return (
+    <div className={styles.shopPilotMark}>
+      <div className={styles.shopPilotBadge}>SP</div>
+      <div>
+        <p>Shop Pilot</p>
+        <span>Mattress guide</span>
+      </div>
+    </div>
   );
 }
 
@@ -269,6 +292,7 @@ export default function Home() {
     await submitMessage(draftMessage);
   }
 
+  const comparisonNote = getComparisonNote(matches, conversationMode);
 
   return (
     <div className={styles.page}>
@@ -405,6 +429,10 @@ export default function Home() {
           </button>
 
           <div className={styles.overlayBody}>
+            <div className={styles.panelBrandBar}>
+              <ShopPilotMark />
+              <button type="button" className={styles.panelGhostButton} onClick={() => submitMessage("Compare the top two options.")}>Compare top picks</button>
+            </div>
 
             <section className={styles.chatSurface}>
               <div className={styles.messageList}>
@@ -418,7 +446,7 @@ export default function Home() {
                 ))}
                 {isLoading ? (
                   <div className={styles.messageAssistant}>
-                    <p>Thinking through the conversational layer and checking the match set…</p>
+                    <p>Refining the shortlist…</p>
                   </div>
                 ) : null}
               </div>
@@ -437,9 +465,12 @@ export default function Home() {
             <section className={styles.chipsSection}>
               <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
               <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling matters</button>
-              <button type="button" onClick={() => submitMessage("I want a medium feel.")}>Medium feel</button>
+              <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
               <button type="button" onClick={() => submitMessage("Keep me under $2,000.")}>Budget under $2k</button>
+              <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare options</button>
             </section>
+
+            {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
 
             <section className={styles.recommendationSection}>
               <div className={styles.sectionHeader}>
@@ -447,9 +478,12 @@ export default function Home() {
                 <p>Tailored to what the shopper has told us so far</p>
               </div>
               <div className={styles.candidateList}>
-                {matches.map((match) => (
+                {matches.map((match, index) => (
                   <article key={match.theme} className={styles.candidateCard}>
-                    <p>{match.brand}</p>
+                    <div className={styles.candidateTopRow}>
+                      <p>{match.brand}</p>
+                      {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
+                    </div>
                     <h4>{match.displayName}</h4>
                     <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
                     <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
@@ -462,7 +496,6 @@ export default function Home() {
                 ))}
               </div>
             </section>
-
           </div>
         </aside>
       </main>
