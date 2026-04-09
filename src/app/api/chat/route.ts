@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { mattressSellingRules } from "../prompt-rules";
 
 type MatchResult = {
   theme: string;
@@ -97,7 +98,9 @@ export async function POST(request: Request) {
       model: "claude-sonnet-4-20250514",
       max_tokens: 220,
       system:
-        "You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply. Do not mention price or budget unless the shopper explicitly asks about it. Instead of listing recommendations in chat, tell the shopper they can scroll down now to see their current recommendations. Always end with one clear shopper-facing question in double asterisks.",
+        `You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply. Do not mention price or budget unless the shopper explicitly asks about it. Instead of listing recommendations in chat, tell the shopper they can scroll down now to see their current recommendations. Always end with one clear shopper-facing question in double asterisks.
+
+${mattressSellingRules}`,
       messages: [
         {
           role: "user",

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
+import { mattressSellingRules } from "../prompt-rules";
 
 const brandTerms = ["helix", "sealy", "tempur", "serta", "beautyrest", "purple", "sleepy's", "sleepys"];
 const MAX_CANDIDATES_FOR_AI = 12;
@@ -164,7 +165,9 @@ async function rerankWithAi({
       model: "claude-sonnet-4-20250514",
       max_tokens: 500,
       system:
-        "You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. Reply with strict JSON only in this shape: {\"rankedThemes\":[{\"theme\":string,\"score\":number,\"reason\":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.",
+        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. Reply with strict JSON only in this shape: {\"rankedThemes\":[{\"theme\":string,\"score\":number,\"reason\":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.
+
+${mattressSellingRules}`,
       messages: [
         {
           role: "user",
