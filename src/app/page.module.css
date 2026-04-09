@@ -348,7 +348,7 @@
 
 .edgeTab {
   position: absolute;
-  top: 96px;
+  top: 42vh;
   left: 0;
   transform: translateX(-100%);
   display: flex;
@@ -447,6 +447,12 @@
   border-radius: 18px;
   display: flex;
   flex-direction: column;
+  gap: 14px;
+}
+
+.messageList {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
@@ -456,6 +462,30 @@
   border-radius: 18px;
   padding: 14px 16px;
   line-height: 1.6;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.composer input {
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font: inherit;
+}
+
+.composer button {
+  border: none;
+  border-radius: 14px;
+  padding: 0 18px;
+  background: #00529f;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .messageAssistant {

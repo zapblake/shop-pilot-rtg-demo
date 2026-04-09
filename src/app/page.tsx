@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import Image from "next/image";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
 import styles from "./page.module.css";
@@ -17,6 +17,12 @@ type ShopperMemory = {
   firstSeenAt: string;
   lastSeenAt: string;
   summary: string;
+};
+
+type ChatMessage = {
+  id: string;
+  role: "assistant" | "user";
+  text: string;
 };
 
 const featuredThemes = mattressThemes.slice(0, 6);
@@ -66,6 +72,24 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode] = useState<ConversationMode>("guided-discovery");
   const [currentTheme, setCurrentTheme] = useState(featuredThemes[0]?.theme ?? null);
+  const [draftMessage, setDraftMessage] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: "assistant-1",
+      role: "assistant",
+      text: "Welcome in. I can help narrow things down quickly without making this feel like homework.",
+    },
+    {
+      id: "user-1",
+      role: "user",
+      text: "I sleep on my side, get hot, and want to stay under about $2,000.",
+    },
+    {
+      id: "assistant-2",
+      role: "assistant",
+      text: "Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.",
+    },
+  ]);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -90,6 +114,26 @@ export default function Home() {
       summary: "New shopper session. No durable preferences captured yet.",
     };
   });
+
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextMessage = draftMessage.trim();
+    if (!nextMessage) return;
+
+    const selectedTheme = featuredThemes.find((item) => item.theme === currentTheme) ?? featuredThemes[0];
+
+    setMessages((current) => [
+      ...current,
+      { id: `user-${Date.now()}`, role: "user", text: nextMessage },
+      {
+        id: `assistant-${Date.now()}`,
+        role: "assistant",
+        text: `That helps. Based on what you just said, I’d keep ${selectedTheme?.displayName ?? "these options"} in the working set and ask one sharper follow-up before calling the deeper match workflow.`,
+      },
+    ]);
+    setDraftMessage("");
+  }
 
   const runtimeContext = useMemo(() => {
     const theme = featuredThemes.find((item) => item.theme === currentTheme) ?? null;
@@ -251,15 +295,26 @@ export default function Home() {
             </div>
 
             <section className={styles.chatSurface}>
-              <div className={styles.messageAssistant}>
-                <p>Welcome in. I can help narrow things down quickly without making this feel like homework.</p>
+              <div className={styles.messageList}>
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}
+                  >
+                    <p>{message.text}</p>
+                  </div>
+                ))}
               </div>
-              <div className={styles.messageUser}>
-                <p>I sleep on my side, get hot, and want to stay under about $2,000.</p>
-              </div>
-              <div className={styles.messageAssistant}>
-                <p>Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.</p>
-              </div>
+
+              <form className={styles.composer} onSubmit={handleSubmit}>
+                <input
+                  value={draftMessage}
+                  onChange={(event) => setDraftMessage(event.target.value)}
+                  placeholder="Tell Shop Pilot what matters most to you"
+                  aria-label="Message Shop Pilot"
+                />
+                <button type="submit">Send</button>
+              </form>
             </section>
 
             <section className={styles.chipsSection}>
