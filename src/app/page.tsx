@@ -71,6 +71,7 @@ const starterMessages: ChatMessage[] = [
 ];
 const starterMatches: MatchResult[] = [];
 const startingSizeOptions = ["Queen", "King", "Not Sure", "Other"];
+const firmnessStops = ["Plush", "Medium-plush", "Medium", "Medium-firm", "Firm"];
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -202,6 +203,7 @@ export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>(storedSession?.messages ?? starterMessages);
   const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
   const [showOpeningOptions, setShowOpeningOptions] = useState(false);
+  const [selectedFirmnessIndex, setSelectedFirmnessIndex] = useState(2);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -321,7 +323,13 @@ export default function Home() {
   const comparisonNote = getComparisonNote(matches, conversationMode);
   const compareThemes = useMemo(() => matches.slice(0, 3).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
-  const showDynamicSections = matches.length > 0;
+  const userMessages = messages.filter((message) => message.role === "user");
+  const shouldAskFirmness = userMessages.length === 1;
+  const showDynamicSections = matches.length > 0 && !shouldAskFirmness;
+
+  async function submitFirmness() {
+    await submitMessage(`I want a ${firmnessStops[selectedFirmnessIndex]} feel.`);
+  }
 
   return (
     <div className={styles.page}>
@@ -532,6 +540,35 @@ export default function Home() {
                 </section>
               ) : null}
 
+              {shouldAskFirmness ? (
+                <section className={styles.firmnessPrompt}>
+                  <div className={styles.firmnessPromptHeader}>
+                    <span>Next up</span>
+                    <strong>What firmness feels best to you?</strong>
+                  </div>
+                  <div className={styles.firmnessSliderWrap}>
+                    <div className={styles.firmnessScaleLabels}>
+                      <span>Plush</span>
+                      <span>Firm</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max={String(firmnessStops.length - 1)}
+                      step="1"
+                      value={selectedFirmnessIndex}
+                      onChange={(event) => setSelectedFirmnessIndex(Number(event.target.value))}
+                      className={styles.firmnessSlider}
+                      aria-label="Firmness preference"
+                    />
+                    <div className={styles.firmnessSelected}>{firmnessStops[selectedFirmnessIndex]}</div>
+                    <button type="button" className={styles.firmnessSubmit} onClick={submitFirmness}>
+                      Use {firmnessStops[selectedFirmnessIndex]}
+                    </button>
+                  </div>
+                </section>
+              ) : null}
+
               <form className={styles.composer} onSubmit={handleSubmit}>
                 <input
                   ref={inputRef}
@@ -554,8 +591,55 @@ export default function Home() {
                   <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare options</button>
                 </section>
 
+                <section className={styles.recommendationSection}>
+                  <div className={styles.sectionHeader}>
+                    <h3>Top matches right now</h3>
+                    <p>Tailored to what the shopper has told us so far</p>
+                  </div>
+                  <div className={styles.candidateScroller}>
+                    <div className={styles.candidateList}>
+                      {matches.map((match, index) => {
+                        const theme = getMatchTheme(match);
+                        const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
+                        const supportScore = getFeatureScore(theme?.supportLevel?.label);
+                        const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
+
+                        return (
+                          <article key={match.theme} className={styles.candidateCard}>
+                            <div className={styles.candidateImageWrap}>
+                              {theme?.heroImage ? (
+                                <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
+                              ) : null}
+                            </div>
+                            <div className={styles.candidateCardBody}>
+                              <div className={styles.candidateTopRow}>
+                                <p>{match.brand}</p>
+                                {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
+                              </div>
+                              <h4>{match.displayName}</h4>
+                              {match.type || match.comfort ? (
+                                <span>{[match.type, match.comfort].filter(Boolean).join(" · ")}</span>
+                              ) : null}
+                              {match.priceFrom ? <strong>{`From $${match.priceFrom.toLocaleString()}`}</strong> : null}
+                              <div className={styles.miniMetrics}>
+                                {coolingScore ? <div><span>Cooling</span><b>{coolingScore}</b></div> : null}
+                                {supportScore ? <div><span>Support</span><b>{supportScore}</b></div> : null}
+                                {pressureScore ? <div><span>Relief</span><b>{pressureScore}</b></div> : null}
+                              </div>
+                              <div className={styles.reasonList}>
+                                {getFitReasons(match, memorySummary).map((reason) => (
+                                  <em key={reason}>{reason}</em>
+                                ))}
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </section>
+
                 {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
-                <p className={styles.compareNote}>Note: we still need to define the right trigger and moment for offering compare in the shopper journey.</p>
 
                 {compareThemes.length >= 2 ? (
                   <section className={styles.compareSection}>
@@ -563,82 +647,40 @@ export default function Home() {
                       <h3>Compare top options</h3>
                       <p>Side-by-side based on the shopper’s current priorities</p>
                     </div>
-                    <div className={styles.compareGrid}>
-                      {compareThemes.map((theme, index) => (
-                        <article key={theme.theme} className={`${styles.compareCard} ${index === 0 ? styles.compareCardLead : ""}`}>
-                          <div className={styles.compareImageWrap}>
-                            {theme.heroImage ? (
-                              <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.compareImage} />
-                            ) : null}
-                            {index === 0 ? <span className={styles.compareWinnerPill}>Top fit</span> : null}
-                          </div>
-                          <div className={styles.compareCardBody}>
-                            <p>{theme.brand}</p>
-                            <h4>{theme.displayName}</h4>
-                            <strong>{theme.priceRange?.min ? `From $${theme.priceRange.min.toLocaleString()}` : "Price TBD"}</strong>
-                            <div className={styles.compareStats}>
-                              <div><span>Feel</span><b>{theme.comfort || "TBD"}</b></div>
-                              <div><span>Type</span><b>{theme.type || "TBD"}</b></div>
-                              <div><span>Cooling</span><b>{theme.temperatureManagement?.label || "TBD"}</b></div>
-                              <div><span>Support</span><b>{theme.supportLevel?.label || "TBD"}</b></div>
+                    <div className={styles.compareScroller}>
+                      <div className={styles.compareGrid}>
+                        {compareThemes.map((theme, index) => (
+                          <article key={theme.theme} className={`${styles.compareCard} ${index === 0 ? styles.compareCardLead : ""}`}>
+                            <div className={styles.compareImageWrap}>
+                              {theme.heroImage ? (
+                                <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.compareImage} />
+                              ) : null}
+                              {index === 0 ? <span className={styles.compareWinnerPill}>Top fit</span> : null}
                             </div>
-                            <div className={styles.compareCallouts}>
-                              <em>{getBestFor(theme)}</em>
-                              <em>Pressure relief: {theme.pressureRelief?.label || "TBD"}</em>
+                            <div className={styles.compareCardBody}>
+                              <p>{theme.brand}</p>
+                              <h4>{theme.displayName}</h4>
+                              {theme.priceRange?.min ? <strong>{`From $${theme.priceRange.min.toLocaleString()}`}</strong> : null}
+                              <div className={styles.compareStats}>
+                                {theme.comfort ? <div><span>Feel</span><b>{theme.comfort}</b></div> : null}
+                                {theme.type ? <div><span>Type</span><b>{theme.type}</b></div> : null}
+                                {theme.temperatureManagement?.label ? <div><span>Cooling</span><b>{theme.temperatureManagement.label}</b></div> : null}
+                                {theme.supportLevel?.label ? <div><span>Support</span><b>{theme.supportLevel.label}</b></div> : null}
+                              </div>
+                              <div className={styles.compareCallouts}>
+                                <em>{getBestFor(theme)}</em>
+                                {theme.pressureRelief?.label ? <em>Pressure relief: {theme.pressureRelief.label}</em> : null}
+                              </div>
+                              {compareWinner?.theme === theme.theme ? (
+                                <div className={styles.compareWinnerNote}>Best current fit based on the shopper’s stated priorities.</div>
+                              ) : null}
                             </div>
-                            {compareWinner?.theme === theme.theme ? (
-                              <div className={styles.compareWinnerNote}>Best current fit based on the shopper’s stated priorities.</div>
-                            ) : null}
-                          </div>
-                        </article>
-                      ))}
+                          </article>
+                        ))}
+                      </div>
                     </div>
                   </section>
                 ) : null}
-
-                <section className={styles.recommendationSection}>
-                  <div className={styles.sectionHeader}>
-                    <h3>Top matches right now</h3>
-                    <p>Tailored to what the shopper has told us so far</p>
-                  </div>
-                  <div className={styles.candidateList}>
-                    {matches.map((match, index) => {
-                      const theme = getMatchTheme(match);
-                      const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
-                      const supportScore = getFeatureScore(theme?.supportLevel?.label);
-                      const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
-
-                      return (
-                        <article key={match.theme} className={styles.candidateCard}>
-                          <div className={styles.candidateImageWrap}>
-                            {theme?.heroImage ? (
-                              <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
-                            ) : null}
-                          </div>
-                          <div className={styles.candidateCardBody}>
-                            <div className={styles.candidateTopRow}>
-                              <p>{match.brand}</p>
-                              {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
-                            </div>
-                            <h4>{match.displayName}</h4>
-                            <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
-                            <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
-                            <div className={styles.miniMetrics}>
-                              <div><span>Cooling</span><b>{coolingScore || "-"}</b></div>
-                              <div><span>Support</span><b>{supportScore || "-"}</b></div>
-                              <div><span>Relief</span><b>{pressureScore || "-"}</b></div>
-                            </div>
-                            <div className={styles.reasonList}>
-                              {getFitReasons(match, memorySummary).map((reason) => (
-                                <em key={reason}>{reason}</em>
-                              ))}
-                            </div>
-                          </div>
-                        </article>
-                      );
-                    })}
-                  </div>
-                </section>
               </>
             ) : null}
           </div>
