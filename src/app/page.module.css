@@ -729,7 +729,7 @@
 
 .panelPartnerImage {
   width: auto;
-  height: 40px;
+  height: 54px;
   object-fit: contain;
 }
 
@@ -742,7 +742,7 @@
   background: white;
   color: #0f172a;
   font: inherit;
-  font-size: 18px;
+  font-size: 26px;
   font-weight: 700;
   display: grid;
   place-items: center;
