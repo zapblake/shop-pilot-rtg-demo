@@ -248,6 +248,7 @@ export default function Home() {
   const matchRequestVersionRef = useRef(0);
   const [showScrollNudge, setShowScrollNudge] = useState(false);
   const [showMatchNudge, setShowMatchNudge] = useState(false);
+  const [showUpdatedPulse, setShowUpdatedPulse] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
@@ -378,7 +379,9 @@ export default function Home() {
           setMatches(incomingMatches);
           if (incomingMatches.length > 0) {
             setShowMatchNudge(true);
+            setShowUpdatedPulse(true);
             window.setTimeout(() => setShowMatchNudge(false), 1500);
+            window.setTimeout(() => setShowUpdatedPulse(false), 1800);
             setCurrentTheme(incomingMatches[0]?.theme ?? null);
           }
         })
@@ -860,9 +863,12 @@ export default function Home() {
                   </div>
                 </section>
 
-                <section className={styles.recommendationSection}>
+                <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                   <div className={styles.sectionHeader}>
-                    <h3>Top matches right now</h3>
+                    <div className={styles.sectionHeaderTopRow}>
+                      <h3>Top matches right now</h3>
+                      {showUpdatedPulse ? <span className={styles.updatedPill}>Updated for your preferences</span> : null}
+                    </div>
                     <p>Tailored to what the shopper has told us so far</p>
                   </div>
                   <div className={styles.candidateScroller}>

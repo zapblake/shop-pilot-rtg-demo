@@ -533,6 +533,28 @@
   margin-bottom: 12px;
 }
 
+.sectionHeaderTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.updatedPill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0f766e;
+  background: rgba(20, 184, 166, 0.12);
+  border: 1px solid rgba(20, 184, 166, 0.18);
+  animation: updatedPillFade 1.6s ease-out both;
+}
+
 .sectionHeader p {
   color: #6b7280;
   font-size: 14px;
@@ -549,6 +571,10 @@
   border-radius: 16px;
   background: #f9fafb;
   border: 1px solid #e5e7eb;
+}
+
+.recommendationSectionPulse .candidateCard {
+  animation: recommendationPulse 1.4s ease-out;
 }
 
 .candidateCard p {
@@ -1522,4 +1548,41 @@
 @keyframes arrowBounce {
   0%, 100% { transform: translateY(0); opacity: 0.7; }
   50% { transform: translateY(5px); opacity: 1; }
+}
+
+@keyframes recommendationPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.22);
+    border-color: rgba(20, 184, 166, 0.18);
+    transform: translateY(0);
+  }
+  35% {
+    box-shadow: 0 0 0 8px rgba(20, 184, 166, 0.08);
+    border-color: rgba(20, 184, 166, 0.38);
+    transform: translateY(-1px);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+    border-color: #e5e7eb;
+    transform: translateY(0);
+  }
+}
+
+@keyframes updatedPillFade {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
 }
