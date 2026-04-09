@@ -407,9 +407,7 @@ export default function Home() {
           <div className={styles.overlayBody}>
             <div className={styles.panelBrandBar}>
               <div className={styles.panelBrandCluster}>
-                <Image src="/assets/rtg-chat-logo.png" alt="Shop Pilot" width={138} height={42} className={styles.panelLogoImage} />
-                <div className={styles.panelBrandDivider} />
-                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={140} height={36} className={styles.panelPartnerImage} />
+                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={184} height={44} className={styles.panelPartnerImage} />
               </div>
               <button
                 type="button"
