@@ -295,7 +295,7 @@
 }
 
 .closed {
-  transform: translateX(392px);
+  transform: translateX(421px);
 }
 
 .overlayHeader,
@@ -490,6 +490,6 @@
   }
 
   .closed {
-    transform: translateX(calc(min(420px, 100vw - 48px) - 28px));
+    transform: translateX(calc(min(420px, 100vw - 48px) + 1px));
   }
 }
