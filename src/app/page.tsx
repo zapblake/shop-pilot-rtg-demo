@@ -13,7 +13,6 @@ type ConversationMode =
 
 const featuredThemes = mattressThemes.slice(0, 4);
 const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
-const PANEL_WIDTH = 420;
 
 type ShopperMemory = {
   shopperId: string;
@@ -95,12 +94,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.viewport}>
-        <section
-          className={`${styles.siteSurface} ${isOpen ? styles.siteSurfaceShifted : ""}`}
-          style={{
-            transform: isOpen ? `translateX(-${PANEL_WIDTH}px)` : "translateX(0)",
-          }}
-        >
+        <section className={`${styles.siteSurface} ${isOpen ? styles.siteSurfaceShifted : ""}`}>
           <div className={styles.browserTopbar}>
             <div className={styles.browserDots}>
               <span />
@@ -169,10 +163,7 @@ export default function Home() {
           </div>
         </section>
 
-        <aside
-          className={`${styles.overlayPanel} ${isOpen ? styles.open : styles.closed}`}
-          style={{ width: isOpen ? PANEL_WIDTH : undefined }}
-        >
+        <aside className={`${styles.overlayPanel} ${isOpen ? styles.open : styles.closed}`}>
           <button
             type="button"
             className={styles.edgeTab}
