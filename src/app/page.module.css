@@ -59,6 +59,14 @@
   gap: 28px;
 }
 
+.subcopy {
+  margin-top: 14px;
+  max-width: 52ch;
+  color: #64748b;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
 .mockSiteHeader {
   display: flex;
   justify-content: space-between;
@@ -122,6 +130,17 @@
   border-radius: 24px;
   cursor: pointer;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.productTile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+.productTileActive {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.12);
 }
 
 .productImagePlaceholder {
@@ -181,7 +200,7 @@
   top: 0;
   height: 100vh;
   padding: 20px 20px 20px 0;
-  transition: width 0.2s ease, transform 0.2s ease;
+  transition: width 0.24s ease, transform 0.24s ease;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
@@ -216,7 +235,7 @@
   padding: 14px 14px 14px 12px;
   border: none;
   border-radius: 18px 0 0 18px;
-  background: #0f172a;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
   color: white;
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.22);
   cursor: pointer;
@@ -236,10 +255,17 @@
   text-transform: uppercase;
 }
 
+.overlayBody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .overlayHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   padding: 20px 22px;
   border-radius: 24px 24px 18px 18px;
 }
@@ -256,6 +282,14 @@
 .overlayHeader h2 {
   font-size: 28px;
   letter-spacing: -0.04em;
+}
+
+.headerMicrocopy {
+  max-width: 16ch;
+  text-align: right;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .overlayHeader button,

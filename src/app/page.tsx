@@ -12,17 +12,63 @@ type ConversationMode =
   | "resume";
 
 const featuredThemes = mattressThemes.slice(0, 4);
+const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
+
+type ShopperMemory = {
+  shopperId: string;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  summary: string;
+};
+
+function getCookie(name: string) {
+  if (typeof document === "undefined") return null;
+  const cookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`));
+  return cookie ? decodeURIComponent(cookie.split("=")[1]) : null;
+}
+
+function setCookie(name: string, value: string, days = 30) {
+  if (typeof document === "undefined") return;
+  const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+}
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode] = useState<ConversationMode>("guided-discovery");
   const [currentTheme, setCurrentTheme] = useState(featuredThemes[0]?.theme ?? null);
+  const [shopperMemory] = useState<ShopperMemory | null>(() => {
+    const now = new Date().toISOString();
+    const existingId = getCookie(SHOPPER_COOKIE_KEY);
+
+    if (existingId) {
+      setCookie(SHOPPER_COOKIE_KEY, existingId, 30);
+      return {
+        shopperId: existingId,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        summary:
+          "Returning shopper interested in cooling, side-sleeper support, and medium-feel options around a mid-range budget.",
+      };
+    }
+
+    const generatedId = `demo-${Math.random().toString(36).slice(2, 10)}`;
+    setCookie(SHOPPER_COOKIE_KEY, generatedId, 30);
+    return {
+      shopperId: generatedId,
+      firstSeenAt: now,
+      lastSeenAt: now,
+      summary: "New shopper session. No durable preferences captured yet.",
+    };
+  });
 
   const runtimeContext = useMemo(() => {
     const theme = featuredThemes.find((item) => item.theme === currentTheme) ?? null;
 
     return {
-      shopperId: "demo-shopper-001",
+      shopperId: shopperMemory?.shopperId ?? "loading",
       pageType: "category",
       currentUrl: "https://www.roomstogo.com/mattress",
       currentSku: null,
@@ -39,12 +85,11 @@ export default function Home() {
       },
       shortlistedThemes: featuredThemes.slice(0, 3).map((item) => item.theme),
       compareSet: featuredThemes.slice(0, 2).map((item) => item.theme),
-      priorConversationSummary:
-        "Shopper wants cooling help, prefers medium feel, and is deciding between side-sleeper-friendly options.",
+      priorConversationSummary: shopperMemory?.summary ?? "Loading shopper memory",
       topCandidateThemes: featuredThemes.slice(0, 3).map((item) => item.theme),
-      recentInteractionTimestamp: "2026-04-09T02:29:00-05:00",
+      recentInteractionTimestamp: shopperMemory?.lastSeenAt ?? "loading",
     };
-  }, [conversationMode, currentTheme]);
+  }, [conversationMode, currentTheme, shopperMemory]);
 
   return (
     <div className={styles.page}>
@@ -64,6 +109,9 @@ export default function Home() {
               <div>
                 <p className={styles.eyebrow}>Rooms To Go Mattress</p>
                 <h1>Find the right mattress for how you actually sleep.</h1>
+                <p className={styles.subcopy}>
+                  Premium guidance, brand-safe recommendations, and a calmer path to the right fit.
+                </p>
               </div>
               <div className={styles.mockActions}>
                 <button type="button">Shop by comfort</button>
@@ -75,7 +123,7 @@ export default function Home() {
               {featuredThemes.map((theme) => (
                 <article
                   key={theme.theme}
-                  className={styles.productTile}
+                  className={`${styles.productTile} ${currentTheme === theme.theme ? styles.productTileActive : ""}`}
                   onClick={() => setCurrentTheme(theme.theme)}
                 >
                   <div className={styles.productImagePlaceholder}>
@@ -112,19 +160,19 @@ export default function Home() {
           </button>
 
           {isOpen ? (
-            <>
+            <div className={styles.overlayBody}>
               <div className={styles.overlayHeader}>
                 <div>
                   <p className={styles.overlayKicker}>RTG Chat</p>
                   <h2>Shop Pilot</h2>
                 </div>
+                <p className={styles.headerMicrocopy}>Helpful, calm, and context-aware.</p>
               </div>
 
               <section className={styles.chatSurface}>
                 <div className={styles.messageAssistant}>
                   <p>
-                    I can help narrow this down quickly. Tell me what matters most,
-                    comfort, cooling, support, or budget, and I’ll guide the next step.
+                    Welcome in. I can help narrow things down quickly without making this feel like homework.
                   </p>
                 </div>
                 <div className={styles.messageUser}>
@@ -134,9 +182,7 @@ export default function Home() {
                 </div>
                 <div className={styles.messageAssistant}>
                   <p>
-                    Understood. I’d have the conversational agent acknowledge that
-                    instantly, then let the mattress match agent narrow the field in
-                    the background while we keep the UI responsive.
+                    Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.
                   </p>
                 </div>
               </section>
@@ -148,32 +194,10 @@ export default function Home() {
                 <button type="button">Budget under $2k</button>
               </section>
 
-              <section className={styles.contextCard}>
-                <h3>Runtime context</h3>
-                <dl>
-                  <div>
-                    <dt>Mode</dt>
-                    <dd>Adaptive guided assistance</dd>
-                  </div>
-                  <div>
-                    <dt>Page</dt>
-                    <dd>{runtimeContext.pageType}</dd>
-                  </div>
-                  <div>
-                    <dt>Theme</dt>
-                    <dd>{runtimeContext.currentTheme ?? "None"}</dd>
-                  </div>
-                  <div>
-                    <dt>Summary</dt>
-                    <dd>{runtimeContext.currentProductSummary ?? "No active product"}</dd>
-                  </div>
-                </dl>
-              </section>
-
               <section className={styles.recommendationSection}>
                 <div className={styles.sectionHeader}>
-                  <h3>Suggested candidates</h3>
-                  <p>Starter UI for backend match-agent results</p>
+                  <h3>Top matches right now</h3>
+                  <p>Starter UI for backend match-agent output</p>
                 </div>
                 <div className={styles.candidateList}>
                   {featuredThemes.slice(0, 3).map((theme) => (
@@ -187,7 +211,29 @@ export default function Home() {
                   ))}
                 </div>
               </section>
-            </>
+
+              <section className={styles.contextCard}>
+                <h3>Internal runtime state</h3>
+                <dl>
+                  <div>
+                    <dt>Shopper ID</dt>
+                    <dd>{runtimeContext.shopperId}</dd>
+                  </div>
+                  <div>
+                    <dt>Experience mode</dt>
+                    <dd>Adaptive guided assistance</dd>
+                  </div>
+                  <div>
+                    <dt>Current theme</dt>
+                    <dd>{runtimeContext.currentTheme ?? "None"}</dd>
+                  </div>
+                  <div>
+                    <dt>Memory summary</dt>
+                    <dd>{runtimeContext.priorConversationSummary}</dd>
+                  </div>
+                </dl>
+              </section>
+            </div>
           ) : null}
         </aside>
       </main>
