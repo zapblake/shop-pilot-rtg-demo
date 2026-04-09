@@ -609,12 +609,14 @@ export default function Home() {
 
             {showDynamicSections ? (
               <>
-                <section className={styles.chipsSection}>
-                  <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
-                  <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling matters</button>
-                  <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
-                  <button type="button" onClick={() => submitMessage("Keep me under $2,000.")}>Budget under $2k</button>
-                  <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare options</button>
+                <section className={styles.suggestedSection}>
+                  <span className={styles.suggestedLabel}>Suggested</span>
+                  <div className={styles.chipsSection}>
+                    <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
+                    <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling</button>
+                    <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
+                    <button type="button" onClick={() => submitMessage("Compare the top two options.")}>Compare</button>
+                  </div>
                 </section>
 
                 <section className={styles.recommendationSection}>

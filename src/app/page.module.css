@@ -1138,3 +1138,32 @@
   font-size: 14px;
   line-height: 1.45;
 }
+
+.suggestedSection {
+  position: relative;
+  border: 1px solid #facc15;
+  background: #fffdf2;
+  border-radius: 18px;
+  padding: 20px 14px 14px;
+}
+
+.suggestedLabel {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a16207;
+}
+
+.chipsSection button {
+  border-color: #facc15;
+  background: #fffdf2;
+}
+
+.chipsSection button:hover {
+  border-color: #eab308;
+  background: #fef9c3;
+}
