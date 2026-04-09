@@ -569,6 +569,18 @@ export default function Home() {
                 </section>
               ) : null}
 
+              {shouldAskFirmness ? (
+                <section className={styles.firmnessAltOption}>
+                  <button
+                    type="button"
+                    className={styles.openingChip}
+                    onClick={() => submitMessage("It’s complicated")}
+                  >
+                    Its complicated
+                  </button>
+                </section>
+              ) : null}
+
               <form className={styles.composer} onSubmit={handleSubmit}>
                 <input
                   ref={inputRef}
