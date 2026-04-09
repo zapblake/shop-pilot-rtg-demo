@@ -163,6 +163,67 @@ function getFitReasons(match: MatchResult, summary: string) {
   return reasons.slice(0, 3);
 }
 
+function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches: MatchResult[]) {
+  const userText = messages
+    .filter((message) => message.role === "user")
+    .map((message) => message.text)
+    .join(" ")
+    .toLowerCase();
+
+  const wantsSoft = /soft|plush/.test(userText);
+  const knowsPosition = /side|back|stomach/.test(userText);
+  const knowsCooling = /hot|cool|cooling/.test(userText);
+  const knowsWeight = /\b(under 180|180|230|over 230|heavy|heavier|light|medium weight|300lb|300 lbs|250lb|250 lbs)\b/.test(userText);
+  const knowsPain = /back pain|lower back|shoulder pain|hip pain|pressure/.test(userText);
+  const inComparison = matches.length > 1;
+
+  if (!knowsPosition) {
+    return [
+      { label: "Side sleeper", message: "I’m a side sleeper." },
+      { label: "Back sleeper", message: "I’m a back sleeper." },
+      { label: "Stomach sleeper", message: "I’m a stomach sleeper." },
+    ];
+  }
+
+  if (wantsSoft && !knowsWeight) {
+    return [
+      { label: "Under 180 lbs", message: "I want a plush feel and I’m under 180 lbs." },
+      { label: "180–230 lbs", message: "I want a plush feel and I’m between 180 and 230 lbs." },
+      { label: "Over 230 lbs", message: "I want a plush feel and I’m over 230 lbs." },
+    ];
+  }
+
+  if (!knowsCooling) {
+    return [
+      { label: "I sleep hot", message: "I sleep hot at night." },
+      { label: "Cooling matters", message: "Cooling matters most to me." },
+      { label: "Temp not important", message: "Temperature does not matter much to me." },
+    ];
+  }
+
+  if (!knowsPain) {
+    return [
+      { label: "Lower back pain", message: "Lower back support matters to me." },
+      { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
+      { label: "Hip pressure", message: "I need pressure relief at my hips." },
+    ];
+  }
+
+  if (inComparison) {
+    return [
+      { label: "More support", message: "I want something with stronger support." },
+      { label: "Softer feel", message: "I want a softer feel." },
+      { label: "Best value", message: "I care most about getting the best value." },
+    ];
+  }
+
+  return [
+    { label: "Pressure relief", message: "Pressure relief matters most to me." },
+    { label: "Cooling", message: "Cooling matters most to me." },
+    { label: "Easy movement", message: "I want it to be easy to move around on." },
+  ];
+}
+
 function getComparisonNote(matches: MatchResult[], mode: ConversationMode) {
   if (mode !== "comparison" || matches.length < 2) return null;
 
@@ -499,6 +560,7 @@ export default function Home() {
   const comparisonNote = getComparisonNote(matches, conversationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
+  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(messages, memorySummary, matches), [messages, memorySummary, matches]);
   const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered;
   const showDynamicSections = matches.length > 0 && !shouldAskFirmness;
 
@@ -856,9 +918,9 @@ export default function Home() {
                 <section className={styles.suggestedSection}>
                   <span className={styles.suggestedLabel}>Easy Reply</span>
                   <div className={styles.chipsSection}>
-                    <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
-                    <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling</button>
-                    <button type="button" onClick={() => submitMessage("I want pressure relief at my shoulders and hips.")}>Pressure relief</button>
+                    {dynamicReplyPills.map((pill) => (
+                      <button key={pill.label} type="button" onClick={() => submitMessage(pill.message)}>{pill.label}</button>
+                    ))}
                   </div>
                 </section>
 
