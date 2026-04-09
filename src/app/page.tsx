@@ -13,6 +13,7 @@ type ConversationMode =
 
 const featuredThemes = mattressThemes.slice(0, 4);
 const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
+const PANEL_WIDTH = 420;
 
 type ShopperMemory = {
   shopperId: string;
@@ -93,8 +94,13 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <main className={styles.stage}>
-        <section className={styles.browserShell}>
+      <main className={styles.viewport}>
+        <section
+          className={`${styles.siteSurface} ${isOpen ? styles.siteSurfaceShifted : ""}`}
+          style={{
+            transform: isOpen ? `translateX(-${PANEL_WIDTH}px)` : "translateX(0)",
+          }}
+        >
           <div className={styles.browserTopbar}>
             <div className={styles.browserDots}>
               <span />
@@ -116,6 +122,21 @@ export default function Home() {
               <div className={styles.mockActions}>
                 <button type="button">Shop by comfort</button>
                 <button type="button">Compare brands</button>
+              </div>
+            </div>
+
+            <div className={styles.heroBand}>
+              <div className={styles.heroCard}>
+                <p>Cooling help</p>
+                <strong>Hot sleeper options that do not feel clinical</strong>
+              </div>
+              <div className={styles.heroCard}>
+                <p>Support</p>
+                <strong>Guided picks for side sleepers and pressure relief</strong>
+              </div>
+              <div className={styles.heroCard}>
+                <p>Budget clarity</p>
+                <strong>Quick narrowing without bouncing between tabs</strong>
               </div>
             </div>
 
@@ -148,102 +169,92 @@ export default function Home() {
           </div>
         </section>
 
-        <aside className={`${styles.overlayPanel} ${isOpen ? styles.open : styles.closed}`}>
-          {isOpen ? (
-            <div className={styles.overlayBody}>
-              <button
-                type="button"
-                className={styles.edgeTab}
-                onClick={() => setIsOpen((value) => !value)}
-                aria-label="Collapse Shop Pilot"
-              >
-                <span className={styles.edgeCaret}>{">"}</span>
-                <span className={styles.edgeLabel}>Shop Pilot</span>
-              </button>
-              <div className={styles.overlayHeader}>
-                <div>
-                  <p className={styles.overlayKicker}>RTG Chat</p>
-                  <h2>Shop Pilot</h2>
-                </div>
-                <p className={styles.headerMicrocopy}>Helpful, calm, and context-aware.</p>
+        <aside
+          className={`${styles.overlayPanel} ${isOpen ? styles.open : styles.closed}`}
+          style={{ width: isOpen ? PANEL_WIDTH : undefined }}
+        >
+          <button
+            type="button"
+            className={styles.edgeTab}
+            onClick={() => setIsOpen((value) => !value)}
+            aria-label={isOpen ? "Collapse Shop Pilot" : "Open Shop Pilot"}
+          >
+            <span className={styles.edgeCaret}>{isOpen ? ">" : "<"}</span>
+            <span className={styles.edgeLabel}>Shop Pilot</span>
+          </button>
+
+          <div className={`${styles.overlayBody} ${isOpen ? styles.overlayBodyOpen : styles.overlayBodyClosed}`}>
+            <div className={styles.overlayHeader}>
+              <div>
+                <p className={styles.overlayKicker}>RTG Chat</p>
+                <h2>Shop Pilot</h2>
               </div>
-
-              <section className={styles.chatSurface}>
-                <div className={styles.messageAssistant}>
-                  <p>
-                    Welcome in. I can help narrow things down quickly without making this feel like homework.
-                  </p>
-                </div>
-                <div className={styles.messageUser}>
-                  <p>
-                    I sleep on my side, get hot, and want to stay under about $2,000.
-                  </p>
-                </div>
-                <div className={styles.messageAssistant}>
-                  <p>
-                    Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.
-                  </p>
-                </div>
-              </section>
-
-              <section className={styles.chipsSection}>
-                <button type="button">Side sleeper</button>
-                <button type="button">Cooling matters</button>
-                <button type="button">Medium feel</button>
-                <button type="button">Budget under $2k</button>
-              </section>
-
-              <section className={styles.recommendationSection}>
-                <div className={styles.sectionHeader}>
-                  <h3>Top matches right now</h3>
-                  <p>Starter UI for backend match-agent output</p>
-                </div>
-                <div className={styles.candidateList}>
-                  {featuredThemes.slice(0, 3).map((theme) => (
-                    <article key={theme.theme} className={styles.candidateCard}>
-                      <p>{theme.brand}</p>
-                      <h4>{theme.displayName}</h4>
-                      <span>
-                        {theme.type || "Type TBD"} · {theme.comfort || "Comfort TBD"}
-                      </span>
-                    </article>
-                  ))}
-                </div>
-              </section>
-
-              <section className={styles.contextCard}>
-                <h3>Internal runtime state</h3>
-                <dl>
-                  <div>
-                    <dt>Shopper ID</dt>
-                    <dd>{runtimeContext.shopperId}</dd>
-                  </div>
-                  <div>
-                    <dt>Experience mode</dt>
-                    <dd>Adaptive guided assistance</dd>
-                  </div>
-                  <div>
-                    <dt>Current theme</dt>
-                    <dd>{runtimeContext.currentTheme ?? "None"}</dd>
-                  </div>
-                  <div>
-                    <dt>Memory summary</dt>
-                    <dd>{runtimeContext.priorConversationSummary}</dd>
-                  </div>
-                </dl>
-              </section>
+              <p className={styles.headerMicrocopy}>Helpful, calm, and context-aware.</p>
             </div>
-          ) : (
-            <button
-              type="button"
-              className={styles.edgeTab}
-              onClick={() => setIsOpen(true)}
-              aria-label="Open Shop Pilot"
-            >
-              <span className={styles.edgeCaret}>{"<"}</span>
-              <span className={styles.edgeLabel}>Shop Pilot</span>
-            </button>
-          )}
+
+            <section className={styles.chatSurface}>
+              <div className={styles.messageAssistant}>
+                <p>
+                  Welcome in. I can help narrow things down quickly without making this feel like homework.
+                </p>
+              </div>
+              <div className={styles.messageUser}>
+                <p>I sleep on my side, get hot, and want to stay under about $2,000.</p>
+              </div>
+              <div className={styles.messageAssistant}>
+                <p>
+                  Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.
+                </p>
+              </div>
+            </section>
+
+            <section className={styles.chipsSection}>
+              <button type="button">Side sleeper</button>
+              <button type="button">Cooling matters</button>
+              <button type="button">Medium feel</button>
+              <button type="button">Budget under $2k</button>
+            </section>
+
+            <section className={styles.recommendationSection}>
+              <div className={styles.sectionHeader}>
+                <h3>Top matches right now</h3>
+                <p>Starter UI for backend match-agent output</p>
+              </div>
+              <div className={styles.candidateList}>
+                {featuredThemes.slice(0, 3).map((theme) => (
+                  <article key={theme.theme} className={styles.candidateCard}>
+                    <p>{theme.brand}</p>
+                    <h4>{theme.displayName}</h4>
+                    <span>
+                      {theme.type || "Type TBD"} · {theme.comfort || "Comfort TBD"}
+                    </span>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className={styles.contextCard}>
+              <h3>Internal runtime state</h3>
+              <dl>
+                <div>
+                  <dt>Shopper ID</dt>
+                  <dd>{runtimeContext.shopperId}</dd>
+                </div>
+                <div>
+                  <dt>Experience mode</dt>
+                  <dd>Adaptive guided assistance</dd>
+                </div>
+                <div>
+                  <dt>Current theme</dt>
+                  <dd>{runtimeContext.currentTheme ?? "None"}</dd>
+                </div>
+                <div>
+                  <dt>Memory summary</dt>
+                  <dd>{runtimeContext.priorConversationSummary}</dd>
+                </div>
+              </dl>
+            </section>
+          </div>
         </aside>
       </main>
     </div>

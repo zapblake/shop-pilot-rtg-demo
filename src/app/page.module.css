@@ -1,24 +1,24 @@
 .page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #edf3fb 0%, #e5edf8 100%);
+  background: #edf3fb;
   color: #0f172a;
+  overflow-x: hidden;
 }
 
-.stage {
+.viewport {
+  position: relative;
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
 }
 
-.browserShell {
-  display: flex;
-  flex-direction: column;
-  margin: 24px 0 24px 24px;
-  border-radius: 28px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.24);
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+.siteSurface {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+  transition: transform 0.28s ease;
+  will-change: transform;
+}
+
+.siteSurfaceShifted {
+  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.08);
 }
 
 .browserTopbar {
@@ -27,7 +27,7 @@
   gap: 16px;
   padding: 16px 20px;
   border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-  background: rgba(248, 250, 252, 0.85);
+  background: rgba(248, 250, 252, 0.9);
 }
 
 .browserDots {
@@ -59,14 +59,6 @@
   gap: 28px;
 }
 
-.subcopy {
-  margin-top: 14px;
-  max-width: 52ch;
-  color: #64748b;
-  font-size: 17px;
-  line-height: 1.7;
-}
-
 .mockSiteHeader {
   display: flex;
   justify-content: space-between;
@@ -85,9 +77,17 @@
 
 .mockSiteHeader h1 {
   max-width: 14ch;
-  font-size: 48px;
+  font-size: 56px;
   line-height: 0.98;
   letter-spacing: -0.05em;
+}
+
+.subcopy {
+  margin-top: 14px;
+  max-width: 52ch;
+  color: #64748b;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 .mockActions {
@@ -97,9 +97,6 @@
 }
 
 .mockActions button,
-.modeRow button,
-.overlayHeader button,
-.reopenButton,
 .chipsSection button {
   border: none;
   border-radius: 999px;
@@ -113,6 +110,35 @@
   background: white;
   border: 1px solid rgba(148, 163, 184, 0.18);
   color: #334155;
+}
+
+.heroBand {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.heroCard {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.04);
+}
+
+.heroCard p {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.heroCard strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 .productGrid {
@@ -201,36 +227,14 @@
   right: 0;
   z-index: 20;
   height: 100vh;
-  padding: 20px 20px 20px 0;
-  transition: width 0.24s ease, transform 0.24s ease;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-}
-
-.open {
-  width: 432px;
-}
-
-.closed {
-  width: 72px;
-}
-
-.overlayHeader,
-.chatSurface,
-.contextCard,
-.recommendationSection,
-.chipsSection {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  width: 0;
 }
 
 .edgeTab {
   position: absolute;
   top: 96px;
-  left: 0;
-  transform: translateX(-100%);
+  right: 0;
+  transform: translateX(0);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -243,6 +247,7 @@
   cursor: pointer;
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  z-index: 2;
 }
 
 .edgeCaret {
@@ -258,11 +263,48 @@
 }
 
 .overlayBody {
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100vh;
   width: 100%;
+  padding: 20px 20px 20px 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(246, 249, 253, 0.98) 100%);
+  border-left: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.16);
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: auto;
+  transition: opacity 0.22s ease;
+}
+
+.overlayBodyOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overlayBodyClosed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.open {
+  width: 420px;
+}
+
+.closed {
+  width: 0;
+}
+
+.overlayHeader,
+.chatSurface,
+.contextCard,
+.recommendationSection,
+.chipsSection {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
 
 .overlayHeader {
@@ -295,14 +337,7 @@
   line-height: 1.5;
 }
 
-.overlayHeader button,
-.reopenButton {
-  background: #0f172a;
-  color: white;
-}
-
 .chatSurface {
-  margin-top: 12px;
   padding: 18px;
   border-radius: 18px;
   display: flex;
@@ -330,7 +365,6 @@
 }
 
 .chipsSection {
-  margin-top: 12px;
   padding: 12px;
   display: flex;
   flex-wrap: wrap;
@@ -345,7 +379,6 @@
 
 .contextCard,
 .recommendationSection {
-  margin-top: 12px;
   padding: 18px;
   border-radius: 18px;
 }
@@ -421,65 +454,27 @@
   color: #475569;
 }
 
-.overlayPanel > :not(.edgeTab) {
-  width: 100%;
-}
-
-@media (max-width: 1180px) {
-  .stage {
+@media (max-width: 1100px) {
+  .heroBand {
     grid-template-columns: 1fr;
   }
 
-  .overlayPanel {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    padding: 20px 20px 20px 0;
-  }
-
-  .open {
-    width: min(432px, calc(100vw - 24px));
-  }
-
-  .closed {
-    width: 72px;
-  }
-
-  .browserShell {
-    margin-right: 24px;
+  .productGrid {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 800px) {
-  .browserShell {
-    margin: 16px;
-    margin-right: 72px;
-  }
-
   .browserContent {
-    padding: 16px;
+    padding: 20px;
   }
 
-  .overlayPanel {
-    padding: 16px 0 16px 0;
-  }
-
-  .open {
-    width: min(400px, calc(100vw - 12px));
-  }
-
-  .closed {
-    width: 64px;
-  }
-
-  .mockSiteHeader,
-  .productGrid {
-    grid-template-columns: 1fr;
+  .mockSiteHeader {
     display: grid;
+    gap: 16px;
   }
 
   .mockSiteHeader h1 {
-    font-size: 36px;
+    font-size: 40px;
   }
 }
