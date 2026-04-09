@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
 import styles from "./page.module.css";
@@ -35,8 +35,17 @@ type MatchResult = {
   score: number;
 };
 
+type PersistedSession = {
+  messages: ChatMessage[];
+  matches: MatchResult[];
+  conversationMode: ConversationMode;
+  currentTheme: string | null;
+  memorySummary: string;
+};
+
 const featuredThemes = mattressThemes.slice(0, 6);
 const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
+const SHOPPER_SESSION_KEY = "shop-pilot-demo-session";
 const brandLogos = [
   "https://assets.roomstogo.com/v2/MT_Logo_250w_TempurPedic.png?q=70",
   "https://assets.roomstogo.com/v2/MT_Logo_250w_Beautyrest.png?q=70",
@@ -51,6 +60,32 @@ const sizeIcons = [
   ["Full", "https://assets.roomstogo.com/v2/MT_Icon_Full.svg?q=70"],
   ["Twin", "https://assets.roomstogo.com/v2/MT_Icon_Twin.svg?q=70"],
 ] as const;
+const starterMessages: ChatMessage[] = [
+  {
+    id: "assistant-1",
+    role: "assistant",
+    text: "Welcome in. I can help narrow things down quickly without making this feel like homework.",
+  },
+  {
+    id: "user-1",
+    role: "user",
+    text: "I sleep on my side, get hot, and want to stay under about $2,000.",
+  },
+  {
+    id: "assistant-2",
+    role: "assistant",
+    text: "Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.",
+  },
+];
+const starterMatches: MatchResult[] = featuredThemes.slice(0, 3).map((theme, index) => ({
+  theme: theme.theme,
+  displayName: theme.displayName,
+  brand: theme.brand,
+  type: theme.type,
+  comfort: theme.comfort,
+  priceFrom: theme.priceRange?.min ?? null,
+  score: 3 - index,
+}));
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -66,6 +101,61 @@ function setCookie(name: string, value: string, days = 30) {
   document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
 }
 
+function getStoredSession(): PersistedSession | null {
+  if (typeof window === "undefined") return null;
+  const raw = window.localStorage.getItem(SHOPPER_SESSION_KEY);
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as PersistedSession;
+  } catch {
+    return null;
+  }
+}
+
+function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
+  const userText = messages
+    .filter((message) => message.role === "user")
+    .slice(-3)
+    .map((message) => message.text)
+    .join(" ")
+    .toLowerCase();
+
+  const preferences = [
+    userText.includes("side") ? "side-sleeper" : null,
+    userText.includes("back") ? "back-sleeper" : null,
+    userText.includes("hot") || userText.includes("cool") ? "cooling-conscious" : null,
+    userText.includes("medium") ? "medium-feel" : null,
+    userText.includes("firm") ? "firm-feel" : null,
+    userText.includes("budget") || userText.includes("under") || userText.includes("$") ? "budget-aware" : null,
+  ].filter(Boolean);
+
+  const topMatch = matches[0]?.displayName;
+  const preferenceText = preferences.length ? preferences.join(", ") : "preferences still emerging";
+
+  return topMatch
+    ? `Returning shopper is ${preferenceText}. Current lead recommendation: ${topMatch}.`
+    : `Returning shopper is ${preferenceText}. No lead recommendation yet.`;
+}
+
+function getFitReasons(match: MatchResult, summary: string) {
+  const reasons = [];
+  const lowerSummary = summary.toLowerCase();
+
+  if ((lowerSummary.includes("cool") || lowerSummary.includes("hot")) && [match.type, match.comfort, match.displayName].join(" ").toLowerCase().match(/cool|foam|hybrid/)) {
+    reasons.push("Cooling fit");
+  }
+  if (lowerSummary.includes("side") && [match.comfort, match.displayName].join(" ").toLowerCase().match(/plush|medium/)) {
+    reasons.push("Good for side sleeping");
+  }
+  if (lowerSummary.includes("budget") || lowerSummary.includes("under") || lowerSummary.includes("$") || lowerSummary.includes("budget-aware")) {
+    if ((match.priceFrom ?? 999999) < 2000) reasons.push("Budget aligned");
+  }
+  if (!reasons.length) reasons.push("Strong overall match");
+
+  return reasons.slice(0, 3);
+}
+
 function RoomsToGoLogo() {
   return (
     <svg viewBox="0 0 275 32" role="img" aria-label="Rooms To Go" className={styles.logoSvg}>
@@ -79,39 +169,15 @@ function RoomsToGoLogo() {
 }
 
 export default function Home() {
+  const storedSession = getStoredSession();
   const [isOpen, setIsOpen] = useState(false);
-  const [conversationMode, setConversationMode] = useState<ConversationMode>("guided-discovery");
-  const [currentTheme, setCurrentTheme] = useState(featuredThemes[0]?.theme ?? null);
+  const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
+  const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
   const [draftMessage, setDraftMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [matches, setMatches] = useState<MatchResult[]>(
-    featuredThemes.slice(0, 3).map((theme, index) => ({
-      theme: theme.theme,
-      displayName: theme.displayName,
-      brand: theme.brand,
-      type: theme.type,
-      comfort: theme.comfort,
-      priceFrom: theme.priceRange?.min ?? null,
-      score: 3 - index,
-    })),
-  );
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "assistant-1",
-      role: "assistant",
-      text: "Welcome in. I can help narrow things down quickly without making this feel like homework.",
-    },
-    {
-      id: "user-1",
-      role: "user",
-      text: "I sleep on my side, get hot, and want to stay under about $2,000.",
-    },
-    {
-      id: "assistant-2",
-      role: "assistant",
-      text: "Great, that gives us something useful to work with. I’d keep the conversation flowing here while the match agent narrows the best cooling-friendly side-sleeper options in the background.",
-    },
-  ]);
+  const [matches, setMatches] = useState<MatchResult[]>(storedSession?.matches ?? starterMatches);
+  const [messages, setMessages] = useState<ChatMessage[]>(storedSession?.messages ?? starterMessages);
+  const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -122,8 +188,7 @@ export default function Home() {
         shopperId: existingId,
         firstSeenAt: now,
         lastSeenAt: now,
-        summary:
-          "Returning shopper interested in cooling, side-sleeper support, and medium-feel options around a mid-range budget.",
+        summary: storedSession?.memorySummary ?? "Returning shopper with captured preferences.",
       };
     }
 
@@ -133,19 +198,33 @@ export default function Home() {
       shopperId: generatedId,
       firstSeenAt: now,
       lastSeenAt: now,
-      summary: "New shopper session. No durable preferences captured yet.",
+      summary: storedSession?.memorySummary ?? "New shopper session. No durable preferences captured yet.",
     };
   });
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nextMessage = draftMessage.trim();
-    if (!nextMessage || isLoading) return;
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const nextSummary = buildMemorySummary(messages, matches);
+    setMemorySummary(nextSummary);
+    window.localStorage.setItem(
+      SHOPPER_SESSION_KEY,
+      JSON.stringify({
+        messages,
+        matches,
+        conversationMode,
+        currentTheme,
+        memorySummary: nextSummary,
+      } satisfies PersistedSession),
+    );
+  }, [conversationMode, currentTheme, matches, messages]);
+
+  async function submitMessage(messageText: string) {
+    if (!messageText.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      text: nextMessage,
+      text: messageText.trim(),
     };
 
     setMessages((current) => [...current, userMessage]);
@@ -157,10 +236,11 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: nextMessage,
+          message: messageText,
           currentTheme,
           shopperId: shopperMemory?.shopperId,
           conversationMode,
+          memorySummary,
         }),
       });
 
@@ -194,6 +274,11 @@ export default function Home() {
     }
   }
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await submitMessage(draftMessage);
+  }
+
   const runtimeContext = useMemo(() => {
     const theme = featuredThemes.find((item) => item.theme === currentTheme) ?? null;
 
@@ -206,9 +291,9 @@ export default function Home() {
         ? `${theme.displayName} · ${theme.type || "Type TBD"} · ${theme.comfort || "Comfort TBD"}`
         : null,
       conversationMode,
-      priorConversationSummary: shopperMemory?.summary ?? "Loading shopper memory",
+      priorConversationSummary: memorySummary,
     };
-  }, [conversationMode, currentTheme, shopperMemory]);
+  }, [conversationMode, currentTheme, memorySummary, shopperMemory]);
 
   return (
     <div className={styles.page}>
@@ -382,16 +467,16 @@ export default function Home() {
             </section>
 
             <section className={styles.chipsSection}>
-              <button type="button" onClick={() => setDraftMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
-              <button type="button" onClick={() => setDraftMessage("Cooling matters most to me.")}>Cooling matters</button>
-              <button type="button" onClick={() => setDraftMessage("I want a medium feel.")}>Medium feel</button>
-              <button type="button" onClick={() => setDraftMessage("Keep me under $2,000.")}>Budget under $2k</button>
+              <button type="button" onClick={() => submitMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
+              <button type="button" onClick={() => submitMessage("Cooling matters most to me.")}>Cooling matters</button>
+              <button type="button" onClick={() => submitMessage("I want a medium feel.")}>Medium feel</button>
+              <button type="button" onClick={() => submitMessage("Keep me under $2,000.")}>Budget under $2k</button>
             </section>
 
             <section className={styles.recommendationSection}>
               <div className={styles.sectionHeader}>
                 <h3>Top matches right now</h3>
-                <p>Now driven by the match-agent stub route</p>
+                <p>Now remembers prior signals and explains why each match fits</p>
               </div>
               <div className={styles.candidateList}>
                 {matches.map((match) => (
@@ -400,6 +485,11 @@ export default function Home() {
                     <h4>{match.displayName}</h4>
                     <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
                     <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
+                    <div className={styles.reasonList}>
+                      {getFitReasons(match, memorySummary).map((reason) => (
+                        <em key={reason}>{reason}</em>
+                      ))}
+                    </div>
                   </article>
                 ))}
               </div>

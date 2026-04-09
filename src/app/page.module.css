@@ -652,3 +652,22 @@
     padding: 10px 18px;
   }
 }
+
+
+.reasonList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.reasonList em {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  color: #00529f;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
