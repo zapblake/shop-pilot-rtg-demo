@@ -504,21 +504,23 @@
 }
 
 .chipsSection {
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  background: rgba(255, 248, 179, 0.96);
+  border: 1px solid #facc15;
+  box-shadow: 0 14px 30px rgba(250, 204, 21, 0.14);
 }
 
 .chipsSection button {
-  border: 1px solid #d1d5db;
+  border: 1px solid #facc15;
   border-radius: 999px;
-  padding: 10px 14px;
-  font: inherit;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
   background: white;
   cursor: pointer;
 }
@@ -1204,30 +1206,30 @@
 .suggestedSection {
   position: relative;
   border: 1px solid #facc15;
-  background: #fffdf2;
+  background: #fff7b3;
   border-radius: 18px;
-  padding: 20px 14px 14px;
+  padding: 18px 12px 12px;
 }
 
 .suggestedLabel {
   position: absolute;
-  top: 8px;
-  left: 12px;
-  font-size: 10px;
+  top: 7px;
+  left: 11px;
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #a16207;
+  color: #92400e;
 }
 
 .chipsSection button {
   border-color: #facc15;
-  background: #fffdf2;
+  background: #fff59d;
 }
 
 .chipsSection button:hover {
   border-color: #eab308;
-  background: #fef9c3;
+  background: #ffe95c;
 }
 
 
