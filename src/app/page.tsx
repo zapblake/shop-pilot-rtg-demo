@@ -41,6 +41,9 @@ type PersistedSession = {
   conversationMode: ConversationMode;
   currentTheme: string | null;
   memorySummary: string;
+  selectedSize: string | null;
+  sizeCapturedViaPill: boolean;
+  firmnessAnswered: boolean;
 };
 
 type ThemeRecord = (typeof mattressThemes)[number];
@@ -227,6 +230,9 @@ export default function Home() {
   const [showOpeningOptions, setShowOpeningOptions] = useState(false);
   const [showOtherSizes, setShowOtherSizes] = useState(false);
   const [selectedFirmnessValue, setSelectedFirmnessValue] = useState(50);
+  const [selectedSize, setSelectedSize] = useState<string | null>(storedSession?.selectedSize ?? null);
+  const [sizeCapturedViaPill, setSizeCapturedViaPill] = useState(storedSession?.sizeCapturedViaPill ?? false);
+  const [firmnessAnswered, setFirmnessAnswered] = useState(storedSession?.firmnessAnswered ?? false);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -263,9 +269,12 @@ export default function Home() {
         conversationMode,
         currentTheme,
         memorySummary: nextSummary,
+        selectedSize,
+        sizeCapturedViaPill,
+        firmnessAnswered,
       } satisfies PersistedSession),
     );
-  }, [conversationMode, currentTheme, matches, messages]);
+  }, [conversationMode, currentTheme, matches, messages, selectedSize, sizeCapturedViaPill, firmnessAnswered]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -312,7 +321,7 @@ export default function Home() {
     return undefined;
   }, [messages]);
 
-  async function processMessage(messageText: string) {
+  async function processMessage(messageText: string, options?: { skipAssistantReply?: boolean; overrideMemorySummary?: string }) {
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
@@ -332,7 +341,7 @@ export default function Home() {
           currentTheme,
           shopperId: shopperMemory?.shopperId,
           conversationMode,
-          memorySummary,
+          memorySummary: options?.overrideMemorySummary ?? memorySummary,
         }),
       });
 
@@ -351,37 +360,39 @@ export default function Home() {
         setCurrentTheme(payload.matches[0].theme);
       }
 
-      const assistantId = `assistant-${Date.now()}`;
-      const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
+      if (!options?.skipAssistantReply) {
+        const assistantId = `assistant-${Date.now()}`;
+        const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
 
-      setMessages((current) => [
-        ...current,
-        {
-          id: assistantId,
-          role: "assistant",
-          text: "",
-        },
-      ]);
+        setMessages((current) => [
+          ...current,
+          {
+            id: assistantId,
+            role: "assistant",
+            text: "",
+          },
+        ]);
 
-      let charIndex = 0;
-      const streamReply = () => {
-        charIndex += Math.max(1, Math.round(fullReply.length / 55));
-        const nextText = fullReply.slice(0, charIndex);
+        let charIndex = 0;
+        const streamReply = () => {
+          charIndex += Math.max(1, Math.round(fullReply.length / 55));
+          const nextText = fullReply.slice(0, charIndex);
 
-        setMessages((current) =>
-          current.map((message) =>
-            message.id === assistantId
-              ? { ...message, text: nextText }
-              : message,
-          ),
-        );
+          setMessages((current) =>
+            current.map((message) =>
+              message.id === assistantId
+                ? { ...message, text: nextText }
+                : message,
+            ),
+          );
 
-        if (charIndex < fullReply.length) {
-          window.setTimeout(streamReply, 18);
-        }
-      };
+          if (charIndex < fullReply.length) {
+            window.setTimeout(streamReply, 18);
+          }
+        };
 
-      streamReply();
+        streamReply();
+      }
     } catch {
       setMessages((current) => [
         ...current,
@@ -407,7 +418,7 @@ export default function Home() {
     }
   }
 
-  async function submitMessage(messageText: string) {
+  async function submitMessage(messageText: string, options?: { skipAssistantReply?: boolean; overrideMemorySummary?: string }) {
     const trimmed = messageText.trim();
     if (!trimmed) return;
 
@@ -425,19 +436,22 @@ export default function Home() {
       return;
     }
 
-    await processMessage(trimmed);
+    await processMessage(trimmed, options);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!sizeCapturedViaPill) {
+      setFirmnessAnswered(true);
+      setSelectedSize(null);
+    }
     await submitMessage(draftMessage);
   }
 
   const comparisonNote = getComparisonNote(matches, conversationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
-  const userMessages = messages.filter((message) => message.role === "user");
-  const shouldAskFirmness = userMessages.length === 1;
+  const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered;
   const showDynamicSections = matches.length > 0 && !shouldAskFirmness;
 
   const selectedFirmness = useMemo(() => {
@@ -449,7 +463,15 @@ export default function Home() {
   }, [selectedFirmnessValue]);
 
   async function submitFirmness() {
-    await submitMessage(`I want a ${selectedFirmness.label} feel.`);
+    if (!selectedSize) {
+      await submitMessage(`I want a ${selectedFirmness.label} feel.`);
+      return;
+    }
+
+    setFirmnessAnswered(true);
+    const combinedMessage = `${selectedSize}. I want a ${selectedFirmness.label} feel.`;
+    const nextSummary = `Returning shopper is ${selectedSize.toLowerCase()}-size shopper and prefers a ${selectedFirmness.label.toLowerCase()} feel. ${matches[0]?.displayName ? `Current lead recommendation: ${matches[0].displayName}.` : "No lead recommendation yet."}`;
+    await submitMessage(combinedMessage, { overrideMemorySummary: nextSummary });
   }
 
   return (
@@ -605,6 +627,9 @@ export default function Home() {
                   setCurrentTheme(featuredThemes[0]?.theme ?? null);
                   setDraftMessage("");
                   setShowOpeningOptions(false);
+                  setSelectedSize(null);
+                  setSizeCapturedViaPill(false);
+                  setFirmnessAnswered(false);
                   window.setTimeout(() => {
                     setShowOpeningOptions(true);
                     inputRef.current?.focus();
@@ -659,7 +684,24 @@ export default function Home() {
                         if (option === "Other") {
                           setShowOtherSizes((v) => !v);
                         } else {
-                          submitMessage(option);
+                          const isNotSure = option === "Not Sure";
+                          setSelectedSize(option);
+                          setSizeCapturedViaPill(!isNotSure);
+                          setFirmnessAnswered(false);
+                          if (isNotSure) {
+                            submitMessage(option);
+                          } else {
+                            setMessages((current) => [
+                              ...current,
+                              {
+                                id: `user-${Date.now()}`,
+                                role: "user",
+                                text: option,
+                              },
+                            ]);
+                            setDraftMessage("");
+                            setShowOpeningOptions(false);
+                          }
                         }
                       }}
                     >
@@ -674,7 +716,21 @@ export default function Home() {
                           type="button"
                           className={styles.openingChip}
                           style={{ animationDelay: `${index * 50}ms` }}
-                          onClick={() => submitMessage(size)}
+                          onClick={() => {
+                            setSelectedSize(size);
+                            setSizeCapturedViaPill(true);
+                            setFirmnessAnswered(false);
+                            setMessages((current) => [
+                              ...current,
+                              {
+                                id: `user-${Date.now()}`,
+                                role: "user",
+                                text: size,
+                              },
+                            ]);
+                            setDraftMessage("");
+                            setShowOpeningOptions(false);
+                          }}
                         >
                           {size}
                         </button>
@@ -718,7 +774,10 @@ export default function Home() {
                   <button
                     type="button"
                     className={styles.openingChip}
-                    onClick={() => submitMessage("It’s complicated")}
+                    onClick={() => {
+                      setFirmnessAnswered(true);
+                      submitMessage("It’s complicated");
+                    }}
                   >
                     Its complicated
                   </button>
