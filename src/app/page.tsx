@@ -865,10 +865,7 @@ export default function Home() {
 
                 <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                   <div className={styles.sectionHeader}>
-                    <div className={styles.sectionHeaderTopRow}>
-                      <h3>Top matches right now</h3>
-                      {showUpdatedPulse ? <span className={styles.updatedPill}>Updated for your preferences</span> : null}
-                    </div>
+                    <h3>Top matches right now</h3>
                     <p>Tailored to what the shopper has told us so far</p>
                   </div>
                   <div className={styles.candidateScroller}>
