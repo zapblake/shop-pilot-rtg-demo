@@ -1462,28 +1462,29 @@
 /* Scroll nudge overlay — shown after 30s inactivity when recommendations are ready */
 .scrollNudge {
   position: absolute;
-  bottom: 38%;
+  bottom: 52%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  background: rgba(22, 145, 98, 0.62);
-  color: white;
-  border: none;
+  background: rgba(22, 145, 98, 0.28);
+  color: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 20px;
-  padding: 14px 24px 18px;
+  padding: 12px 22px 16px;
   cursor: pointer;
-  box-shadow: 0 8px 32px rgba(22, 145, 98, 0.2);
+  box-shadow: 0 6px 22px rgba(22, 145, 98, 0.12);
   animation: nudgeFadeIn 0.4s ease both;
   z-index: 20;
-  backdrop-filter: blur(6px);
-  transition: background 0.2s;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .scrollNudge:hover {
-  background: rgba(22, 145, 98, 0.82);
+  background: rgba(22, 145, 98, 0.38);
+  box-shadow: 0 8px 24px rgba(22, 145, 98, 0.16);
 }
 
 .scrollNudgeLabel {
@@ -1495,11 +1496,12 @@
 
 .scrollNudgeArrows {
   display: flex;
-  gap: 6px;
+  gap: 7px;
 }
 
 .scrollNudgeArrows span {
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 900;
   line-height: 1;
   animation: arrowBounce 1.2s ease-in-out infinite;
 }
