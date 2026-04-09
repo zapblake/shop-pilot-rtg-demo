@@ -545,7 +545,7 @@ export default function Home() {
           <div className={styles.overlayBody}>
             <div className={styles.panelBrandBar}>
               <div className={styles.panelBrandCluster}>
-                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={184} height={44} className={styles.panelPartnerImage} />
+                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={224} height={54} className={styles.panelPartnerImage} />
               </div>
               <button
                 type="button"
