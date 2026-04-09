@@ -211,6 +211,7 @@ export default function Home() {
   const storedSession = getStoredSession();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
+  const overlayBodyRef = useRef<HTMLDivElement | null>(null);
   const queuedMessagesRef = useRef<string[]>([]);
   const inactivityTimerRef = useRef<number | null>(null);
   const [showScrollNudge, setShowScrollNudge] = useState(false);
@@ -289,6 +290,15 @@ export default function Home() {
       if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Dismiss scroll nudge when the panel body is scrolled
+  useEffect(() => {
+    const el = overlayBodyRef.current;
+    if (!el) return;
+    const handler = () => setShowScrollNudge(false);
+    el.addEventListener("scroll", handler, { passive: true });
+    return () => el.removeEventListener("scroll", handler);
   }, []);
 
   useEffect(() => {
@@ -572,7 +582,7 @@ export default function Home() {
             <span className={styles.edgeLabel}>Shop Pilot</span>
           </button>
 
-          <div className={styles.overlayBody}>
+          <div className={styles.overlayBody} ref={overlayBodyRef}>
             <div className={styles.panelBrandBar}>
               <div className={styles.panelBrandCluster}>
                 <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={260} height={64} className={styles.panelPartnerImage} />

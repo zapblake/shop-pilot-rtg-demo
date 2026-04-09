@@ -1077,8 +1077,24 @@
 .candidateScroller,
 .compareScroller {
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 8px;
   scrollbar-width: thin;
+  scrollbar-color: #c8102e #f1f5f9;
+}
+
+/* WebKit scrollbar — always visible, thin, RTG red */
+.candidateScroller::-webkit-scrollbar {
+  height: 4px;
+}
+
+.candidateScroller::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 2px;
+}
+
+.candidateScroller::-webkit-scrollbar-thumb {
+  background: #c8102e;
+  border-radius: 2px;
 }
 
 .candidateList,
@@ -1453,20 +1469,21 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  background: rgba(22, 145, 98, 0.92);
+  background: rgba(22, 145, 98, 0.62);
   color: white;
   border: none;
   border-radius: 20px;
   padding: 14px 24px 18px;
   cursor: pointer;
-  box-shadow: 0 8px 32px rgba(22, 145, 98, 0.35);
+  box-shadow: 0 8px 32px rgba(22, 145, 98, 0.2);
   animation: nudgeFadeIn 0.4s ease both;
   z-index: 20;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  transition: background 0.2s;
 }
 
 .scrollNudge:hover {
-  background: rgba(14, 116, 76, 0.96);
+  background: rgba(22, 145, 98, 0.82);
 }
 
 .scrollNudgeLabel {
