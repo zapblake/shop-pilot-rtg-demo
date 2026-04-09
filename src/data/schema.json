@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "generatedFrom": [
+    "memory/rtg-catalog.csv",
+    "memory/rtg-mattress-info.csv",
+    "memory/rtg-mattress-photos.csv",
+    "memory/rtg-accessories.csv"
+  ],
+  "outputs": {
+    "mattresses.normalized.json": "SKU-level mattress records for page context and size-specific pricing",
+    "mattressThemes.normalized.json": "Theme-level mattress records for recommendations and comparison",
+    "accessories.normalized.json": "Accessory records for supporting recommendations"
+  },
+  "joinStrategy": {
+    "catalog_to_mattress_info": "Join on SKU = Sku Number",
+    "mattress_info_to_photos": "Join on Theme"
+  }
+}

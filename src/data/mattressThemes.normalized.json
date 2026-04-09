@@ -1,0 +1,4283 @@
+[
+  {
+    "theme": "ADAPT 2.0 MEDIUM",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Adapt 2.0 Medium",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".Superior cool-to-the-touch feel with a premium knit cover..TEMPUR-Material provides one-of-a-kind, body-conforming support by responding to your body's weight, shape, and temperature to help reduce aches and pains..A second layer of TEMPUR-Material absorbs motion to help minimize disruptions caused by movement from partners, pets, or kids.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-adapt-20-medium-twin-xl-mattress_50007460_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-adapt-20-medium-twin-xl-mattress_50007460_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1699.0,
+      "max": 2899.0
+    },
+    "variantCount": 7,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Medium best for side, back, stomach cooling: Premier support: Premier"
+  },
+  {
+    "theme": "ADAPT 2.0 MEDIUM HYBRID",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Adapt 2.0 Medium Hybrid",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".Superior cool-to-the-touch feel with a premium knit cover..TEMPUR-Material provides one-of-a-kind, body-conforming support by responding to your body's weight, shape, and temperature to help reduce aches and pains..A second layer of TEMPUR-Material absorbs motion to help minimize disruptions caused by movement from partners, pets, or kids..Hybrid technology combines premium innersprings with TEMPUR-Material to deliver the right combination of pressure relief and support.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-adapt-20-medium-hybrid-twin-xl-mattress_50007472_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-adapt-20-medium-hybrid-twin-xl-mattress_50007472_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1999.0,
+      "max": 3199.0
+    },
+    "variantCount": 7,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Hybrid Medium best for side, back, stomach cooling: Premier support: Premier"
+  },
+  {
+    "theme": "ADAPT PRO HI 2.0",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Adapt Pro Hi 2.0",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The TEMPUR-Adapt ProHi Pillow is designed to complement the Adapt mattress collection and provide maximum comfort for side and combination sleepers. Its high profile and medium-firm feel offers personalized support while innovative TEMPUR-Material adapts to your shape for superior comfort all night. Complete with a removable, machine-washable, cool-to-the-touch SmartClimate Cover, the TEMPUR-Adapt ProHi Pillow helps pull heat away from the body for refreshing, all-night cooling comfort. Designed to adapt to your head, neck, and shoulders, TEMPUR-Material delivers exceptional pressure relief to help reduce aches and pains.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 175.0,
+      "max": 215.0
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "ADAPT PRO LO 2.0",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Adapt Pro Lo 2.0",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Specifically designed to complement Adapt Collection mattresses, the TEMPUR-Adapt ProLo Pillow provides the most comfort for stomach and back sleepers. Its medium-firm feel offers personalized support while proprietary TEMPUR-Material adjusts to your shape for the all-night comfort you deserve. Complete with a removable, machine-washable, cool-to-the-touch SmartClimate Cover, the TEMPUR-Adapt ProLo Pillow helps pull heat away from the body for cooling comfort all night long. Designed to adapt to your head, neck, and shoulders, TEMPUR-Material delivers exceptional pressure relief to help reduce aches and pains.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 175.0,
+      "max": 215.0
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "ADAPT PROADJUST",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Adapt Proadjust",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The TEMPUR-Adapt ProAdjust Pillow complements the Adapt Collection with exclusive TEMPUR-Material that precisely adapts to your head, neck, and shoulders. It's specifically designed to provide back, side, or stomach sleepers deeply comfortable rest all night long. Exclusive TEMPUR-Material can be added or removed for personalized support and comfort. The removable, machine-washable SmartClimate Cover is woven with special fibers that provide a cool-to-the-touch surface.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 125.0,
+      "max": 165.0
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "ALDER",
+    "brand": "THERAPEDIC KIDS",
+    "displayName": "Alder",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 1,
+      "label": "Basic",
+      "raw": "1-Basic"
+    },
+    "temperatureManagement": {
+      "score": 1,
+      "label": "Basic",
+      "raw": "1-Basic"
+    },
+    "description": "Therapedic's Alder mattress delivers a supportive bed for your growing child. Featuring antimicrobial protection, the quilt cover is enhanced with soft cushioning. For support and durability, this mattress utilizes performance foam to provide comfort for years to come. This product is made with the reassurance of CertiPUR-US foams that meet strict environmental, health and safety codes.",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-alder-twin-mattress_50111144_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-alder-twin-mattress_50111144_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 99.0,
+      "max": 199.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC KIDS Foam Medium best for side, back, stomach cooling: Basic support: Basic"
+  },
+  {
+    "theme": "ARADA CANYON",
+    "brand": "DREW & JONATHAN",
+    "displayName": "Arada Canyon",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/drew-jonathan-arada-canyon-twin-xl-mattress_50020925_image-item",
+    "altImage": "https://assets.roomstogo.com/product/drew-jonathan-arada-canyon-twin-xl-mattress_50020925_alt-image-1",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1297.0,
+      "max": 2097.0
+    },
+    "variantCount": 3,
+    "hasImage": true,
+    "themeSummary": "DREW & JONATHAN Innerspring Soft best for side, back cooling: Superior support: Superior"
+  },
+  {
+    "theme": "ASPEN PILLOW",
+    "brand": "BEDGEAR",
+    "displayName": "Aspen Pillow",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 149.99,
+      "max": 199.99
+    },
+    "variantCount": 8,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "BASELOGIC PLATINUM",
+    "brand": "SIMMONS",
+    "displayName": "Baselogic Platinum",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The Beautyrest Baselogic Platinum adjustable base delivers head and foot adjustability with a wireless LCD remote and enhanced lifestyle upgrades. Dual massage feature with relaxing vibration. Integrated white, pink and brown noise machine for relaxing sound therapy. Multiple levels of ambient underbed lighting. USB A & C charging ports. Anti-snoring preset. Memory preset for easy repositioning. Automatic pillow tilt. Zero-gravity button for instant relief of pressure points. 1-touch flat button for quick reset to the default position. 4-in-1 adjustable legs with four leg heights up to 12. Zero-clearance profile for compatibility with most bedframes.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1399.0,
+      "max": 1899.0
+    },
+    "variantCount": 5,
+    "hasImage": false,
+    "themeSummary": "SIMMONS"
+  },
+  {
+    "theme": "BASELOGIC SILVER",
+    "brand": "SIMMONS",
+    "displayName": "Baselogic Silver",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The Beautyrest Baselogic Silver adjustable base delivers head and foot adjustability with a wireless remote. Zero-gravity button for instant relief of pressure points. 1-touch flat button for an easy reset to the default position. 3-in-1 adjustable legs with leg heights up to 12. Zero-clearance profile for compatibility with most bedframes.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 649.0,
+      "max": 1199.0
+    },
+    "variantCount": 5,
+    "hasImage": false,
+    "themeSummary": "SIMMONS"
+  },
+  {
+    "theme": "BAY DREAMER",
+    "brand": "TOMMY BAHAMA",
+    "displayName": "Bay Dreamer",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/tommy-bahama-bay-dreamer-twin-mattress_50111055_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tommy-bahama-bay-dreamer-twin-mattress_50111055_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 345.0,
+      "max": 595.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "TOMMY BAHAMA Innerspring Soft best for side, back cooling: Good support: Premier"
+  },
+  {
+    "theme": "BEAUTYREST BLACK FOAM PILLOW",
+    "brand": "BEAUTYREST BLACK",
+    "displayName": "Beautyrest Black Foam Pillow",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Luxuriously designed with innovative materials, the Beautyrest Black pillow offers the indulgence of cool-to-the-touch, breathable comfort night after night. Removable, machine-washable cover made of cooling cashmere-blended fabric. Premium ventilated memory foam infused with graphite promotes airflow and helps transfer heat away from the head and neck. Contours to the head and neck for pressure-relieving support.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [],
+    "priceRange": {
+      "min": 199.99,
+      "max": 249.99
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "BEAUTYREST BLACK"
+  },
+  {
+    "theme": "BG BASIC SHEETS",
+    "brand": "BEDGEAR",
+    "displayName": "Bg Basic Sheets",
+    "designation": "",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The BG Basic White 3 Pc Twin Bed Sheet Set are exceptional sheets in a simple package. The allergen reducing materials allow an undisturbed, sneeze-free sleep. Not too warm and not too breezy, these sheets work season to season. This basic set provides all-night comfort, and a secure fit and grip on your mattress. This set includes 1 flat sheet, 1 fitted sheet, and 1 pillowcase.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 59.99,
+      "max": 99.99
+    },
+    "variantCount": 18,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "BRADFORD HILL",
+    "brand": "CORRECT COMFORT",
+    "displayName": "Bradford Hill",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-correct-comfort-bradford-hill-twin-xl-mattress_50028969_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-correct-comfort-bradford-hill-twin-xl-mattress_50028969_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 595.0,
+      "max": 995.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "CORRECT COMFORT Foam Medium best for side, back, stomach cooling: Good support: Superior"
+  },
+  {
+    "theme": "BREEZE PRO-HI 2.0",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Breeze Pro-Hi 2.0",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 225.0,
+      "max": 225.0
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "BREEZE PRO-HI 2.0 KG",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Breeze Pro-Hi 2.0 Kg",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King"
+    ],
+    "priceRange": {
+      "min": 275.0,
+      "max": 275.0
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "BREEZE PRO-LO 2.0",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Breeze Pro-Lo 2.0",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 225.0,
+      "max": 225.0
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "BREEZE PRO-LO 2.0 KG",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Breeze Pro-Lo 2.0 Kg",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King"
+    ],
+    "priceRange": {
+      "min": 275.0,
+      "max": 275.0
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "BRIERWOOD",
+    "brand": "POSTUREPEDIC",
+    "displayName": "Brierwood",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Sealy Posturepedic Briarwood Medium mattress offers lasting comfort and superior support to help maintain natural body alignment and reduce nagging Bed Aches. The orthopedic-inspired Posturepedic Support System features exclusive PrecisionFit Coils, arranged right where you need them. Plus the Coil Edge provides a solid surface that's built to last.",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-posturepedic-brierwood-twin-xl-mattress_50029175_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-posturepedic-brierwood-twin-xl-mattress_50029175_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 577.0,
+      "max": 1077.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "POSTUREPEDIC Innerspring Medium best for side, back, stomach cooling: Good support: Good"
+  },
+  {
+    "theme": "BROAD PEAK MEDIUM HYBRID",
+    "brand": "BEAUTYREST SELECT",
+    "displayName": "Broad Peak Medium Hybrid",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "Developed by the pioneer of the hybrid mattress, the new Beautyrest Select Hybrid line offers consistent that conforms to your body, allowing you to find your optimal sleep position. The superior stretch and recovery surface adapts with you throughout the night, enabling you to engage more closely with the pressure relieving memory foams for a deep, easy sleep. This unique construction enhances the benefits of both our Pocketed Coil Technology and gel memory foams to provide comfort and breathability.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-select-broad-peak-medium-hybrid-twin-xl-mattress_50010671_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-select-broad-peak-medium-hybrid-twin-xl-mattress_50010671_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 595.0,
+      "max": 1195.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST SELECT Hybrid Medium best for side, back, stomach cooling: Superior support: Superior"
+  },
+  {
+    "theme": "CAPERTEE",
+    "brand": "DREW & JONATHAN",
+    "displayName": "Capertee",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/drew-jonathan-capertee-twin-xl-mattress_50020862_image-item",
+    "altImage": "https://assets.roomstogo.com/product/drew-jonathan-capertee-twin-xl-mattress_50020862_alt-image-1",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 797.0,
+      "max": 1397.0
+    },
+    "variantCount": 3,
+    "hasImage": true,
+    "themeSummary": "DREW & JONATHAN Innerspring Medium best for side, back, stomach cooling: Superior support: Superior"
+  },
+  {
+    "theme": "CASPER CLOUD ONE",
+    "brand": "CASPER",
+    "displayName": "Casper Cloud One",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/casper-cloud-one-twin-xl-mattress_50000543_image-item",
+    "altImage": "https://assets.roomstogo.com/product/casper-cloud-one-twin-xl-mattress_50000543_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 799.0,
+      "max": 1319.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "CASPER Foam Medium best for side, back, stomach cooling: Good support: Superior"
+  },
+  {
+    "theme": "CASPER ONYX 2.0",
+    "brand": "CASPER",
+    "displayName": "Casper Onyx 2.0",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Casper Onyx mattress is designed with 3 layers of foam for comfort, breathability and support. Obsessively engineered by Casper's award-winning research and development team, this mattress contains Breathe Flex Foam for support and pressure relief & Breathe Foam for air flow that pairs breathability with softness for all-night comfort. Key FeaturesA cozy knit cover designed with added stretch so you can experience all the comfort your mattress has to offer. Features a top layer of Breathe Flex Foam that's both responsive and breathable to soothe you to sleep with the perfect bit of bounce. A firm Casper Core base provides long-lasting support while preventing sinking and sagging. Foams are certified by the CertiPUR-US program, meaning they are made without ozone depleting chemicals and regulated by the Consumer Product Safety Commission Low VOC Volatile Organic Compound emissions for indoor air quality less than 0.5 parts per million.",
+    "heroImage": "https://assets.roomstogo.com/product/casper-onyx-20-twin-xl-mattress_50000682_image-item",
+    "altImage": "https://assets.roomstogo.com/product/casper-onyx-20-twin-xl-mattress_50000682_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 649.0,
+      "max": 1199.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "CASPER Foam Medium best for side, back, stomach cooling: Good support: Good"
+  },
+  {
+    "theme": "CASPER SNOW 2.0",
+    "brand": "CASPER",
+    "displayName": "Casper Snow 2.0",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Casper signature cooling hybrid mattress. Specialty cool-to-the-touch fibers give an instantly refreshing feel. Phase Change Material instantly pulls heat away whileHeatDelete Bandsremove excess body heat to help you sleep up to 5\u00b0 cooler all night long. Soothe Memory Foam conforms to the body and gently eases you into deep sleep. Zoned Support helps keep your spine in alignment with firmer foam under the hips, waist and lower back. Individually pocketed Flex Coils reduce motion transfer and boost support.",
+    "heroImage": "https://assets.roomstogo.com/product/casper-snow-20-twin-xl-mattress_50000579_image-item",
+    "altImage": "https://assets.roomstogo.com/product/casper-snow-20-twin-xl-mattress_50000579_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1595.0,
+      "max": 2595.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "CASPER Hybrid Medium best for side, back, stomach cooling: Premier support: Superior"
+  },
+  {
+    "theme": "CASPER SNOW MAX",
+    "brand": "CASPER",
+    "displayName": "Casper Snow Max",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "description": "Ultimate cooling hybrid mattress. Specialty cool-to-the-touch fibers give an instantly refreshing feel. Phase Change MaterialandHeatDelete Bands remove excess body heat and help you sleep up to 6\u00b0 cooler all night long. Precision-cut foam and encased coils for a breathable and supportive medium-soft feel. Ultra-supportive Align Memory Foam keeps you aligned for your deepest sleep. Firmer center foam cradles your body while giving added support to your hips, waist and lower back. Individually pocketed Flex Coils flex reduce motion transfer and boost support.",
+    "heroImage": "https://assets.roomstogo.com/product/casper-snow-max-twin-xl-mattress_50000581_image-item",
+    "altImage": "https://assets.roomstogo.com/product/casper-snow-max-twin-xl-mattress_50000581_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2595.0,
+      "max": 3895.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "CASPER Hybrid Soft best for side, back cooling: Ultimate support: Superior"
+  },
+  {
+    "theme": "CASPER SNOW PILLOW",
+    "brand": "CASPER",
+    "displayName": "Casper Snow Pillow",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Wake up feeling refreshed and revitalized after a night of supportive comfort provided by the Casper hybrid pillow. Engineered with Snow technology, this innovative foam and fiber design delivers a soft and supple feel that helps you sleep cooler for more than 12 hours. The CoolTouch cover provides immediate temperature regulation while the AirScape technology creates a breathable layer for a fresh and comfortable sleep experience night after night.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 143.0,
+      "max": 167.0
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "CASPER"
+  },
+  {
+    "theme": "CASTLE ROCK",
+    "brand": "POSTUREPEDIC PLUS",
+    "displayName": "Castle Rock",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Sealy Posturepedic Castle Rock Medium EPT mattress delivers pressure-relieving comfort to help maintain natural body alignment and reduce nagging Bed Aches night after night. The orthopedic-inspired Posturepedic Plus Support System features exclusive PrecisionFit Coils, arranged right where you need them. Plus, the DuraFlex Coil Edge provides a reinforced solid surface that's built to last.",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-posturepedic-castle-rock-twin-xl-mattress_50029202_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-posturepedic-castle-rock-twin-xl-mattress_50029202_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 897.0,
+      "max": 1397.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "POSTUREPEDIC PLUS Innerspring Medium best for side, back, stomach cooling: Good support: Superior"
+  },
+  {
+    "theme": "CREEKMORE",
+    "brand": "THERAPEDIC KIDS",
+    "displayName": "Creekmore",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Therapedic Creekmore mattress delivers a supportive bed that helps keep itself clean and fresh. Its sanitized finish continually inhibits the growth of odor-causing microbes and bacteria using zinc to keep your mattress fresh. Featuring antimicrobial protection, the quilt cover is enhanced with soft cushioning. TheraCool Memory Touch Visco gel foam maximizes comfort, combining pressure relieving and heat-wicking material. For support and durability, this mattress utilizes performance foam to provide comfort for years to come.",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-creekmore-twin-mattress_50111168_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-creekmore-twin-mattress_50111168_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 377.0,
+      "max": 477.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC KIDS Foam Soft best for side, back cooling: Good support: Good"
+  },
+  {
+    "theme": "DARLINGTON",
+    "brand": "THERAPEDIC",
+    "displayName": "Darlington",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-darlington-twin-xl-mattress_50011368_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-darlington-twin-xl-mattress_50011368_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 497.0,
+      "max": 897.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC Innerspring Medium best for side, back, stomach cooling: Superior support: Good"
+  },
+  {
+    "theme": "DRI-TEC CRIB PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Dri-Tec Crib Protector",
+    "designation": "Kid",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Featuring a unique channel-weave construction designed to facilitate airflow, the Dri-Tec performance crib mattress protector from BEDGEAR wicks away moisture and dissipates heat for a drier, more comfortable night's sleep. A waterproof, invisible barrier completely protects your baby and their mattress without changing the feel. Engineered to enhance the body-conforming qualities of memory foam and latex mattresses, this flexible protector reacts to motion, keeping them cool and comfortable even as theymove during the night.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Crib"
+    ],
+    "priceRange": {
+      "min": 29.99,
+      "max": 29.99
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "DRI-TEC PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Dri-Tec Protector",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Featuring a unique channel-weave construction designed to facilitate airflow, the Dri-Tec 5.0 performance mattress protector from BEDGEAR wicks away moisture and dissipates heat for a drier, more comfortable night's sleep. A waterproof, invisible barrier completely protects your mattress without changing the feel. Engineered to enhance the body-conforming qualities of memory foam and latex mattresses, this flexible protector reacts to your motion, keeping you cool and comfortable even as you move during the night.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split Head King",
+      "Split Head Queen",
+      "Split King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 109.99,
+      "max": 209.99
+    },
+    "variantCount": 10,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "DRI-TEC SHEETS",
+    "brand": "BEDGEAR",
+    "displayName": "Dri-Tec Sheets",
+    "designation": "",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The advanced moisture wicking technology in the Dri-Tec Performance 4 Pc Full Bed Sheet Set helps you sleep drier, cooler, and more comfortably throughout the night. The soft, conforming material moves with you throughout the night, and provides a no-cling, no-pull stretch. CFM Certified for maximum air flow, allowing your body to achieve optimal temperature regulation. This set includes 1 flat sheet, 1 fitted sheet, and 2 queen pillowcases.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King,King",
+      "Full",
+      "Queen",
+      "Split California King,Split King",
+      "Twin,Twin Xl"
+    ],
+    "priceRange": {
+      "min": 199.99,
+      "max": 279.99
+    },
+    "variantCount": 20,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "EASE 4.0",
+    "brand": "",
+    "displayName": "Ease 4.0",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Boasting all of the features of a power base, the Sealy Ease 4.0 adjustable base delivers custom comfort. Adjustable head and foot positions promote ergonomic alignment using a wireless remote. For enhanced relaxation, the zero gravity preset relieves pressure from your lower back to simulate a feeling of weightlessness. Easily set the base flat again with the touch of a button. Plus, tapered legs feature removable pieces to conveniently adjust the base height. Its light, thin profile offers a more seamless storage experience.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 899.0,
+      "max": 1499.0
+    },
+    "variantCount": 7,
+    "hasImage": false,
+    "themeSummary": ""
+  },
+  {
+    "theme": "ESTATE FIRM PT",
+    "brand": "STEARNS & FOSTER",
+    "displayName": "Estate Firm Pt",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "Engineered with the best night's sleep in mind, Stearns & Foster Estate Collection takes comfort to the next level. Featuring our TEMPUR-Indulge Memory Foam for enhanced pressure relief. Exclusive IntelliCoil innersprings add night-long support.",
+    "heroImage": "https://assets.roomstogo.com/product/stearns-and-foster-estate-firm-pillow-top-twin-xl-mattress_50048050_image-item",
+    "altImage": "https://assets.roomstogo.com/product/stearns-and-foster-estate-firm-pillow-top-twin-xl-mattress_50048050_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2499.0,
+      "max": 3199.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "STEARNS & FOSTER Innerspring Firm best for stomach, back cooling: Superior support: Premier"
+  },
+  {
+    "theme": "ESTATE FIRM TT",
+    "brand": "STEARNS & FOSTER",
+    "displayName": "Estate Firm Tt",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "Engineered with the best night's sleep in mind, Stearns & Foster Estate Collection takes comfort to the next level. Featuring our TEMPUR-Indulge Memory Foam for enhanced pressure relief. Exclusive IntelliCoil innersprings add night-long support.",
+    "heroImage": "https://assets.roomstogo.com/product/stearns-and-foster-estate-firm-tight-top-twin-xl-mattress_50048036_image-item",
+    "altImage": "https://assets.roomstogo.com/product/stearns-and-foster-estate-firm-tight-top-twin-xl-mattress_50048036_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2099.0,
+      "max": 2999.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "STEARNS & FOSTER Innerspring Firm best for stomach, back cooling: Superior support: Premier"
+  },
+  {
+    "theme": "FLOURISH",
+    "brand": "THERAPEDIC KIDS",
+    "displayName": "Flourish",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 1,
+      "label": "Basic",
+      "raw": "1-Basic"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "Designed to grow with your child, the Therapedic Flourish 2-Sided mattress makes a long-lasting bed that gives them the support they need. With two unique sides, this mattress includes zoned support based on your child's weight to provide proper support for their growth. TheraCool advanced gel foam promotes comfort, combining pressure relieving and heat-wicking material. Featuring antimicrobial protection, the quilt cover is enhanced with soft cushioning. Memory Touch Visco foam maximizes comfort, providing support and reducing pressure points. This premium foam adapts to weight and temperature for a customized sleep experience. For support and durability, this mattress utilizes performance foam to provide comfort for years to come.",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-flourish-2-sided-twin-mattress_50111170_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-flourish-2-sided-twin-mattress_50111170_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 427.0,
+      "max": 627.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC KIDS Foam Medium best for side, back, stomach cooling: Good support: Basic"
+  },
+  {
+    "theme": "FORESTER",
+    "brand": "THERAPEDIC",
+    "displayName": "Forester",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Extra Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-forester-twin-xl-mattress_50011344_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-forester-twin-xl-mattress_50011344_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 597.0,
+      "max": 1097.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC Innerspring Extra Firm best for stomach, back cooling: Good support: Superior"
+  },
+  {
+    "theme": "FRAMES",
+    "brand": "GLIDEAWAY",
+    "displayName": "Frames",
+    "designation": "All",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Twin/Full Frames",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King,King,Queen",
+      "Full,Twin"
+    ],
+    "priceRange": {
+      "min": 59.99,
+      "max": 79.99
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "GLIDEAWAY"
+  },
+  {
+    "theme": "GRENSON",
+    "brand": "KINGSDOWN",
+    "displayName": "Grenson",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": ".The smooth cover is enhanced by the tri-tech memory foam underneath it. .Materials are infused with copper, silver and graphite for ultimate comfort. .Gel foam keeps the mattress cool while providing pressure relief and support. .A bottom layer of 6 foam core gently compresses for customized support where it's needed..This mattress works well with motion bases.",
+    "heroImage": "https://assets.roomstogo.com/product/kingsdown-grenson-twin-mattress_50102296_image-item",
+    "altImage": "https://assets.roomstogo.com/product/kingsdown-grenson-twin-mattress_50102296_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 377.0,
+      "max": 527.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "KINGSDOWN Foam Soft best for side, back cooling: Good support: Superior"
+  },
+  {
+    "theme": "HAMEL",
+    "brand": "THERAPEDIC KIDS",
+    "displayName": "Hamel",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "Boasting innovative sleep technology, the Therapedic Hamel mattress epitomizes comfort with the addition of self-cleaning properties. Its sanitized finish continually inhibits the growth of odor-causing microbes and bacteria using zinc to keep your mattress fresh. Perfect for children sharing a bed, TheraWrap Edge to Edge coils reduce motion transfer to prevent partner disturbance. Each individual coil moves independently, conforming to fit the sleeper. Featuring antimicrobial protection, the quilt cover is enhanced with soft cushioning. TheraCool advanced gel foam with graphite promotes comfort, combining pressure relieving and heat-wicking material. For support and durability, this utilizes performance foam to provide comfort for years to come.",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-hamell-twin-mattress_50111233_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-hamell-twin-mattress_50111233_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 277.0,
+      "max": 377.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC KIDS Innerspring Soft best for side, back cooling: Good support: Premier"
+  },
+  {
+    "theme": "HASTINGS",
+    "brand": "THERAPEDIC HYBRID",
+    "displayName": "Hastings",
+    "designation": "",
+    "type": "Hybrid",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-hastings-twin-xl-mattress_50011382_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-hastings-twin-xl-mattress_50011382_alt-image-1",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 627.0,
+      "max": 1177.0
+    },
+    "variantCount": 3,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC HYBRID Hybrid Soft best for side, back cooling: Superior support: Superior"
+  },
+  {
+    "theme": "HAWKE",
+    "brand": "KINGSDOWN",
+    "displayName": "Hawke",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": ".Gel micro-denier polyester fiber in the cover makes the surface exceptionally soft and resilient. .Tri-tech memory foam includes specialized lumbar support underneath it..Materials are infused with copper, silver and graphite for ultimate comfort. .Gel foam keeps the mattress cool while providing pressure relief and support. .Perimeter wrapped coils provide superior edge-to-edge support at the base level..Ensures comfortable sleep throughout the night.",
+    "heroImage": "https://assets.roomstogo.com/product/kingsdown-hawke-twin-mattress_50102284_image-item",
+    "altImage": "https://assets.roomstogo.com/product/kingsdown-hawke-twin-mattress_50102284_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 298.0,
+      "max": 398.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "KINGSDOWN Innerspring Medium best for side, back, stomach cooling: Good support: Premier"
+  },
+  {
+    "theme": "HELIX KIDS",
+    "brand": "HELIX",
+    "displayName": "Helix Kids",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Dual",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/helix-kids-twin-mattress_50170047_image-item",
+    "altImage": "https://assets.roomstogo.com/product/helix-kids-twin-mattress_50170047_alt-image-6",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 599.0,
+      "max": 799.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "HELIX Innerspring Dual best for side, back, stomach cooling: Superior support: Ultimate"
+  },
+  {
+    "theme": "HELIX MIDNIGHT ELITE",
+    "brand": "HELIX",
+    "displayName": "Helix Midnight Elite",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/helix-midnight-elite-twin-xl-mattress_50070122_image-item",
+    "altImage": "https://assets.roomstogo.com/product/helix-midnight-elite-twin-xl-mattress_50070122_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1999.0,
+      "max": 3599.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "HELIX Innerspring Medium best for side, back, stomach cooling: Premier support: Premier"
+  },
+  {
+    "theme": "HELIX MIDNIGHT LUXE",
+    "brand": "HELIX",
+    "displayName": "Helix Midnight Luxe",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/helix-midnight-luxe-twin-xl-mattress_50070110_image-item",
+    "altImage": "https://assets.roomstogo.com/product/helix-midnight-luxe-twin-xl-mattress_50070110_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1348.0,
+      "max": 2538.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "HELIX Innerspring Medium best for side, back, stomach cooling: Superior support: Premier"
+  },
+  {
+    "theme": "HYPER-COTTON SHEETS",
+    "brand": "BEDGEAR",
+    "displayName": "Hyper-Cotton Sheets",
+    "designation": "",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Made with innovative cooling technology, BEDGEAR's Hyper-Cotton Performance sheet set is designed for flexibility, durability and comfort. Hyper-Cotton material allows more airflow to your bed when compared to traditional 100% cotton sheets, allowing your body to achieve optimal temperature regulation. The seamless fitted sheet creates a smooth sleep surface and long-lasting construction, so you don't have to worry about ripped seams. A fitted sheet Powerband ensures the most secure fit and grip on your mattress and works great with adjustable bases. Ideal for all seasons, Hyper-Cotton sheets have a fast-dry technology that quickly evaporates moisture.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Split King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 149.99,
+      "max": 249.99
+    },
+    "variantCount": 24,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "IMPREZA",
+    "brand": "THERAPEDIC KIDS",
+    "displayName": "Impreza",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 1,
+      "label": "Basic",
+      "raw": "1-Basic"
+    },
+    "description": "Theracool advanced gel wicks away heat from the body, ensuring a cooler night's sleep. Therafoam encasement provides tremendous edge support for a smoother transition in and out of bed. Individual coils move independently to conform to the sleeper's position. Performance Plush transition layer adds extra support. Its sanitized finish continually inhibits the growth of odor-causing microbes and bacteria, keeping your mattress fresh.",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-impreza-twin-mattress_50111269_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-impreza-twin-mattress_50111269_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 327.0,
+      "max": 477.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC KIDS Innerspring Medium best for side, back, stomach cooling: Basic support: Superior"
+  },
+  {
+    "theme": "IPROTECT CRIB PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Iprotect Crib Protector",
+    "designation": "Kid",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Essential for comfortable, healthy sleep, the BEDGEAR iProtect crib mattress protector offers a soft and flexible waterproof layer of defense for both your baby and their bed. Machine washable, its noiseless, spill-resistant barrier shields their mattress from stains, and the lightweight, brushed fiber surface keeps their mattress dry throughout the night. It also protects against dust and other allergens to create a clean sleep environment. iProtect's stretch sidewall skirt with Powerband makes it easy to put on your crib mattress, and it smoothly and securely grips the mattress, with no bunching underneath.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [],
+    "priceRange": {
+      "min": 19.99,
+      "max": 19.99
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "IPROTECT PILLOW PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Iprotect Pillow Protector",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Simple protection at its best Engineered from breathable, moisture wicking fabric, the iProtect Pillow Protector is designed to protect your pillows against pet dander, dust mites, and allergens. This lightweight pillow protector securely fits against your pillow for a smooth fit that never bunches.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 9.99,
+      "max": 14.99
+    },
+    "variantCount": 2,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "IPROTECT PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Iprotect Protector",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Essential for comfortable sleep, the BEDGEAR iProtect mattress protector offers a layer of defense for you and your bed. Machine washable, its noiseless waterproof barrier shields your mattress from stains. It also protects against dust and other allergens to create a clean, healthy sleep environment. The lightweight, brushed fiber surface keeps your mattress dry throughout the night. iProtect's sidewall skirt smoothly and securely fits mattresses from eight to 18 inches in height.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 49.99,
+      "max": 89.99
+    },
+    "variantCount": 6,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "IPROTECT SLEEPER PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Iprotect Sleeper Protector",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Specially designed for sleepers, the BEDGEAR iProtect sleeper mattress protector fits securely while creating a comfortable bed for guests. BEDGEAR's product protects your sleeper mattress from dust mites, pet dander and other common allergens. To help maintain a clean and healthy sleep environment, its waterproof barrier resists stains, mold and mildew by reducing contact with liquids. The flexible two-way stretch skirt is built for mattresses up to four inches high, which prevents it from getting caught in the mechanism or bunching when folded. For easy care, this mattress protector is machine washable and can be placed in the dryer on low heat.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Full",
+      "Queen",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 29.99,
+      "max": 39.99
+    },
+    "variantCount": 4,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "KAANAPALI",
+    "brand": "THERAPEDIC HYBRID",
+    "displayName": "Kaanapali",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-kaanapali-twin-xl-mattress_50011457_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-kaanapali-twin-xl-mattress_50011457_alt-image-1",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1249.99,
+      "max": 1899.99
+    },
+    "variantCount": 3,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC HYBRID Hybrid Firm best for stomach, back cooling: Superior support: Premier"
+  },
+  {
+    "theme": "KERRY PARK",
+    "brand": "CORRECT COMFORT",
+    "displayName": "Kerry Park",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Extra Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-correct-comfort-kerry-park-twin-xl-mattress_50028957_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-correct-comfort-kerry-park-twin-xl-mattress_50028957_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 797.0,
+      "max": 1397.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "CORRECT COMFORT Innerspring Extra Soft best for side, back cooling: Superior support: Superior"
+  },
+  {
+    "theme": "LEDO",
+    "brand": "THERAPEDIC HYBRID",
+    "displayName": "Ledo",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/therapedic-ledo-twin-xl-mattress_50011495_image-item",
+    "altImage": "https://assets.roomstogo.com/product/therapedic-ledo-twin-xl-mattress_50011495_alt-image-1",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1449.99,
+      "max": 2299.99
+    },
+    "variantCount": 3,
+    "hasImage": true,
+    "themeSummary": "THERAPEDIC HYBRID Hybrid Medium best for side, back, stomach cooling: Superior support: Premier"
+  },
+  {
+    "theme": "LEVEL FOUR PLUSH PILLOWTOP",
+    "brand": "BEAUTYREST WORLD CLASS",
+    "displayName": "Level Four Plush Pillowtop",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Step up to a world class sleep experience with Beautyrest World Class. Provides cushy comfort that responds to movement with a soft-yet-supportive feel and a cloud-like top layer. InfiniCool MAX Technology adds advanced cooling with vertical cooling fibers. Level Four mattresses feature twice the SurfaceTouch Gel Memory Foam, unlocking even more pressure relief right at the surface. World Class Relief HD Foam, featured in all level four Beautyrest mattresses, offers remarkable pressure relief that responds to your body. Beautyrest ActiveResponse MAX HD Memory Foam helps alleviate aches and pains withhigh-density contouring. 1000-density Pocketed Coil Technology and higher density foams offer individualized support motion separation.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-world-class-level-four-plush-pillow-top-twin-xl-mattress_50025800_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-world-class-level-four-plush-pillow-top-twin-xl-mattress_50025800_alt-image-13",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1799.0,
+      "max": 2299.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST WORLD CLASS Innerspring Soft best for side, back cooling: Premier support: Premier"
+  },
+  {
+    "theme": "LEVEL THREE MEDIUM PILLOWTOP",
+    "brand": "BEAUTYREST WORLD CLASS",
+    "displayName": "Level Three Medium Pillowtop",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Step up to a world class sleep experience with Beautyrest World Class. Provides medium support with just the right amount of pressure relief and cloud-like top layer. InfiniCool MAX Technology adds advanced cooling combined with natural lux fibers for added surface breathability. SurfaceTouch Gel Memory Foam is quilted into the sleep surface to unlock immediate, advanced comfort. GelTouch Foam helps provide comfort, support, airflow and breathability. World Class Relief HD Foam, featured in all level three Beautyrest mattresses, adapts to body temperature, providing responsive pressure relief. Beautyrest ActiveResponse MAX HD Memory Foam creates high-density contouring to help alleviate aches and pains. 1000-density Pocketed Coil Technology and higher density foams offer individualized support motion separation.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-world-class-level-three-medium-pillow-top-twin-xl-mattress_50025759_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-world-class-level-three-medium-pillow-top-twin-xl-mattress_50025759_alt-image-13",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1499.0,
+      "max": 1949.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST WORLD CLASS Innerspring Medium best for side, back, stomach cooling: Premier support: Premier"
+  },
+  {
+    "theme": "LEVEL THREE PLUSH",
+    "brand": "BEAUTYREST WORLD CLASS",
+    "displayName": "Level Three Plush",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Step up to a world class sleep experience with Beautyrest World Class. Provides cushy comfort that responds to movement with a soft-yet-supportive feel. InfiniCool MAX Technology adds advanced cooling with vertical cooling fibers. SurfaceTouch Gel Memory Foam is quilted into the sleep surface to unlock immediate, advanced comfort. World Class Relief HD Foam, featured in all level three Beautyrest mattresses, adapts to body temperature, providing responsive pressure relief. Beautyrest ActiveResponse MAX HD Memory Foam creates high-density contouring to help alleviate aches and pains. 1000-density Pocketed Coil Technology and higher density foams offer individualized support motion separation.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-world-class-level-three-plush-twin-xl-mattress_50025747_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-world-class-level-three-plush-twin-xl-mattress_50025747_alt-image-13",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1299.0,
+      "max": 1749.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST WORLD CLASS Innerspring Soft best for side, back cooling: Premier support: Premier"
+  },
+  {
+    "theme": "LUX ESTATE ELITE",
+    "brand": "STEARNS & FOSTER",
+    "displayName": "Lux Estate Elite",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "The soft, sustainably sourced TENCEL cover creates a cool and comfortable sleep surface with enhanced cooling fibers. TEMPUR-Indulge Memory Foam comfort layers, developed by the sleep experts at Tempur-Pedic, conform to the body to deliver all-night comfort and pressure relief. The Pillowtop Support Layer features microcoils just below the pillowtop to provide added durability for maintaining overall comfort. Supportive latex comfort layers provide a perfect combination of pressure relief, durability, and a uniquely weightless, yet supported feel. IntelliCoil innersprings are uniquely designed to respond to varying types of pressure, providing the perfect balance of pressure relief and support.",
+    "heroImage": "https://assets.roomstogo.com/product/stearns-and-foster-lux-estate-elite-medium-pillow-top-twin-xl-mattress_50048276_image-item",
+    "altImage": "https://assets.roomstogo.com/product/stearns-and-foster-lux-estate-elite-medium-pillow-top-twin-xl-mattress_50048276_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 4099.0,
+      "max": 4799.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "STEARNS & FOSTER Innerspring Medium best for side, back, stomach cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "LUX ESTATE FIRM PT",
+    "brand": "STEARNS & FOSTER",
+    "displayName": "Lux Estate Firm Pt",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Engineered with luxury and leisure in mind, the Stearns & Foster Lux Estate Collection provides an elevated level of comfort and support. It combines our exclusive TEMPUR-Indulge Memory Foam for enhanced pressure relief with supportive IntelliCoil innersprings with latex for durability. Enhanced cool-to-the-touch cover and additional ventilation throughout the mattress help keep you cool, all night long.",
+    "heroImage": "https://assets.roomstogo.com/product/stearns-and-foster-lux-estate-firm-pillow-top-twin-xl-mattress_50048101_image-item",
+    "altImage": "https://assets.roomstogo.com/product/stearns-and-foster-lux-estate-firm-pillow-top-twin-xl-mattress_50048101_alt-image-1",
+    "availableSizes": [
+      "California King"
+    ],
+    "priceRange": {
+      "min": 4099.0,
+      "max": 4099.0
+    },
+    "variantCount": 1,
+    "hasImage": true,
+    "themeSummary": "STEARNS & FOSTER Innerspring Firm best for stomach, back cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "LUXEADAPT 2.0 MEDIUM HYBRID",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Luxeadapt 2.0 Medium Hybrid",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".The removable, machine-washable, and cool-to-the-touch SmartClimate cover features heat-absorbing fibers, drawing heat away from the body for added cooling comfort..Specially ventilated TEMPUR-Material delivers additional airflow and breathability, while providing pressure relief and motion absorption..Advanced Relief Material is the most pressure-relieving material made by Tempur-Pedic and contours to your body for ultimate comfort. .Hybrid technology mixes premium innersprings with a proprietary hybrid material to deliver a lighter, more-responsive feel that helps support any sleep position.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-luxeadapt-20-medium-hybrid-twin-xl-mattress_50007585_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-luxeadapt-20-medium-hybrid-twin-xl-mattress_50007585_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 4199.0,
+      "max": 5399.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Hybrid Medium best for side, back, stomach cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "LUXEADAPT 2.0 SOFT",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Luxeadapt 2.0 Soft",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".The removable, machine-washable, and cool-to-the-touch SmartClimate cover features heat-absorbing fibers, drawing heat away from the body for added cooling comfort..Specially ventilated TEMPUR-Material delivers additional airflow and breathability, while providing pressure relief and motion absorption..Advanced Relief Material is the most pressure-relieving material made by Tempur-Pedic and contours to your body for ultimate comfort. .An ergonomic 5-zone support layer conforms to your body for targeted support in the spine, hips, and shoulders for personalized comfort.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-luxeadapt-20-soft-twin-xl-mattress_50007561_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-luxeadapt-20-soft-twin-xl-mattress_50007561_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 4199.0,
+      "max": 5399.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Soft best for side, back cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "LUXEBREEZE 2.0 FIRM",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Luxebreeze 2.0 Firm",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "description": "The all-new TEMPUR-LuxeBreeze mattress feels up to 10 cooler. Features advanced Pure Cool Plus material designed to pull heat away from the body so even the hottest sleepers can stay cool throughout the night. One-of-a-kind Tempur-Pedic Ventilated Advanced Relief material increases airflow throughout the mattress for a deeper, more restful sleep.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-luxebreeze-20-firm-twin-xl-mattress_50007624_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-luxebreeze-20-firm-twin-xl-mattress_50007624_image-item",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Split California King",
+      "Split Head King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 5199.0,
+      "max": 10398.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Firm best for stomach, back cooling: Ultimate support: Ultimate"
+  },
+  {
+    "theme": "MAKE WAVES",
+    "brand": "TOMMY BAHAMA",
+    "displayName": "Make Waves",
+    "designation": "Kid",
+    "type": "Hybrid",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/tommy-bahama-make-waves-twin-mattress_50111067_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tommy-bahama-make-waves-twin-mattress_50111067_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 395.0,
+      "max": 645.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "TOMMY BAHAMA Hybrid Firm best for stomach, back cooling: Good support: Premier"
+  },
+  {
+    "theme": "MOLECULE CORE",
+    "brand": "MOLECULE",
+    "displayName": "Molecule Core",
+    "designation": "",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/molecule-core-twin-xl-mattress_50010570_image-item",
+    "altImage": "https://assets.roomstogo.com/product/molecule-core-twin-xl-mattress_50010570_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 397.0,
+      "max": 897.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "MOLECULE Foam Medium best for side, back, stomach cooling: Superior support: Superior"
+  },
+  {
+    "theme": "NIGHT ICE PILLOW",
+    "brand": "BEDGEAR",
+    "displayName": "Night Ice Pillow",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 299.99,
+      "max": 349.99
+    },
+    "variantCount": 8,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "NORTHGATE",
+    "brand": "CORRECT COMFORT",
+    "displayName": "Northgate",
+    "designation": "",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/posturepedic-northgate-twin-xl-mattress_50028971_image-item",
+    "altImage": "https://assets.roomstogo.com/product/posturepedic-northgate-twin-xl-mattress_50028971_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 977.0,
+      "max": 1497.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "CORRECT COMFORT Foam Medium best for side, back, stomach cooling: Superior support: Superior"
+  },
+  {
+    "theme": "OCEANA MIST",
+    "brand": "BEAUTYSLEEP",
+    "displayName": "Oceana Mist",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Beauty Sleep Oceana Mist 11.5 Medium Hybrid mattress is designed for your lifestyle. With a smooth top panel, the Beauty Sleep Oceana Mist 11.5 Medium Hybrid mattress features AllCool Gel Foam and AllCool Gel Memory Foam that contours to your body for the ultimate pressure relief. Premium foams provide a responsive sleep surface for all-night comfort, support, airflow, and breathability. Plus, firm 815 Original Beauty Sleep Pocketed Coils provide consistent, supportive sleep at a value designed for your lifestyle. Medium Smooth Top Hybrid mattress.",
+    "heroImage": "https://assets.roomstogo.com/product/beauty-sleep-oceana-mist-medium-hybrid-twin-xl-mattress_50022210_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beauty-sleep-oceana-mist-medium-hybrid-twin-xl-mattress_50022210_alt-image-8",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 347.0,
+      "max": 697.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYSLEEP Hybrid Medium best for side, back, stomach cooling: Good support: Superior"
+  },
+  {
+    "theme": "PEBBLEBROOK",
+    "brand": "POSTUREPEDIC PRO",
+    "displayName": "Pebblebrook",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "The Sealy Posturepedic Pebblebrook Medium mattress offers pressure-relieving comfort and targeted support to help maintain natural body alignment and reduce nagging Bed Aches night after night. The orthopedic-inspired Posturepedic Pro Support System features exclusive PrecisionFit Coils enhanced by MaxSupport Technology for all-over support. And the DuraFlex Coil Edge provides a reinforced solid surface that's built to last.",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-posturepedic-pebblebrook-twin-xl-mattress_50029214_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-posturepedic-pebblebrook-twin-xl-mattress_50029214_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 977.0,
+      "max": 1577.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "POSTUREPEDIC PRO Innerspring Medium best for side, back, stomach cooling: Superior support: Premier"
+  },
+  {
+    "theme": "PROADAPT 2.0 FIRM",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Proadapt 2.0 Firm",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".The removable, machine-washable, and cool-to-the-touch SmartClimate cover features heat-absorbing fibers, drawing heat away from the body for added cooling comfort..Ventilated Advanced Relief Material provides pressure relief and added ventilation for increased airflow..TEMPUR-Material provides one-of-a-kind, body-conforming support by responding to your body's weight, shape, and temperature.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-firm-twin-xl-mattress_50007484_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-firm-twin-xl-mattress_50007484_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2899.0,
+      "max": 4099.0
+    },
+    "variantCount": 7,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Firm best for stomach, back cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "PROADAPT 2.0 MEDIUM",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Proadapt 2.0 Medium",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".The removable, machine-washable, and cool-to-the-touch SmartClimate cover features heat-absorbing fibers, drawing heat away from the body for added cooling comfort..Ventilated Advanced Relief Material provides pressure relief and added ventilation for increased airflow..TEMPUR-Material provides one-of-a-kind, body-conforming support by responding to your body's weight, shape, and temperature.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-medium-twin-xl-mattress_50007523_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-medium-twin-xl-mattress_50007523_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2899.0,
+      "max": 4099.0
+    },
+    "variantCount": 7,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Medium best for side, back, stomach cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "PROADAPT 2.0 MEDIUM HYBRID",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Proadapt 2.0 Medium Hybrid",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".The removable, machine-washable, and cool-to-the-touch SmartClimate cover features heat-absorbing fibers, drawing heat away from the body for added cooling comfort..Specially ventilated TEMPUR-Material delivers additional airflow and breathability, while providing pressure relief and motion absorption..Advanced Relief Material is the most pressure-relieving material made by Tempur-Pedic and contours to your body for ultimate comfort. .Hybrid technology mixes premium innersprings with one-of-a-kind Tempur-Pedic materials to deliver the right combination of relief and support.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-medium-hybrid-twin-xl-mattress_50007559_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-medium-hybrid-twin-xl-mattress_50007559_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2899.0,
+      "max": 4099.0
+    },
+    "variantCount": 7,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Hybrid Medium best for side, back, stomach cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "PROADAPT 2.0 SOFT",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Proadapt 2.0 Soft",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": ".The removable, machine-washable, and cool-to-the-touch SmartClimate cover features heat-absorbing fibers, drawing heat away from the body for added cooling comfort..Specially ventilated TEMPUR-Material delivers additional airflow and breathability, while providing pressure relief and motion absorption..Advanced Relief Material is the most pressure-relieving material made by Tempur-Pedic and conforms to your body for ultimate comfort.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-soft-twin-xl-mattress_50007535_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-proadapt-20-soft-twin-xl-mattress_50007535_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2899.0,
+      "max": 4099.0
+    },
+    "variantCount": 7,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Soft best for side, back cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "PROBREEZE 2.0 MEDIUM HYBRID",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Probreeze 2.0 Medium Hybrid",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "description": "Experience all-night cooling with the all-new TEMPUR-ProBreeze mattress. Features a removable, machine-washable cover with heat-absorbing fibers that provide cooling comfort. Premium hybrid technology combines over 1,000 innersprings with Tempur-Pedic's pressure relieving and cooling materials. Delivers exceptional support and ensures cool and comfortable sleep every night.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-pedic-probreeze-20-medium-hybrid-twin-xl-mattress_50007511_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-pedic-probreeze-20-medium-hybrid-twin-xl-mattress_50007511_image-item",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 3899.0,
+      "max": 5099.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Hybrid Medium best for side, back, stomach cooling: Ultimate support: Ultimate"
+  },
+  {
+    "theme": "RTG-SLEEP 2900",
+    "brand": "LEGGETT & PLATT",
+    "displayName": "Rtg-Sleep 2900",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": ".Head-up only adjustable base..Wireless remote plus Bluetooth app that connects to your Android of iOS device to control base functions..Height adjustable legs and a zero-clearance design for compatibility with most beds..Supports a large lifting capacity up to 850 lbs.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 499.0,
+      "max": 799.0
+    },
+    "variantCount": 3,
+    "hasImage": false,
+    "themeSummary": "LEGGETT & PLATT"
+  },
+  {
+    "theme": "RTG-SLEEP 3900",
+    "brand": "LEGGETT & PLATT",
+    "displayName": "Rtg-Sleep 3900",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 749.0,
+      "max": 1299.0
+    },
+    "variantCount": 3,
+    "hasImage": false,
+    "themeSummary": "LEGGETT & PLATT"
+  },
+  {
+    "theme": "RTG-SLEEP 5900",
+    "brand": "MOTO MOTION",
+    "displayName": "Rtg-Sleep 5900",
+    "designation": "",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1499.0,
+      "max": 2099.0
+    },
+    "variantCount": 3,
+    "hasImage": false,
+    "themeSummary": "MOTO MOTION"
+  },
+  {
+    "theme": "SEASIDE SERENITY",
+    "brand": "TOMMY BAHAMA",
+    "displayName": "Seaside Serenity",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/tommy-bahama-seaside-serenity-twin-mattress_50111079_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tommy-bahama-seaside-serenity-twin-mattress_50111079_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 495.0,
+      "max": 745.0
+    },
+    "variantCount": 4,
+    "hasImage": true,
+    "themeSummary": "TOMMY BAHAMA Innerspring Medium best for side, back, stomach cooling: Good support: Premier"
+  },
+  {
+    "theme": "SERIES ONE EXTRA FIRM",
+    "brand": "BEAUTYREST BLACK",
+    "displayName": "Series One Extra Firm",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Extra Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Experience extraordinary sleep at the intersection of luxury and innovation with the Beautyrest Black Collection's premier materials and advanced sleep technology. Triple-Stranded Pocketed Coil Technology offers our highest level of individualized support and motion separation, so you can rest undisturbed. Specialized vertical fibers combine with an applied surface-cooling technology to help transfer heat away from the body all night. Contouring foam adheres to the shape of your body for exceptional pressure relief. High-density, firm-feel comfort foam provides a unique combination of comfort and support night after night. A unique, channeled design promotes airflow for cool, enhanced pressure relief. All foams are CertiPUR-US certified. Our mattresses are proudly assembled in the USA. Adjustable base compatible.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-black-series-one-extra-firm-twin-xl-mattress_50037057_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-black-series-one-extra-firm-twin-xl-mattress_50037057_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1549.0,
+      "max": 2599.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST BLACK Innerspring Extra Firm best for stomach, back cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "SERIES THREE PLUSH PILLOW TOP",
+    "brand": "BEAUTYREST BLACK",
+    "displayName": "Series Three Plush Pillow Top",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Experience extraordinary sleep at the intersection of luxury and innovation with the Beautyrest Black Collection's premier materials and advanced sleep technology. Plus, for an even more luxurious upgrade, Series Three Pillow Top models feature exclusive 2K Nano Coils for enhanced, individualized support throughout the night.Triple-Stranded Pocketed Coil Technology offers our highest level of individualized support and motion separation, so you can rest undisturbed.A layer of specialized foam is quilted into the sleep surface for exceptional pressure relief.A premium memory foam layer, infused with diamond particles, is designed to help move heat away from the body for a cool sleep.Ventilated latex layer maximizes airflow and provides advanced pressure relief.A layer of 2K Nano Coils enhances conformability for increased, individualized support All foams are CertiPUR-US certified.Our mattresses are proudly assembled in the USA.Adjustable base compatible.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-black-series-three-plush-pillow-top-twin-xl-mattress_50037223_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-black-series-three-plush-pillow-top-twin-xl-mattress_50037223_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 3649.0,
+      "max": 4899.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST BLACK Innerspring Soft best for side, back cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "SERIES TWO MEDIUM",
+    "brand": "BEAUTYREST BLACK",
+    "displayName": "Series Two Medium",
+    "designation": "Adult",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Experience extraordinary sleep at the intersection of luxury and innovation with the Beautyrest Black Collection's premier materials and advanced sleep features. Triple-Stranded Pocketed Coil Technology offers our highest level of individualized support and motion separation, so you can rest undisturbed. Specialized vertical fibers combine with an applied surface-cooling technology to help transfer heat away from the body all night. A supportive foam layer quilted into the sleep surface unlocks advanced pressure relief. Micro Diamond Memory Foam, infused with diamond particles, helps move heat away from the body for a cool sleep. A unique, channeled design promotes airflow for cool, enhanced pressure relief. All foams are CertiPUR-US certified. Our mattresses are proudly assembled in the USA. Adjustable base friendly - helps reduce snoring and enhance comfort.",
+    "heroImage": "https://assets.roomstogo.com/product/beautyrest-black-series-two-medium-twin-xl-mattress_50037134_image-item",
+    "altImage": "https://assets.roomstogo.com/product/beautyrest-black-series-two-medium-twin-xl-mattress_50037134_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2549.0,
+      "max": 3599.0
+    },
+    "variantCount": 5,
+    "hasImage": true,
+    "themeSummary": "BEAUTYREST BLACK Innerspring Medium best for side, back, stomach cooling: Premier support: Ultimate"
+  },
+  {
+    "theme": "SIMMONS KIDS DELIGHT",
+    "brand": "SIMMONS KIDS",
+    "displayName": "Simmons Kids Delight",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 1,
+      "label": "Basic",
+      "raw": "1-Basic"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Simmons Kids Delight mattress is designed with multiple layers of advanced comfort foam. A plush outer layer provides pressure relief and stable temperature regulation. A firm comfort foam core adds the proper support for your growing child. The cozy channeled cover offers a refreshing night's rest.",
+    "heroImage": "https://assets.roomstogo.com/product/simmons-kids-delight-twin-mattress_50110938_image-item",
+    "altImage": "https://assets.roomstogo.com/product/simmons-kids-delight-twin-mattress_50110938_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 177.0,
+      "max": 277.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "SIMMONS KIDS Foam Firm best for stomach, back cooling: Good support: Good"
+  },
+  {
+    "theme": "SIMMONS KIDS GLAD",
+    "brand": "SIMMONS KIDS",
+    "displayName": "Simmons Kids Glad",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "The Simmons Kids Delight mattress is designed with multiple layers of advanced comfort foam. A plush outer layer provides pressure relief all night. Multiple gel foam layers add stable temperature regulation and cradling softness. A medium comfort foam core offers the proper support for your growing child.",
+    "heroImage": "https://assets.roomstogo.com/product/simmons-kids-glad-twin-mattress_50110940_image-item",
+    "altImage": "https://assets.roomstogo.com/product/simmons-kids-glad-twin-mattress_50110940_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 277.0,
+      "max": 377.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "SIMMONS KIDS Foam Medium best for side, back, stomach cooling: Good support: Good"
+  },
+  {
+    "theme": "SIMMONS KIDS HAPPY",
+    "brand": "SIMMONS KIDS",
+    "displayName": "Simmons Kids Happy",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "The Simmons Kids Happy mattress is designed with multiple layers of advanced comfort foam and a supportive coil system. A plush outer layer offers cradling softness. Premium gel memory foam provides contouring pressure relief and temperature regulation. 800 individually wrapped coils conform to the body for supported sleep. A firm comfort foam core adds the proper support for your growing child.",
+    "heroImage": "https://assets.roomstogo.com/product/simmons-kids-happy-twin-mattress_50110952_image-item",
+    "altImage": "https://assets.roomstogo.com/product/simmons-kids-happy-twin-mattress_50110952_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 327.0,
+      "max": 427.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "SIMMONS KIDS Innerspring Firm best for stomach, back cooling: Superior support: Good"
+  },
+  {
+    "theme": "SMART MATCH 2.0",
+    "brand": "KINGSDOWN",
+    "displayName": "Smart Match 2.0",
+    "designation": "",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/kingsdown-smart-match-20-twin-xl-mattress_50001773_image-item",
+    "altImage": "https://assets.roomstogo.com/product/kingsdown-smart-match-20-twin-xl-mattress_50001773_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 977.0,
+      "max": 1777.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "KINGSDOWN Innerspring Medium best for side, back, stomach cooling: Superior support: Premier"
+  },
+  {
+    "theme": "STEARNS AND FOSTER LATEX",
+    "brand": "STEARNS & FOSTER",
+    "displayName": "Stearns And Foster Latex",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Ensuring consistent comfort throughout the night is the Stearns & Foster latex pillow. Crafted with a stretch knit cover with breathable Tencel material to wick away moisture and provide exceptional all-night comfort. State of the art surface guard technology protects the pillow from bacteria, odors and staining. Premium latex delivers proper pressure relief and support for neck and shoulders.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 129.0,
+      "max": 129.0
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "STEARNS & FOSTER"
+  },
+  {
+    "theme": "STORM PILLOW",
+    "brand": "BEDGEAR",
+    "displayName": "Storm Pillow",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Dual-sided Performance pillow. Ver-Tex instant cooling cover helps reduce overheating. Responsive foam provides ample support for the head, neck and shoulders. Air-X mesh materials enhance airflow for maximum breathability.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "King",
+      "Queen"
+    ],
+    "priceRange": {
+      "min": 199.99,
+      "max": 259.99
+    },
+    "variantCount": 8,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "TEMPUR-ERGO 3.0",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Tempur-Ergo 3.0",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The redesigned TEMPUR-Ergo Power Base is better than ever. Offers adjustable support in the lumbar region along with three different massage settings. Unlimited range of head and foot positions relieve pressure while sitting, reading, working or watching TV. Zero gravity preset provides a simulated weightless experience by simultaneously elevating your head and feet. The TEMPUR-Ergo Power Base paired with a Tempur-Pedic mattress helps to ease aches & pains, helping you fall asleep and stay asleep - every night.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1599.0,
+      "max": 2399.0
+    },
+    "variantCount": 6,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "TEMPUR-ERGO 3.0 SMART",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Tempur-Ergo 3.0 Smart",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The new and improved TEMPUR-Ergo Smart Base is specially designed to improve your sleep quality over time. Sleeptracker-AI gives you personalized sleep coaching with insights and expert-level analytics through the easy-to-use app. Automatic Snore Response raises your head once approximately 12 degrees to help reduce snoring in otherwise healthy individuals who snore due to body positioning. An additional component can raise up to six inches to provide extra support in the lumbar area for extra comfort while you're sitting or lying flat. Zero gravity preset takes the pressure off your back while you sleep by simultaneously elevating your head and feet, creating a weightless experience and comfortable sleep night after night.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2099.0,
+      "max": 2899.0
+    },
+    "variantCount": 6,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "TEMPUR-ERGO PROSMART",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Tempur-Ergo Prosmart",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "The all-new TEMPUR-Ergo ProSmart Base, powered by Sleeptracker-AI, delivers an innovative sleep solution for snoring as well as enhanced relaxation. Automatic Snore Response can detect and respond to snoring once by raising your head approximately 12 degrees to help reduce snoring in otherwise healthy individuals who snore due to body positioning. SoundScape Mode is an immersive experience that allows you to hear and feel sound through the mattress by connecting a Bluetooth device. Wind Down preset program helps you calmly and comfortably drift off to sleep by cycling through different base positions and soothing massage types. Wave Form Massage eases muscle tension by using sound waves to transmit vibrations throughout the mattress, promoting relaxation for the mind and body.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "King",
+      "Queen",
+      "Split California King",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 2599.0,
+      "max": 3399.0
+    },
+    "variantCount": 5,
+    "hasImage": false,
+    "themeSummary": "TEMPURPEDIC"
+  },
+  {
+    "theme": "TEMPUR-KIDS",
+    "brand": "TEMPURPEDIC",
+    "displayName": "Tempur-Kids",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "Exclusively at Rooms To Go, the TEMPUR-Kids mattress provides a restorative sleep experience for growing bodies. At the mattress surface, an anti-microbial cover is treated to defend against dust mite dander and other allergens to promote a fresh, healthy sleep environment. Beneath the cover, exclusive TEMPUR-ES Material creates a soft feel that relaxes your child's body. The ORIGINAL TEMPUR Material support layer adapts to your child's unique shape, providing conforming comfort. The end result is a plush mattress with body conforming support, which promotes deep, rejuvenating, Tempur-Pedic sleep.",
+    "heroImage": "https://assets.roomstogo.com/product/tempur-kids-twin-mattress_50134116_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tempur-kids-project-z-twin-mattress_50134116_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 699.0,
+      "max": 799.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "TEMPURPEDIC Foam Medium best for side, back, stomach cooling: Good support: Ultimate"
+  },
+  {
+    "theme": "TUFT & NEEDLE KIDS GLEE",
+    "brand": "TUFT & NEEDLE",
+    "displayName": "Tuft & Needle Kids Glee",
+    "designation": "Kid",
+    "type": "Foam",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "Whether they're a teething toddler or a growing teen, help your child wake refreshed with the Tuft & Needle Glee mattress. Featuring a foam construction for cradling comfort, this mattress offers innovative cooling, responsive pressure relief, and the bounce-back support of T&N Adaptive foam, so they can sink deeply into sleep-but never into the mattress. Unlike memory foam, Tuft & Needle's T&N Adaptive foam doesn't sink under weight. Instead, it keeps each sleeper lifted while contouring to relieve pressure where they need it most. With the addition of a breathable cover and reinforced edge support for corner-to-corner comfort, the Tuft & Needle Glee 9 Medium-Firm mattress ensures your child can sleep well, and wake refreshed, for years to come.",
+    "heroImage": "https://assets.roomstogo.com/product/tuft-needle-kids-glee-twin-mattress_50109923_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tuft-needle-kids-glee-twin-mattress_50109923_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 477.0,
+      "max": 577.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "TUFT & NEEDLE Foam Medium best for side, back, stomach cooling: Good support: Good"
+  },
+  {
+    "theme": "TUFT & NEEDLE STITCH TN3.1",
+    "brand": "TUFT & NEEDLE",
+    "displayName": "Tuft & Needle Stitch Tn3.1",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/tuft-needle-stitch-tn31-twin-xl-mattress_50009870_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tuft-needle-stitch-tn31-twin-xl-mattress_50009870_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 597.0,
+      "max": 1397.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "TUFT & NEEDLE Hybrid Medium best for side, back, stomach cooling: Superior support: Superior"
+  },
+  {
+    "theme": "TUFT & NEEDLE STITCH TN5.1",
+    "brand": "TUFT & NEEDLE",
+    "displayName": "Tuft & Needle Stitch Tn5.1",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/tuft-needle-stitch-tn51-twin-xl-mattress_50009882_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tuft-needle-stitch-tn51-twin-xl-mattress_50009882_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 695.0,
+      "max": 1495.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "TUFT & NEEDLE Hybrid Firm best for stomach, back cooling: Premier support: Premier"
+  },
+  {
+    "theme": "TUFT & NEEDLE STITCH TN9.1",
+    "brand": "TUFT & NEEDLE",
+    "displayName": "Tuft & Needle Stitch Tn9.1",
+    "designation": "Adult",
+    "type": "Hybrid",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 5,
+      "label": "Ultimate",
+      "raw": "5-Ultimate"
+    },
+    "supportLevel": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "",
+    "heroImage": "https://assets.roomstogo.com/product/tuft-needle-stitch-tn91-twin-xl-mattress_50009907_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tuft-needle-stitch-tn91-twin-xl-mattress_50009907_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 1497.0,
+      "max": 2497.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "TUFT & NEEDLE Hybrid Soft best for side, back cooling: Premier support: Premier"
+  },
+  {
+    "theme": "TUFT & NEEDLE TN1",
+    "brand": "TUFT & NEEDLE",
+    "displayName": "Tuft & Needle Tn1",
+    "designation": "Adult",
+    "type": "Foam",
+    "comfort": "Firm",
+    "bestForSleepPositions": [
+      "stomach",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "Reclaim your nights and wake refreshed for your days with the Tuft & Needle TN1 12 Firm mattress. Available in a standard flat-mattress construction, this mattress offers innovative cooling, responsive pressure relief, and the bounce back support of T&N Adaptive foam, so you can sink deeply into sleep-but never into your mattress. Unlike memory foam, Tuft & Needle's T&N Adaptive foam doesn't sink under your weight. Instead, it keeps you lifted while contouring to relieve pressure where you need it most. Rest easy as this ventilated foam helps channel airflow through the mattress and a breathable cover helps you sleep comfortably. Plus, feel cool as T&N AdaptiveCool gel foam technology, designed to help absorb heat, is ribboned across the center-third of the mattress to promote optimal cooling. With the addition of comfortable support foams, each Tuft & Needle TN1 12 Firm flat-mattress protects your rest so you can wake up refreshed and ready for the day.",
+    "heroImage": "https://assets.roomstogo.com/product/tuft-needle-tn1-twin-xl-mattress_50009933_image-item",
+    "altImage": "https://assets.roomstogo.com/product/tuft-needle-tn1-twin-xl-mattress_50009933_alt-image-1",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 527.0,
+      "max": 1177.0
+    },
+    "variantCount": 6,
+    "hasImage": true,
+    "themeSummary": "TUFT & NEEDLE Foam Firm best for stomach, back cooling: Good support: Good"
+  },
+  {
+    "theme": "TURNBULL",
+    "brand": "KINGSDOWN",
+    "displayName": "Turnbull",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 1,
+      "label": "Basic",
+      "raw": "1-Basic"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": ".A top layer of gel foam keeps the surface cool while providing pressure relief & support. .A second layer of convoluted foam emphasizes the cooling properties in the mattress. .Foam encased coils ensure personalized support and minimize partner disturbance..Reinforced coils along the perimeter create full, edge-to-edge support throughout the mattress. .Ensures cool and comfortable sleep throughout the night.",
+    "heroImage": "https://assets.roomstogo.com/product/kingsdown-turnbull-twin-mattress_50102260_image-item",
+    "altImage": "https://assets.roomstogo.com/product/kingsdown-turnbull-twin-mattress_50102260_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 238.0,
+      "max": 338.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "KINGSDOWN Innerspring Medium best for side, back, stomach cooling: Good support: Basic"
+  },
+  {
+    "theme": "VER-TEX CRIB PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Ver-Tex Crib Protector",
+    "designation": "Kid",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Essential for comfortable, healthy sleep, the BEDGEARVer-Tex temperature regulating performance crib mattress protector offers a cool, comfortable waterproof layer of defense for both your baby and their bed. Featuring a unique contoured channel construction that provides continuous ambient air ventilation, this premium protector was designed with comfort in mind. Engineered to enhance the conforming qualities of memory foam and latex mattresses, this protector also features a waterproof invisible barrier that completely protects theirmattress without changing the feel.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "Crib"
+    ],
+    "priceRange": {
+      "min": 39.99,
+      "max": 39.99
+    },
+    "variantCount": 1,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "VER-TEX PROTECTOR",
+    "brand": "BEDGEAR",
+    "displayName": "Ver-Tex Protector",
+    "designation": "Adult",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "Delivering instant heat deflection for a lasting cool-to-the-touch feel, the Ver-Tex temperature regulating performance mattress protector from BEDGEAR keeps you comfortable all night long. Featuring a unique contoured channel construction that provides continuous ambient air ventilation, this premium protector was designed with comfort in mind. Engineered to enhance the conforming qualities of memory foam and latex mattresses, this protector also features a waterproof invisible barrier that completely protects your mattress without changing the feel.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King",
+      "Full",
+      "King",
+      "Queen",
+      "Split California King",
+      "Split King",
+      "Twin",
+      "Twin XL"
+    ],
+    "priceRange": {
+      "min": 249.99,
+      "max": 359.99
+    },
+    "variantCount": 8,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "VER-TEX SHEETS",
+    "brand": "BEDGEAR",
+    "displayName": "Ver-Tex Sheets",
+    "designation": "",
+    "type": "",
+    "comfort": "",
+    "bestForSleepPositions": [],
+    "pressureRelief": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "supportLevel": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "temperatureManagement": {
+      "score": null,
+      "label": null,
+      "raw": ""
+    },
+    "description": "When things heat up, Ver-Tex sheets keep you cool all night long. Taking inspiration from your favorite active wear, Bedgear has engineered these sheets to be the smoothest, coolest sheets around.",
+    "heroImage": "",
+    "altImage": "",
+    "availableSizes": [
+      "California King,King",
+      "Queen",
+      "Split California King,Split King"
+    ],
+    "priceRange": {
+      "min": 299.99,
+      "max": 349.99
+    },
+    "variantCount": 12,
+    "hasImage": false,
+    "themeSummary": "BEDGEAR"
+  },
+  {
+    "theme": "Z-305",
+    "brand": "SEALY KIDS",
+    "displayName": "Z-305",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Medium",
+    "bestForSleepPositions": [
+      "side",
+      "back",
+      "stomach"
+    ],
+    "pressureRelief": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "supportLevel": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "temperatureManagement": {
+      "score": 2,
+      "label": "Good",
+      "raw": "2-Good"
+    },
+    "description": "Kid-friendly knitted fabric stretches in four directions, making the most of each comfort layer. Gel-infused quilted foam is soft to the touch, cradles the body, and helps keep the sleep surface cool. Active-Z's support layer offers medium firm upholstery foam, providing long lasting comfort throughout the mattress. Advanced support system offers individually wrapped coils that adapt to body movements and provide targeted support where it's needed most. Solid edge system delivers superior performance, additional sleep surface, and overall mattress stability with edge-to-edge foam encasement.",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-kids-z-305-twin-mattress_50152570_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-kids-z-305-twin-mattress_50152570_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 277.0,
+      "max": 377.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "SEALY KIDS Innerspring Medium best for side, back, stomach cooling: Good support: Good"
+  },
+  {
+    "theme": "Z-505",
+    "brand": "SEALY KIDS",
+    "displayName": "Z-505",
+    "designation": "Kid",
+    "type": "Innerspring",
+    "comfort": "Soft",
+    "bestForSleepPositions": [
+      "side",
+      "back"
+    ],
+    "pressureRelief": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "supportLevel": {
+      "score": 3,
+      "label": "Superior",
+      "raw": "3-Superior"
+    },
+    "temperatureManagement": {
+      "score": 4,
+      "label": "Premier",
+      "raw": "4-Premier"
+    },
+    "description": "Kid-friendly knitted stretch fabric features cooling performance yarns engineered for a comfortable night's sleep. Gel-infused quilted foam is soft to the touch, cradles the body, and helps keep the sleep surface cool. Active-Z gel memory foam layer provides advanced air cushioning for additional temperature control. Advanced support system offers individually wrapped coils that adapt to body movements and provide targeted support where it's needed most. Solid edge system delivers superior performance, additional sleep surface, and overall mattress stability with edge-to-edge foam encasement.",
+    "heroImage": "https://assets.roomstogo.com/product/sealy-kids-z-505-twin-mattress_50152582_image-item",
+    "altImage": "https://assets.roomstogo.com/product/sealy-kids-z-505-twin-mattress_50152582_alt-image-1",
+    "availableSizes": [
+      "Full",
+      "Twin"
+    ],
+    "priceRange": {
+      "min": 327.0,
+      "max": 427.0
+    },
+    "variantCount": 2,
+    "hasImage": true,
+    "themeSummary": "SEALY KIDS Innerspring Soft best for side, back cooling: Premier support: Superior"
+  }
+]
