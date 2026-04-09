@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
 
+const brandTerms = ["helix", "sealy", "tempur", "serta", "beautyrest", "purple", "sleepy's", "sleepys"];
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const shopperInput = String(body?.message ?? "").toLowerCase();
+  const requestedBrand = brandTerms.find((brand) => shopperInput.includes(brand));
 
   const ranked = mattressThemes
     .map((theme) => {
@@ -13,6 +16,7 @@ export async function POST(request: Request) {
         .join(" ")
         .toLowerCase();
 
+      if (requestedBrand && haystack.includes(requestedBrand)) score += 6;
       if (shopperInput.includes("cool") || shopperInput.includes("hot")) {
         if (haystack.includes("cool") || haystack.includes("foam") || haystack.includes("hybrid")) score += 2;
       }
@@ -48,7 +52,9 @@ export async function POST(request: Request) {
     trace: {
       agent: "mattress-match",
       invoked: true,
-      reason: "Shopper intent suggested recommendation narrowing",
+      reason: requestedBrand
+        ? `Shopper asked about ${requestedBrand}`
+        : "Shopper intent suggested recommendation narrowing",
     },
   });
 }

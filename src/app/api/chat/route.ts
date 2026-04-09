@@ -29,19 +29,26 @@ function emphasizeQuestion(text: string) {
   const questionSentence = sentences[sentences.length - 1]?.trim() ?? beforeQuestion;
   const prefix = normalized.slice(0, normalized.lastIndexOf(questionSentence)).trim();
 
-  return prefix
-    ? `${prefix} **${questionSentence}**`
-    : `**${questionSentence}**`;
+  return prefix ? `${prefix} **${questionSentence}**` : `**${questionSentence}**`;
 }
 
 function buildFallbackReply(message: string, matches: MatchResult[]) {
   const lower = message.toLowerCase();
-  const [first, second] = matches;
+  const askedBrand = /helix|sealy|tempur|serta|beautyrest|purple|sleepy'?s/i.test(lower);
 
-  if (lower.includes("compare") && first && second) {
+  if (askedBrand) {
     return {
       reply: emphasizeQuestion(
-        `Absolutely. I’d compare ${first.displayName} and ${second.displayName} this way: ${first.displayName} looks like the stronger overall fit right now, while ${second.displayName} gives you a solid alternative if you want a slightly different feel or value balance. Want me to narrow that to feel, cooling, or pressure relief first?`,
+        "You can scroll down now to see your current recommendations. I can keep refining them based on what you care about most. What matters most to you next, cooling, pressure relief, support, or feel?",
+      ),
+      mode: matches.length ? "product-evaluation" : "guided-discovery",
+    };
+  }
+
+  if (lower.includes("compare") && matches.length > 1) {
+    return {
+      reply: emphasizeQuestion(
+        "You can scroll down now to see your current recommendations and compare the top options side by side. What would you like to narrow on first, feel, cooling, or pressure relief?",
       ),
       mode: "comparison",
     };
@@ -49,9 +56,7 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
 
   return {
     reply: emphasizeQuestion(
-      first
-        ? `That gives me a clearer read. ${first.displayName} is leading the set right now. What matters more for the next step, cooler sleep, pressure relief, or easier movement?`
-        : "That gives me a clearer read. What matters more for the next step, cooler sleep, pressure relief, or easier movement?",
+      "You can scroll down now to see your current recommendations. I can keep refining them based on how you sleep. What matters more for the next step, cooler sleep, pressure relief, or easier movement?",
     ),
     mode: matches.length ? "product-evaluation" : "guided-discovery",
   };
@@ -59,7 +64,7 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
 
 async function getMatches(request: Request, body: RouteBody) {
   const message = String(body?.message ?? "").trim();
-  const shouldCallMatchAgent = /side|back|stomach|cool|hot|firm|plush|medium|budget|under|compare|recommend|pressure|support|value|relief|shoulder|hip|price|queen|king|full|twin/i.test(message);
+  const shouldCallMatchAgent = /side|back|stomach|cool|hot|firm|plush|medium|budget|under|compare|recommend|pressure|support|value|relief|shoulder|hip|price|queen|king|full|twin|helix|sealy|tempur|serta|beautyrest|purple|sleepy'?s/i.test(message);
 
   if (!shouldCallMatchAgent) return [] as MatchResult[];
 
@@ -97,7 +102,7 @@ export async function POST(request: Request) {
       .slice(0, 3)
       .map(
         (match: MatchResult, index: number) =>
-          `${index + 1}. ${match.displayName} (${match.brand}, ${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"})`,
+          `${index + 1}. Candidate ${index + 1} (${match.type ?? "Unknown type"}, ${match.comfort ?? "Unknown feel"})`,
       )
       .join("\n");
 
@@ -105,11 +110,11 @@ export async function POST(request: Request) {
       model: "claude-sonnet-4-20250514",
       max_tokens: 220,
       system:
-        "You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary and candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Always end by asking one clear shopper-facing question. Put double asterisks around that final question so the UI can emphasize it.",
+        "You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary and candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply. Do not mention price or budget unless the shopper explicitly asks about it. Instead of listing recommendations in chat, tell the shopper they can scroll down now to see their current recommendations. Always end with one clear shopper-facing question in double asterisks.",
       messages: [
         {
           role: "user",
-          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nTop candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. Do not mention price or budget unless the shopper explicitly asks about it. If compare intent is present, compare the top options naturally. End with one useful next question unless the shopper explicitly asked for comparison only.`,
+          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nTop candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options. If the shopper mentions a specific brand, do not say the store does not carry it unless that is certain from the provided candidates. Keep the reply generic and grounded in the current recommendation state.`,
         },
       ],
     });
