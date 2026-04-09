@@ -71,7 +71,13 @@ const starterMessages: ChatMessage[] = [
 ];
 const starterMatches: MatchResult[] = [];
 const startingSizeOptions = ["Queen", "King", "Not Sure", "Other"];
-const firmnessStops = ["Plush", "Medium-plush", "Medium", "Medium-firm", "Firm"];
+const firmnessStops = [
+  { value: 0, label: "Plush" },
+  { value: 25, label: "Medium-plush" },
+  { value: 50, label: "Medium" },
+  { value: 75, label: "Medium-firm" },
+  { value: 100, label: "Firm" },
+];
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -203,7 +209,7 @@ export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>(storedSession?.messages ?? starterMessages);
   const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
   const [showOpeningOptions, setShowOpeningOptions] = useState(false);
-  const [selectedFirmnessIndex, setSelectedFirmnessIndex] = useState(2);
+  const [selectedFirmnessValue, setSelectedFirmnessValue] = useState(50);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -327,8 +333,16 @@ export default function Home() {
   const shouldAskFirmness = userMessages.length === 1;
   const showDynamicSections = matches.length > 0 && !shouldAskFirmness;
 
+  const selectedFirmness = useMemo(() => {
+    return firmnessStops.reduce((closest, stop) => {
+      return Math.abs(stop.value - selectedFirmnessValue) < Math.abs(closest.value - selectedFirmnessValue)
+        ? stop
+        : closest;
+    }, firmnessStops[0]);
+  }, [selectedFirmnessValue]);
+
   async function submitFirmness() {
-    await submitMessage(`I want a ${firmnessStops[selectedFirmnessIndex]} feel.`);
+    await submitMessage(`I want a ${selectedFirmness.label} feel.`);
   }
 
   return (
@@ -554,16 +568,16 @@ export default function Home() {
                     <input
                       type="range"
                       min="0"
-                      max={String(firmnessStops.length - 1)}
+                      max="100"
                       step="1"
-                      value={selectedFirmnessIndex}
-                      onChange={(event) => setSelectedFirmnessIndex(Number(event.target.value))}
+                      value={selectedFirmnessValue}
+                      onChange={(event) => setSelectedFirmnessValue(Number(event.target.value))}
                       className={styles.firmnessSlider}
                       aria-label="Firmness preference"
                     />
-                    <div className={styles.firmnessSelected}>{firmnessStops[selectedFirmnessIndex]}</div>
+                    <div className={styles.firmnessSelected}>{selectedFirmness.label}</div>
                     <button type="button" className={styles.firmnessSubmit} onClick={submitFirmness}>
-                      Use {firmnessStops[selectedFirmnessIndex]}
+                      Use {selectedFirmness.label}
                     </button>
                   </div>
                 </section>
