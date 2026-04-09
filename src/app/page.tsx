@@ -597,6 +597,8 @@ export default function Home() {
                     <p>Considering…</p>
                   </div>
                 ) : null}
+                {/* Scroll anchor — kept inside messageList so auto-scroll tracks latest message */}
+                <div ref={chatBottomRef} />
               </div>
 
               {showOpeningOptions ? (
@@ -677,15 +679,17 @@ export default function Home() {
                 </section>
               ) : null}
 
-              <form className={styles.composer} onSubmit={handleSubmit}>
+              <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
                 <input
                   ref={inputRef}
                   value={draftMessage}
-                  onChange={(event) => setDraftMessage(event.target.value)}
-                  placeholder="Tell Shop Pilot what matters most to you"
+                  onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
+                  placeholder="What matters most to you?"
                   aria-label="Message Shop Pilot"
                 />
-                <button type="submit" disabled={isLoading}>{isLoading ? "..." : "Send"}</button>
+                <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
+                  {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
+                </button>
               </form>
             </section>
 
@@ -794,6 +798,26 @@ export default function Home() {
               </>
             ) : null}
           </div>
+
+          {/* Scroll nudge overlay — appears after 30s inactivity when recommendations are ready */}
+          {showScrollNudge && showDynamicSections ? (
+            <button
+              type="button"
+              className={styles.scrollNudge}
+              onClick={() => {
+                setShowScrollNudge(false);
+                resetInactivityTimer();
+                document.querySelector(`.${styles.candidateScroller}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              <span className={styles.scrollNudgeLabel}>View recommendations</span>
+              <span className={styles.scrollNudgeArrows}>
+                <span>↓</span>
+                <span>↓</span>
+                <span>↓</span>
+              </span>
+            </button>
+          ) : null}
         </aside>
       </main>
     </div>
