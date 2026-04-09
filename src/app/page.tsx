@@ -157,30 +157,6 @@ function getComparisonNote(matches: MatchResult[], mode: ConversationMode) {
   return `${matches[0].displayName} leads right now, with ${matches[1].displayName} as the best alternate depending on whether the shopper prioritizes feel or value.`;
 }
 
-function RoomsToGoLogo() {
-  return (
-    <svg viewBox="0 0 275 32" role="img" aria-label="Rooms To Go" className={styles.logoSvg}>
-      <path fill="currentColor" d="M0 .5h7.6c4 0 6 .5 7.4 1.1 3.4 1.6 5.4 4.9 5.4 8.6 0 4.4-3.1 8.8-8.9 9.1L20 30.5h-3.8L5.9 16.9c3.8 0 5.1 0 6.5-.4 3.3-.9 5-3.7 5-6.4 0-2.4-1.3-4.8-3.3-5.8-1.8-.9-3.3-1.1-5.8-1.1H3v27.3H0V.5zM87.4.5H92l11 25.6L113.9.5h4.6v30h-3V3.8l-11.3 26.7h-2.6L90.5 3.8h-.1v26.7h-3zM124.8 22.1c.2 3.8 2.6 6.2 6.2 6.2 3.2 0 6.1-2.4 6.1-6 0-4.6-4.7-5.8-6.7-6.4-2.7-.8-7.8-2-7.8-7.9 0-4.7 3.7-8.1 8.4-8.1 4.9 0 8.3 3.8 8.3 8.2h-3c0-3-2.5-5.4-5.3-5.4-3.4 0-5.4 2.6-5.4 5.2 0 3.7 3.2 4.5 7.1 5.6 7.4 2 7.4 7.8 7.4 8.7 0 4.6-3.7 8.8-9.1 8.8-3.9 0-9.1-2.3-9.2-8.9h3zM155.8 3.2h-6.9V.5h16.8v2.7h-6.9v27.3h-3zM219.3 18.2h15.2c-.6 2.7-2.1 5.1-4.3 6.8-2.2 1.8-5 2.7-7.8 2.7-6.8 0-12.4-5.6-12.4-12.4s5.6-12.4 12.4-12.4c2 0 3.9.5 5.6 1.4 1.7.9 3.2 2.1 4.3 3.6h3.7v-.1c-2.7-5-7.9-8.1-13.6-8.1-8.5 0-15.5 7-15.5 15.5s7 15.5 15.5 15.5C231 31 238 24 238 15.5h-18.7v2.7zM52.1 11.1c-.7-2.4-2-4.7-3.9-6.6C44.1.3 38.1-1 32.9.6c-2.4.7-4.7 2-6.6 3.9-1.9 1.9-3.2 4.2-3.9 6.6-1.5 5.3-.2 11.2 3.9 15.4 1.9 1.9 4.2 3.2 6.6 3.9 5.3 1.5 11.2.2 15.4-3.9 4.1-4.2 5.4-10.2 3.8-15.4m-6 13.2c-3.6 3.6-8.7 4.5-13.2 2.8-1.6-.6-3.1-1.5-4.4-2.8-3.6-3.6-4.5-8.7-2.8-13.2.6-1.6 1.5-3.1 2.8-4.4s2.8-2.2 4.4-2.8c4.4-1.7 9.6-.7 13.2 2.8 1.3 1.3 2.2 2.8 2.8 4.4 1.7 4.4.7 9.6-2.8 13.2M84.5 11.1c-.7-2.4-2-4.7-3.9-6.6C76.4.3 70.5-1 65.2.6c-2.4.7-4.7 2-6.6 3.9-1.9 1.9-3.2 4.2-3.9 6.6-1.5 5.3-.2 11.2 3.9 15.4 1.9 1.9 4.2 3.2 6.6 3.9 5.3 1.5 11.2.2 15.4-3.9s5.4-10.2 3.9-15.4m-6.1 13.2c-3.6 3.6-8.7 4.5-13.2 2.8-1.6-.6-3.1-1.5-4.4-2.8-3.6-3.6-4.5-8.7-2.8-13.2.6-1.6 1.5-3.1 2.8-4.4s2.8-2.2 4.4-2.8c4.4-1.7 9.6-.7 13.2 2.8 1.3 1.3 2.2 2.8 2.8 4.4 1.7 4.4.8 9.6-2.8 13.2M188.8 1.8c-2.2-1.2-4.7-1.9-7.4-1.9-5.9 0-11 3.3-13.6 8.1a15.358 15.358 0 0 0 0 14.8c2.6 4.8 7.8 8.1 13.6 8.1 2.7 0 5.2-.7 7.4-1.9 4.8-2.6 8.1-7.8 8.1-13.6s-3.3-10.9-8.1-13.6m-2.3 25c-1.6.7-3.3 1.1-5.1 1.1-5 0-9.4-3-11.3-7.3-.7-1.6-1.1-3.3-1.1-5.1 0-1.8.4-3.6 1.1-5.1C172 6 176.4 3 181.4 3c1.8 0 3.6.4 5.1 1.1 4.3 2 7.3 6.3 7.3 11.3 0 5.1-3 9.4-7.3 11.4M268.9 8c-2.6-4.8-7.8-8.1-13.6-8.1-2.7 0-5.2.7-7.4 1.9-4.8 2.6-8.1 7.8-8.1 13.6s3.3 11 8.1 13.6c2.2 1.2 4.7 1.9 7.4 1.9 5.9 0 11-3.3 13.6-8.1 1.2-2.2 1.9-4.7 1.9-7.4 0-2.6-.7-5.2-1.9-7.4m-2.3 12.6c-2 4.3-6.3 7.3-11.3 7.3-1.8 0-3.6-.4-5.1-1.1-4.3-2-7.3-6.3-7.3-11.3s3-9.4 7.3-11.3c1.6-.7 3.3-1.1 5.1-1.1 5 0 9.4 3 11.3 7.3.7 1.6 1.1 3.3 1.1 5.1 0 1.8-.4 3.5-1.1 5.1" />
-      <path fill="#ffc600" d="M48 15.5c0 5.9-4.8 10.7-10.7 10.7-1.5 0-2.8-.3-4.1-.8-3.9-1.6-6.6-5.4-6.6-9.9 0-1.5.3-2.8.8-4.1 1.1-2.6 3.2-4.7 5.8-5.8 1.3-.5 2.6-.8 4.1-.8 4.4 0 8.3 2.7 9.9 6.6.5 1.2.8 2.6.8 4.1zM80.3 15.5c0 5.9-4.8 10.7-10.7 10.7-1.5 0-2.8-.3-4.1-.8-3.9-1.6-6.6-5.4-6.6-9.9 0-1.5.3-2.8.8-4.1 1.1-2.6 3.2-4.7 5.8-5.8 1.3-.5 2.6-.8 4.1-.8 4.4 0 8.3 2.7 9.9 6.6.5 1.2.8 2.6.8 4.1z" />
-      <path fill="#c00d03" d="M192.1 15.5c0 4.5-2.7 8.3-6.6 9.9-1.3.5-2.6.8-4.1.8-4.5 0-8.3-2.7-9.9-6.6-.5-1.3-.8-2.6-.8-4.1s.3-2.8.8-4.1c1.6-3.9 5.4-6.6 9.9-6.6 1.5 0 2.8.3 4.1.8 3.8 1.6 6.6 5.4 6.6 9.9z" />
-      <path fill="#169162" d="M265.2 11.4c-1.6-3.9-5.4-6.6-9.9-6.6-1.5 0-2.8.3-4.1.8-3.9 1.6-6.6 5.4-6.6 9.9 0 4.4 2.7 8.3 6.6 9.9 1.3.5 2.6.8 4.1.8 4.5 0 8.3-2.7 9.9-6.6.3-.6.5-1.3.6-2 .1-.7.2-1.4.2-2.1 0-1.5-.3-2.9-.8-4.1z" />
-      <path fill="#fff" d="M252.3 24.2V6.7l8.8 8.7z" />
-    </svg>
-  );
-}
-
-function ShopPilotMark() {
-  return (
-    <div className={styles.shopPilotMark}>
-      <div className={styles.shopPilotBadge}>SP</div>
-      <div>
-        <p>Shop Pilot</p>
-        <span>Mattress guide</span>
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
   const storedSession = getStoredSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -302,7 +278,7 @@ export default function Home() {
             <div className={styles.headerRow}>
               <button type="button" className={styles.iconButton}>☰</button>
               <div className={styles.logoWrap}>
-                <RoomsToGoLogo />
+                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={190} height={40} className={styles.headerBrandImage} />
               </div>
               <div className={styles.searchWrap}>
                 <input value="Find your furniture" readOnly aria-label="Search" />
@@ -430,7 +406,11 @@ export default function Home() {
 
           <div className={styles.overlayBody}>
             <div className={styles.panelBrandBar}>
-              <ShopPilotMark />
+              <div className={styles.panelBrandCluster}>
+                <Image src="/assets/rtg-chat-logo.png" alt="Shop Pilot" width={138} height={42} className={styles.panelLogoImage} />
+                <div className={styles.panelBrandDivider} />
+                <Image src="/assets/rooms-to-go-logo.png" alt="Rooms To Go" width={114} height={42} className={styles.panelPartnerImage} />
+              </div>
               <button type="button" className={styles.panelGhostButton} onClick={() => submitMessage("Compare the top two options.")}>Compare top picks</button>
             </div>
 
