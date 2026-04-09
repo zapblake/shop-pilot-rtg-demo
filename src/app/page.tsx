@@ -215,6 +215,7 @@ export default function Home() {
   const queuedMessagesRef = useRef<string[]>([]);
   const inactivityTimerRef = useRef<number | null>(null);
   const [showScrollNudge, setShowScrollNudge] = useState(false);
+  const [showMatchNudge, setShowMatchNudge] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
@@ -337,7 +338,14 @@ export default function Home() {
 
       const payload = await response.json();
       setConversationMode(payload.mode ?? "guided-discovery");
-      setMatches(payload.matches ?? []);
+      const incomingMatches: MatchResult[] = payload.matches ?? [];
+      setMatches(incomingMatches);
+
+      // Flash the nudge for 1.5s when recommendations first arrive
+      if (incomingMatches.length > 0) {
+        setShowMatchNudge(true);
+        window.setTimeout(() => setShowMatchNudge(false), 1500);
+      }
 
       if (payload.matches?.[0]?.theme) {
         setCurrentTheme(payload.matches[0].theme);
@@ -838,12 +846,13 @@ export default function Home() {
           </div>
 
           {/* Scroll nudge overlay — appears after 30s inactivity when recommendations are ready */}
-          {showScrollNudge && showDynamicSections ? (
+          {(showScrollNudge || showMatchNudge) && showDynamicSections ? (
             <button
               type="button"
               className={styles.scrollNudge}
               onClick={() => {
                 setShowScrollNudge(false);
+                setShowMatchNudge(false);
                 resetInactivityTimer();
                 document.querySelector(`.${styles.candidateScroller}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}

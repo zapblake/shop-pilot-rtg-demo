@@ -1462,7 +1462,7 @@
 /* Scroll nudge overlay — shown after 30s inactivity when recommendations are ready */
 .scrollNudge {
   position: absolute;
-  bottom: 100px;
+  bottom: 38%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
