@@ -149,18 +149,17 @@ export default function Home() {
         </section>
 
         <aside className={`${styles.overlayPanel} ${isOpen ? styles.open : styles.closed}`}>
-          <button
-            type="button"
-            className={styles.edgeTab}
-            onClick={() => setIsOpen((value) => !value)}
-            aria-label={isOpen ? "Collapse Shop Pilot" : "Open Shop Pilot"}
-          >
-            <span className={styles.edgeCaret}>{isOpen ? ">" : "<"}</span>
-            <span className={styles.edgeLabel}>Shop Pilot</span>
-          </button>
-
           {isOpen ? (
             <div className={styles.overlayBody}>
+              <button
+                type="button"
+                className={styles.edgeTab}
+                onClick={() => setIsOpen((value) => !value)}
+                aria-label="Collapse Shop Pilot"
+              >
+                <span className={styles.edgeCaret}>{">"}</span>
+                <span className={styles.edgeLabel}>Shop Pilot</span>
+              </button>
               <div className={styles.overlayHeader}>
                 <div>
                   <p className={styles.overlayKicker}>RTG Chat</p>
@@ -234,7 +233,17 @@ export default function Home() {
                 </dl>
               </section>
             </div>
-          ) : null}
+          ) : (
+            <button
+              type="button"
+              className={styles.edgeTab}
+              onClick={() => setIsOpen(true)}
+              aria-label="Open Shop Pilot"
+            >
+              <span className={styles.edgeCaret}>{"<"}</span>
+              <span className={styles.edgeLabel}>Shop Pilot</span>
+            </button>
+          )}
         </aside>
       </main>
     </div>
