@@ -488,6 +488,11 @@
   cursor: pointer;
 }
 
+.composer button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .messageAssistant {
   background: #f9fafb;
   color: #111827;
@@ -591,6 +596,12 @@
   display: block;
   margin-top: 6px;
   color: #4b5563;
+}
+
+.candidateCard strong {
+  display: block;
+  margin-top: 10px;
+  color: #111827;
 }
 
 @media (max-width: 1200px) {

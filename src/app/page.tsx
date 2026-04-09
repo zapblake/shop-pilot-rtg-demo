@@ -25,6 +25,16 @@ type ChatMessage = {
   text: string;
 };
 
+type MatchResult = {
+  theme: string;
+  displayName: string;
+  brand: string;
+  type?: string | null;
+  comfort?: string | null;
+  priceFrom?: number | null;
+  score: number;
+};
+
 const featuredThemes = mattressThemes.slice(0, 6);
 const SHOPPER_COOKIE_KEY = "shop-pilot-demo-shopper";
 const brandLogos = [
@@ -70,9 +80,21 @@ function RoomsToGoLogo() {
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
-  const [conversationMode] = useState<ConversationMode>("guided-discovery");
+  const [conversationMode, setConversationMode] = useState<ConversationMode>("guided-discovery");
   const [currentTheme, setCurrentTheme] = useState(featuredThemes[0]?.theme ?? null);
   const [draftMessage, setDraftMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [matches, setMatches] = useState<MatchResult[]>(
+    featuredThemes.slice(0, 3).map((theme, index) => ({
+      theme: theme.theme,
+      displayName: theme.displayName,
+      brand: theme.brand,
+      type: theme.type,
+      comfort: theme.comfort,
+      priceFrom: theme.priceRange?.min ?? null,
+      score: 3 - index,
+    })),
+  );
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "assistant-1",
@@ -115,24 +137,61 @@ export default function Home() {
     };
   });
 
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const nextMessage = draftMessage.trim();
-    if (!nextMessage) return;
+    if (!nextMessage || isLoading) return;
 
-    const selectedTheme = featuredThemes.find((item) => item.theme === currentTheme) ?? featuredThemes[0];
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      text: nextMessage,
+    };
 
-    setMessages((current) => [
-      ...current,
-      { id: `user-${Date.now()}`, role: "user", text: nextMessage },
-      {
-        id: `assistant-${Date.now()}`,
-        role: "assistant",
-        text: `That helps. Based on what you just said, I’d keep ${selectedTheme?.displayName ?? "these options"} in the working set and ask one sharper follow-up before calling the deeper match workflow.`,
-      },
-    ]);
+    setMessages((current) => [...current, userMessage]);
     setDraftMessage("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: nextMessage,
+          currentTheme,
+          shopperId: shopperMemory?.shopperId,
+          conversationMode,
+        }),
+      });
+
+      const payload = await response.json();
+      setConversationMode(payload.mode ?? "guided-discovery");
+      setMatches(payload.matches ?? []);
+
+      if (payload.matches?.[0]?.theme) {
+        setCurrentTheme(payload.matches[0].theme);
+      }
+
+      setMessages((current) => [
+        ...current,
+        {
+          id: `assistant-${Date.now()}`,
+          role: "assistant",
+          text: payload.reply ?? "I’ve got enough to keep refining the recommendation.",
+        },
+      ]);
+    } catch {
+      setMessages((current) => [
+        ...current,
+        {
+          id: `assistant-error-${Date.now()}`,
+          role: "assistant",
+          text: "Minor snag on the backend stub. The front-end flow is intact, but I’d retry the match request once the route settles.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const runtimeContext = useMemo(() => {
@@ -304,6 +363,11 @@ export default function Home() {
                     <p>{message.text}</p>
                   </div>
                 ))}
+                {isLoading ? (
+                  <div className={styles.messageAssistant}>
+                    <p>Thinking through the conversational layer and checking the match set…</p>
+                  </div>
+                ) : null}
               </div>
 
               <form className={styles.composer} onSubmit={handleSubmit}>
@@ -313,28 +377,29 @@ export default function Home() {
                   placeholder="Tell Shop Pilot what matters most to you"
                   aria-label="Message Shop Pilot"
                 />
-                <button type="submit">Send</button>
+                <button type="submit" disabled={isLoading}>{isLoading ? "..." : "Send"}</button>
               </form>
             </section>
 
             <section className={styles.chipsSection}>
-              <button type="button">Side sleeper</button>
-              <button type="button">Cooling matters</button>
-              <button type="button">Medium feel</button>
-              <button type="button">Budget under $2k</button>
+              <button type="button" onClick={() => setDraftMessage("I’m a side sleeper and sleep hot.")}>Side sleeper</button>
+              <button type="button" onClick={() => setDraftMessage("Cooling matters most to me.")}>Cooling matters</button>
+              <button type="button" onClick={() => setDraftMessage("I want a medium feel.")}>Medium feel</button>
+              <button type="button" onClick={() => setDraftMessage("Keep me under $2,000.")}>Budget under $2k</button>
             </section>
 
             <section className={styles.recommendationSection}>
               <div className={styles.sectionHeader}>
                 <h3>Top matches right now</h3>
-                <p>Starter UI for backend match-agent output</p>
+                <p>Now driven by the match-agent stub route</p>
               </div>
               <div className={styles.candidateList}>
-                {featuredThemes.slice(0, 3).map((theme) => (
-                  <article key={theme.theme} className={styles.candidateCard}>
-                    <p>{theme.brand}</p>
-                    <h4>{theme.displayName}</h4>
-                    <span>{theme.type || "Type TBD"} · {theme.comfort || "Comfort TBD"}</span>
+                {matches.map((match) => (
+                  <article key={match.theme} className={styles.candidateCard}>
+                    <p>{match.brand}</p>
+                    <h4>{match.displayName}</h4>
+                    <span>{match.type || "Type TBD"} · {match.comfort || "Comfort TBD"}</span>
+                    <strong>{match.priceFrom ? `From $${match.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
                   </article>
                 ))}
               </div>
@@ -349,7 +414,7 @@ export default function Home() {
                 </div>
                 <div>
                   <dt>Experience mode</dt>
-                  <dd>Adaptive guided assistance</dd>
+                  <dd>{runtimeContext.conversationMode}</dd>
                 </div>
                 <div>
                   <dt>Current theme</dt>
