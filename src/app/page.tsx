@@ -209,6 +209,7 @@ function renderMessageText(text: string) {
 export default function Home() {
   const storedSession = getStoredSession();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const queuedMessagesRef = useRef<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
@@ -273,9 +274,7 @@ export default function Home() {
     return undefined;
   }, [messages]);
 
-  async function submitMessage(messageText: string) {
-    if (!messageText.trim() || isLoading) return;
-
+  async function processMessage(messageText: string) {
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
@@ -350,7 +349,35 @@ export default function Home() {
     } finally {
       setIsLoading(false);
       window.setTimeout(() => inputRef.current?.focus(), 20);
+
+      const nextQueuedMessage = queuedMessagesRef.current.shift();
+      if (nextQueuedMessage) {
+        window.setTimeout(() => {
+          void processMessage(nextQueuedMessage);
+        }, 30);
+      }
     }
+  }
+
+  async function submitMessage(messageText: string) {
+    const trimmed = messageText.trim();
+    if (!trimmed) return;
+
+    if (isLoading) {
+      queuedMessagesRef.current.push(trimmed);
+      setMessages((current) => [
+        ...current,
+        {
+          id: `user-${Date.now()}`,
+          role: "user",
+          text: trimmed,
+        },
+      ]);
+      setDraftMessage("");
+      return;
+    }
+
+    await processMessage(trimmed);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
