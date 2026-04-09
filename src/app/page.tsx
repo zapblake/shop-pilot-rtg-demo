@@ -359,7 +359,7 @@ export default function Home() {
   }
 
   const comparisonNote = getComparisonNote(matches, conversationMode);
-  const compareThemes = useMemo(() => matches.slice(0, 3).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
+  const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
   const userMessages = messages.filter((message) => message.role === "user");
   const shouldAskFirmness = userMessages.length === 1;
