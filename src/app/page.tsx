@@ -41,15 +41,36 @@ type MatchResult = {
   score: number;
 };
 
+type RecommendationMode = "standard" | "split";
+
+type SplitRecommendation = {
+  sleeper1: MatchResult | null;
+  sleeper2: MatchResult | null;
+  explanation: string;
+};
+
+type ShopperMode = "single" | "two-similar" | "two-different" | null;
+type CouplePath = "compromise" | "split-king" | null;
+
+type CoupleSetup = {
+  shopperMode: ShopperMode;
+  couplePath: CouplePath;
+  sleeper1Firmness: string | null;
+  sleeper2Firmness: string | null;
+};
+
 type PersistedSession = {
   messages: ChatMessage[];
   matches: MatchResult[];
+  splitRecommendation: SplitRecommendation | null;
+  recommendationMode: RecommendationMode;
   conversationMode: ConversationMode;
   currentTheme: string | null;
   memorySummary: string;
   selectedSize: string | null;
   sizeCapturedViaPill: boolean;
   firmnessAnswered: boolean;
+  coupleSetup: CoupleSetup;
 };
 
 type ThemeRecord = (typeof mattressThemes)[number];
@@ -79,6 +100,13 @@ const starterMessages: ChatMessage[] = [
   },
 ];
 const starterMatches: MatchResult[] = [];
+const defaultCoupleSetup: CoupleSetup = {
+  shopperMode: null,
+  couplePath: null,
+  sleeper1Firmness: null,
+  sleeper2Firmness: null,
+};
+const defaultSplitRecommendation: SplitRecommendation | null = null;
 const startingSizeOptions = ["Queen", "King", "Not Sure", "Other"];
 const otherSizeOptions = ["California King", "Full", "Twin", "Twin XL", "RV King", "Short Queen"];
 const firmnessStops = [
@@ -88,6 +116,16 @@ const firmnessStops = [
   { value: 75, label: "Medium-firm" },
   { value: 100, label: "Firm" },
 ];
+const shopperModeOptions = [
+  { value: "single", label: "Just me" },
+  { value: "two-similar", label: "Two sleepers, similar preferences" },
+  { value: "two-different", label: "Two sleepers, different preferences" },
+] as const;
+const couplePathOptions = [
+  { value: "compromise", label: "Find one mattress that works for both of us" },
+  { value: "split-king", label: "Explore a split king / Twin XL setup" },
+] as const;
+const splitFirmnessOptions = ["Plush", "Medium", "Firm"] as const;
 
 function getCookie(name: string) {
   if (typeof document === "undefined") return null;
@@ -109,7 +147,23 @@ function getStoredSession(): PersistedSession | null {
   if (!raw) return null;
 
   try {
-    return JSON.parse(raw) as PersistedSession;
+    const parsed = JSON.parse(raw) as Partial<PersistedSession>;
+    return {
+      messages: parsed.messages ?? starterMessages,
+      matches: parsed.matches ?? starterMatches,
+      splitRecommendation: parsed.splitRecommendation ?? defaultSplitRecommendation,
+      recommendationMode: parsed.recommendationMode ?? "standard",
+      conversationMode: parsed.conversationMode ?? "guided-discovery",
+      currentTheme: parsed.currentTheme ?? featuredThemes[0]?.theme ?? null,
+      memorySummary: parsed.memorySummary ?? buildMemorySummary(starterMessages, starterMatches),
+      selectedSize: parsed.selectedSize ?? null,
+      sizeCapturedViaPill: parsed.sizeCapturedViaPill ?? false,
+      firmnessAnswered: parsed.firmnessAnswered ?? false,
+      coupleSetup: {
+        ...defaultCoupleSetup,
+        ...(parsed.coupleSetup ?? {}),
+      },
+    } satisfies PersistedSession;
   } catch {
     return null;
   }
@@ -118,7 +172,7 @@ function getStoredSession(): PersistedSession | null {
 function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
   const userText = messages
     .filter((message) => message.role === "user")
-    .slice(-4)
+    .slice(-6)
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
@@ -129,6 +183,7 @@ function buildMemorySummary(messages: ChatMessage[], matches: MatchResult[]) {
     userText.includes("hot") || userText.includes("cool") ? "cooling-conscious" : null,
     userText.includes("queen") ? "queen-size shopper" : null,
     userText.includes("king") ? "king-size shopper" : null,
+    userText.includes("two sleepers") || userText.includes("split king") ? "couples-shopping" : null,
     userText.includes("budget") || userText.includes("under") || userText.includes("$") ? "budget-aware" : null,
     userText.includes("pressure") ? "pressure-relief focused" : null,
   ].filter(Boolean);
@@ -155,6 +210,9 @@ function getFitReasons(match: MatchResult, summary: string) {
   if (lowerSummary.includes("pressure") && descriptor.match(/foam|plush|medium/)) {
     reasons.push("Pressure-relief friendly");
   }
+  if (lowerSummary.includes("split king") || lowerSummary.includes("two sleepers")) {
+    reasons.push("Works in a split setup");
+  }
   if (lowerSummary.includes("budget") || lowerSummary.includes("under") || lowerSummary.includes("$") || lowerSummary.includes("budget-aware")) {
     if ((match.priceFrom ?? 999999) < 2000) reasons.push("Budget aligned");
   }
@@ -163,12 +221,20 @@ function getFitReasons(match: MatchResult, summary: string) {
   return reasons.slice(0, 3);
 }
 
-function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches: MatchResult[]) {
+function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches: MatchResult[], recommendationMode: RecommendationMode) {
   const userText = messages
     .filter((message) => message.role === "user")
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
+
+  if (recommendationMode === "split") {
+    return [
+      { label: "More pressure relief", message: "We want more pressure relief on one side." },
+      { label: "More support", message: "One sleeper needs stronger support." },
+      { label: "Adjustable base", message: "We also want to know if this works with an adjustable base." },
+    ];
+  }
 
   const wantsSoft = /soft|plush/.test(userText);
   const knowsPosition = /side|back|stomach/.test(userText);
@@ -224,7 +290,8 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
   ];
 }
 
-function getComparisonNote(matches: MatchResult[], mode: ConversationMode) {
+function getComparisonNote(matches: MatchResult[], mode: ConversationMode, recommendationMode: RecommendationMode) {
+  if (recommendationMode === "split") return "Each sleeper now has an individual Twin XL recommendation while keeping one shared split-king setup.";
   if (mode !== "comparison" || matches.length < 2) return null;
 
   return `${matches[0].displayName} leads right now, with ${matches[1].displayName} as the best alternate depending on whether the shopper prioritizes feel or value.`;
@@ -281,10 +348,14 @@ async function fetchMatches({
   message,
   memorySummary,
   conversationTranscript,
+  recommendationIntent,
+  coupleSetup,
 }: {
   message: string;
   memorySummary: string;
   conversationTranscript: ChatMessage[];
+  recommendationIntent: RecommendationMode;
+  coupleSetup: CoupleSetup;
 }) {
   const response = await fetch("/api/match", {
     method: "POST",
@@ -293,10 +364,20 @@ async function fetchMatches({
       message,
       memorySummary,
       conversationTranscript: conversationTranscript.map(({ role, text }) => ({ role, text })),
+      recommendationIntent,
+      coupleSetup,
     }),
   });
 
   return response.json();
+}
+
+function buildSplitReasonList(splitRecommendation: SplitRecommendation) {
+  return [
+    splitRecommendation.sleeper1 ? `Sleeper 1: ${splitRecommendation.sleeper1.displayName}` : null,
+    splitRecommendation.sleeper2 ? `Sleeper 2: ${splitRecommendation.sleeper2.displayName}` : null,
+    splitRecommendation.explanation,
+  ].filter(Boolean) as string[];
 }
 
 export default function Home() {
@@ -316,6 +397,8 @@ export default function Home() {
   const [draftMessage, setDraftMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<MatchResult[]>(storedSession?.matches ?? starterMatches);
+  const [splitRecommendation, setSplitRecommendation] = useState<SplitRecommendation | null>(storedSession?.splitRecommendation ?? defaultSplitRecommendation);
+  const [recommendationMode, setRecommendationMode] = useState<RecommendationMode>(storedSession?.recommendationMode ?? "standard");
   const [messages, setMessages] = useState<ChatMessage[]>(storedSession?.messages ?? starterMessages);
   const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
   const [showOpeningOptions, setShowOpeningOptions] = useState(false);
@@ -324,6 +407,7 @@ export default function Home() {
   const [selectedSize, setSelectedSize] = useState<string | null>(storedSession?.selectedSize ?? null);
   const [sizeCapturedViaPill, setSizeCapturedViaPill] = useState(storedSession?.sizeCapturedViaPill ?? false);
   const [firmnessAnswered, setFirmnessAnswered] = useState(storedSession?.firmnessAnswered ?? false);
+  const [coupleSetup, setCoupleSetup] = useState<CoupleSetup>(storedSession?.coupleSetup ?? defaultCoupleSetup);
   const [shopperMemory] = useState<ShopperMemory | null>(() => {
     const now = new Date().toISOString();
     const existingId = getCookie(SHOPPER_COOKIE_KEY);
@@ -357,26 +441,27 @@ export default function Home() {
       JSON.stringify({
         messages,
         matches,
+        splitRecommendation,
+        recommendationMode,
         conversationMode,
         currentTheme,
         memorySummary: nextSummary,
         selectedSize,
         sizeCapturedViaPill,
         firmnessAnswered,
+        coupleSetup,
       } satisfies PersistedSession),
     );
-  }, [conversationMode, currentTheme, matches, messages, selectedSize, sizeCapturedViaPill, firmnessAnswered]);
+  }, [conversationMode, currentTheme, matches, messages, selectedSize, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Auto-scroll chat bottom into view whenever messages change
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages]);
 
-  // Reset inactivity timer; show scroll nudge after 30s of shopper idle time
   const resetInactivityTimer = () => {
     if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
     setShowScrollNudge(false);
@@ -390,10 +475,8 @@ export default function Home() {
     return () => {
       if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Dismiss scroll nudge when the panel body is scrolled
   useEffect(() => {
     const el = overlayBodyRef.current;
     if (!el) return;
@@ -430,22 +513,37 @@ export default function Home() {
     const runBackgroundMatch = () => {
       if (options?.skipBackgroundMatch) return;
       const requestVersion = ++matchRequestVersionRef.current;
+      const intent = coupleSetup.couplePath === "split-king" && !!coupleSetup.sleeper1Firmness && !!coupleSetup.sleeper2Firmness
+        ? "split"
+        : "standard";
       void fetchMatches({
         message: trimmed,
         memorySummary: nextMemorySummary,
         conversationTranscript: transcriptForTurn,
+        recommendationIntent: intent,
+        coupleSetup,
       })
         .then((matchPayload) => {
           if (requestVersion !== matchRequestVersionRef.current) return;
-          const incomingMatches: MatchResult[] = matchPayload.matches ?? [];
-          setMatches(incomingMatches);
-          if (incomingMatches.length > 0) {
-            setShowMatchNudge(true);
-            setShowUpdatedPulse(true);
-            window.setTimeout(() => setShowMatchNudge(false), 1500);
-            window.setTimeout(() => setShowUpdatedPulse(false), 1800);
-            setCurrentTheme(incomingMatches[0]?.theme ?? null);
+
+          if (matchPayload.mode === "split") {
+            setRecommendationMode("split");
+            setSplitRecommendation(matchPayload.split ?? null);
+            setMatches([]);
+          } else {
+            const incomingMatches: MatchResult[] = matchPayload.matches ?? [];
+            setRecommendationMode("standard");
+            setSplitRecommendation(null);
+            setMatches(incomingMatches);
+            if (incomingMatches.length > 0) {
+              setCurrentTheme(incomingMatches[0]?.theme ?? null);
+            }
           }
+
+          setShowMatchNudge(true);
+          setShowUpdatedPulse(true);
+          window.setTimeout(() => setShowMatchNudge(false), 1500);
+          window.setTimeout(() => setShowUpdatedPulse(false), 1800);
         })
         .catch(() => {
           // quietly preserve current recommendations if background matching fails
@@ -560,12 +658,16 @@ export default function Home() {
     await submitMessage(draftMessage);
   }
 
-  const comparisonNote = getComparisonNote(matches, conversationMode);
+  const comparisonNote = getComparisonNote(matches, conversationMode, recommendationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
-  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(messages, memorySummary, matches), [messages, memorySummary, matches]);
-  const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered;
-  const showDynamicSections = matches.length > 0 && !shouldAskFirmness;
+  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(messages, memorySummary, matches, recommendationMode), [messages, memorySummary, matches, recommendationMode]);
+  const shouldAskShopperMode = sizeCapturedViaPill && selectedSize === "King" && !coupleSetup.shopperMode;
+  const shouldAskCouplePath = selectedSize === "King" && coupleSetup.shopperMode === "two-different" && !coupleSetup.couplePath;
+  const shouldAskSplitSleeper1 = coupleSetup.couplePath === "split-king" && !coupleSetup.sleeper1Firmness;
+  const shouldAskSplitSleeper2 = coupleSetup.couplePath === "split-king" && !!coupleSetup.sleeper1Firmness && !coupleSetup.sleeper2Firmness;
+  const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+  const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
 
   const selectedFirmness = useMemo(() => {
     return firmnessStops.reduce((closest, stop) => {
@@ -590,6 +692,25 @@ export default function Home() {
     ];
     const nextSummary = buildMemorySummary(syntheticTranscript, matches);
     await submitMessage(combinedMessage, { overrideMemorySummary: nextSummary });
+  }
+
+  function resetConversationState() {
+    setMessages(starterMessages);
+    setMatches(starterMatches);
+    setSplitRecommendation(defaultSplitRecommendation);
+    setRecommendationMode("standard");
+    setConversationMode("guided-discovery");
+    setCurrentTheme(featuredThemes[0]?.theme ?? null);
+    setDraftMessage("");
+    setShowOpeningOptions(false);
+    setSelectedSize(null);
+    setSizeCapturedViaPill(false);
+    setFirmnessAnswered(false);
+    setCoupleSetup(defaultCoupleSetup);
+    window.setTimeout(() => {
+      setShowOpeningOptions(true);
+      inputRef.current?.focus();
+    }, 420);
   }
 
   return (
@@ -738,21 +859,7 @@ export default function Home() {
               <button
                 type="button"
                 className={styles.panelIconButton}
-                onClick={() => {
-                  setMessages(starterMessages);
-                  setMatches(starterMatches);
-                  setConversationMode("guided-discovery");
-                  setCurrentTheme(featuredThemes[0]?.theme ?? null);
-                  setDraftMessage("");
-                  setShowOpeningOptions(false);
-                  setSelectedSize(null);
-                  setSizeCapturedViaPill(false);
-                  setFirmnessAnswered(false);
-                  window.setTimeout(() => {
-                    setShowOpeningOptions(true);
-                    inputRef.current?.focus();
-                  }, 420);
-                }}
+                onClick={resetConversationState}
                 aria-label="Restart chat"
                 title="Restart chat"
               >
@@ -786,7 +893,6 @@ export default function Home() {
                     <p>Considering…</p>
                   </div>
                 ) : null}
-                {/* Scroll anchor — kept inside messageList so auto-scroll tracks latest message */}
                 <div ref={chatBottomRef} />
               </div>
 
@@ -806,6 +912,9 @@ export default function Home() {
                           setSelectedSize(option);
                           setSizeCapturedViaPill(!isNotSure);
                           setFirmnessAnswered(false);
+                          setCoupleSetup(defaultCoupleSetup);
+                          setRecommendationMode("standard");
+                          setSplitRecommendation(null);
                           if (isNotSure) {
                             submitMessage(option);
                           } else {
@@ -838,6 +947,9 @@ export default function Home() {
                             setSelectedSize(size);
                             setSizeCapturedViaPill(true);
                             setFirmnessAnswered(false);
+                            setCoupleSetup(defaultCoupleSetup);
+                            setRecommendationMode("standard");
+                            setSplitRecommendation(null);
                             setMessages((current) => [
                               ...current,
                               {
@@ -855,6 +967,120 @@ export default function Home() {
                       ))}
                     </div>
                   ) : null}
+                </section>
+              ) : null}
+
+              {shouldAskShopperMode ? (
+                <section className={styles.openingOptions}>
+                  <div className={styles.firmnessPromptHeader}>
+                    <span>Next up</span>
+                    <strong>Who are we shopping for?</strong>
+                  </div>
+                  <div className={styles.otherSizesRow}>
+                    {shopperModeOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={styles.openingChip}
+                        onClick={() => {
+                          setCoupleSetup((current) => ({
+                            ...current,
+                            shopperMode: option.value,
+                            couplePath: option.value === "two-different" ? null : null,
+                            sleeper1Firmness: null,
+                            sleeper2Firmness: null,
+                          }));
+                          if (option.value !== "two-different") {
+                            setRecommendationMode("standard");
+                            setSplitRecommendation(null);
+                          }
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {shouldAskCouplePath ? (
+                <section className={styles.openingOptions}>
+                  <div className={styles.firmnessPromptHeader}>
+                    <span>Couples setup</span>
+                    <strong>How would you like to shop this king setup?</strong>
+                  </div>
+                  <div className={styles.otherSizesRow}>
+                    {couplePathOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={styles.openingChip}
+                        onClick={() => {
+                          setCoupleSetup((current) => ({
+                            ...current,
+                            couplePath: option.value,
+                            sleeper1Firmness: null,
+                            sleeper2Firmness: null,
+                          }));
+                          if (option.value === "compromise") {
+                            setRecommendationMode("standard");
+                            setSplitRecommendation(null);
+                          }
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {shouldAskSplitSleeper1 ? (
+                <section className={styles.openingOptions}>
+                  <div className={styles.firmnessPromptHeader}>
+                    <span>Split king setup</span>
+                    <strong>What firmness does sleeper 1 prefer?</strong>
+                  </div>
+                  <div className={styles.otherSizesRow}>
+                    {splitFirmnessOptions.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        className={styles.openingChip}
+                        onClick={() => {
+                          setCoupleSetup((current) => ({ ...current, sleeper1Firmness: option }));
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {shouldAskSplitSleeper2 ? (
+                <section className={styles.openingOptions}>
+                  <div className={styles.firmnessPromptHeader}>
+                    <span>Split king setup</span>
+                    <strong>What firmness does sleeper 2 prefer?</strong>
+                  </div>
+                  <div className={styles.otherSizesRow}>
+                    {splitFirmnessOptions.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        className={styles.openingChip}
+                        onClick={() => {
+                          const nextSetup = { ...coupleSetup, sleeper2Firmness: option };
+                          setCoupleSetup(nextSetup);
+                          setFirmnessAnswered(true);
+                          void submitMessage(`Two sleepers with different preferences. Split king. Sleeper 1 wants ${nextSetup.sleeper1Firmness}. Sleeper 2 wants ${option}.`);
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
                 </section>
               ) : null}
 
@@ -927,21 +1153,25 @@ export default function Home() {
                   </div>
                 </section>
 
-                <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
-                  <div className={styles.sectionHeader}>
-                    <h3>Top matches right now</h3>
-                    <p>Tailored to what the shopper has told us so far</p>
-                  </div>
-                  <div className={styles.candidateScroller}>
-                    <div className={styles.candidateList}>
-                      {matches.map((match, index) => {
+                {recommendationMode === "split" && splitRecommendation ? (
+                  <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
+                    <div className={styles.sectionHeader}>
+                      <h3>Split king recommendations</h3>
+                      <p>Individual Twin XL fits for each sleeper, with one shared setup</p>
+                    </div>
+                    <div className={styles.splitSummaryBanner}>
+                      <strong>Shared strategy</strong>
+                      <p>{splitRecommendation.explanation}</p>
+                    </div>
+                    <div className={styles.splitGrid}>
+                      {[splitRecommendation.sleeper1, splitRecommendation.sleeper2].map((match, index) => {
+                        if (!match) return null;
                         const theme = getMatchTheme(match);
                         const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
                         const supportScore = getFeatureScore(theme?.supportLevel?.label);
                         const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
-
                         return (
-                          <article key={match.theme} className={styles.candidateCard}>
+                          <article key={`${match.theme}-${index}`} className={styles.candidateCard}>
                             <div className={styles.candidateImageWrap}>
                               {theme?.heroImage ? (
                                 <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
@@ -949,8 +1179,8 @@ export default function Home() {
                             </div>
                             <div className={styles.candidateCardBody}>
                               <div className={styles.candidateTopRow}>
-                                <p>{match.brand}</p>
-                                {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
+                                <p>{index === 0 ? "Sleeper 1" : "Sleeper 2"}</p>
+                                <span className={styles.bestFitPill}>Twin XL</span>
                               </div>
                               <h4>{match.displayName}</h4>
                               {match.type || match.comfort ? (
@@ -972,12 +1202,65 @@ export default function Home() {
                         );
                       })}
                     </div>
-                  </div>
-                </section>
+                    <div className={styles.splitReasonList}>
+                      {buildSplitReasonList(splitRecommendation).map((line) => (
+                        <em key={line}>{line}</em>
+                      ))}
+                    </div>
+                  </section>
+                ) : (
+                  <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
+                    <div className={styles.sectionHeader}>
+                      <h3>Top matches right now</h3>
+                      <p>Tailored to what the shopper has told us so far</p>
+                    </div>
+                    <div className={styles.candidateScroller}>
+                      <div className={styles.candidateList}>
+                        {matches.map((match, index) => {
+                          const theme = getMatchTheme(match);
+                          const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
+                          const supportScore = getFeatureScore(theme?.supportLevel?.label);
+                          const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
+
+                          return (
+                            <article key={match.theme} className={styles.candidateCard}>
+                              <div className={styles.candidateImageWrap}>
+                                {theme?.heroImage ? (
+                                  <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
+                                ) : null}
+                              </div>
+                              <div className={styles.candidateCardBody}>
+                                <div className={styles.candidateTopRow}>
+                                  <p>{match.brand}</p>
+                                  {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
+                                </div>
+                                <h4>{match.displayName}</h4>
+                                {match.type || match.comfort ? (
+                                  <span>{[match.type, match.comfort].filter(Boolean).join(" · ")}</span>
+                                ) : null}
+                                {match.priceFrom ? <strong>{`From $${match.priceFrom.toLocaleString()}`}</strong> : null}
+                                <div className={styles.miniMetrics}>
+                                  {coolingScore ? <div><span>Cooling</span><b>{coolingScore}</b></div> : null}
+                                  {supportScore ? <div><span>Support</span><b>{supportScore}</b></div> : null}
+                                  {pressureScore ? <div><span>Relief</span><b>{pressureScore}</b></div> : null}
+                                </div>
+                                <div className={styles.reasonList}>
+                                  {getFitReasons(match, memorySummary).map((reason) => (
+                                    <em key={reason}>{reason}</em>
+                                  ))}
+                                </div>
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </section>
+                )}
 
                 {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
 
-                {compareThemes.length >= 2 ? (
+                {recommendationMode === "standard" && compareThemes.length >= 2 ? (
                   <section className={styles.compareSection}>
                     <div className={styles.sectionHeader}>
                       <h3>Compare top options</h3>
@@ -1021,7 +1304,6 @@ export default function Home() {
             ) : null}
           </div>
 
-          {/* Scroll nudge overlay — appears after 30s inactivity when recommendations are ready */}
           {(showScrollNudge || showMatchNudge) && showDynamicSections ? (
             <button
               type="button"

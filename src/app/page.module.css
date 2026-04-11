@@ -1577,3 +1577,55 @@
     transform: scale(1.015);
   }
 }
+
+
+.splitSummaryBanner {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fff8db 0%, #fff2bf 100%);
+  border: 1px solid rgba(229, 191, 73, 0.45);
+}
+
+.splitSummaryBanner strong {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a5a00;
+  margin-bottom: 4px;
+}
+
+.splitSummaryBanner p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #453011;
+}
+
+.splitGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.splitReasonList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.splitReasonList em {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #fff9e8;
+  border: 1px solid rgba(229, 191, 73, 0.4);
+  color: #6d4b12;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}

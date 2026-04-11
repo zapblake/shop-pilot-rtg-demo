@@ -23,6 +23,13 @@ type MatchResult = {
   score: number;
 };
 
+type CoupleSetup = {
+  shopperMode?: "single" | "two-similar" | "two-different" | null;
+  couplePath?: "compromise" | "split-king" | null;
+  sleeper1Firmness?: string | null;
+  sleeper2Firmness?: string | null;
+};
+
 const sizeAliases: Record<string, string[]> = {
   twin: ["Twin", "Twin XL", "Twin,Twin Xl"],
   "twin xl": ["Twin XL", "Twin,Twin Xl"],
@@ -104,6 +111,9 @@ function baseScoreThemes(combinedInput: string, requestedBrand?: string, request
       if (combinedInput.includes("budget") || combinedInput.includes("under") || combinedInput.includes("$") || combinedInput.includes("value")) {
         if ((theme.priceRange?.min ?? 999999) < 2000) score += 1;
       }
+      if (combinedInput.includes("split king") || combinedInput.includes("twin xl")) {
+        if (themeHasSize(theme, "twin xl")) score += 2;
+      }
 
       return { theme, score } satisfies RankedCandidate;
     })
@@ -165,9 +175,7 @@ async function rerankWithAi({
       model: "claude-sonnet-4-20250514",
       max_tokens: 500,
       system:
-        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. Reply with strict JSON only in this shape: {\"rankedThemes\":[{\"theme\":string,\"score\":number,\"reason\":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.
-
-${mattressSellingRules}`,
+        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
       messages: [
         {
           role: "user",
@@ -208,10 +216,55 @@ ${mattressSellingRules}`,
   }
 }
 
+async function buildSplitRecommendation({
+  coupleSetup,
+  memorySummary,
+}: {
+  coupleSetup: CoupleSetup;
+  memorySummary: string;
+}) {
+  const sleeper1Prompt = `Twin XL. Sleeper 1 prefers ${coupleSetup.sleeper1Firmness ?? "medium"}. Split king setup. ${memorySummary}`;
+  const sleeper2Prompt = `Twin XL. Sleeper 2 prefers ${coupleSetup.sleeper2Firmness ?? "medium"}. Split king setup. ${memorySummary}`;
+
+  const sleeper1Candidates = baseScoreThemes(sleeper1Prompt.toLowerCase(), undefined, "twin xl");
+  const sleeper2Candidates = baseScoreThemes(sleeper2Prompt.toLowerCase(), undefined, "twin xl");
+
+  const sleeper1Top = sleeper1Candidates[0] ? toMatchResult(sleeper1Candidates[0].theme, sleeper1Candidates[0].score) : null;
+  const sleeper2Top = sleeper2Candidates[0] ? toMatchResult(sleeper2Candidates[0].theme, sleeper2Candidates[0].score) : null;
+
+  return {
+    mode: "split" as const,
+    split: {
+      sleeper1: sleeper1Top,
+      sleeper2: sleeper2Top,
+      explanation: "A split king keeps the shared king footprint while giving each sleeper their own Twin XL feel and support profile.",
+    },
+    trace: {
+      agent: "split-mattress-match",
+      invoked: true,
+      requestedSize: "twin xl",
+      usedAi: false,
+      reason: "Built separate Twin XL recommendations for each sleeper in a split-king flow",
+    },
+  };
+}
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const shopperInput = String(body?.message ?? "");
   const memorySummary = String(body?.memorySummary ?? "");
+  const coupleSetup = (body?.coupleSetup ?? {}) as CoupleSetup;
+  const recommendationIntent = body?.recommendationIntent === "split" ? "split" : "standard";
+
+  if (
+    recommendationIntent === "split" &&
+    coupleSetup?.couplePath === "split-king" &&
+    coupleSetup?.sleeper1Firmness &&
+    coupleSetup?.sleeper2Firmness
+  ) {
+    return NextResponse.json(await buildSplitRecommendation({ coupleSetup, memorySummary }));
+  }
+
   const transcriptText = Array.isArray(body?.conversationTranscript)
     ? body.conversationTranscript
         .slice(-12)
@@ -236,6 +289,7 @@ export async function POST(request: Request) {
     .map(({ theme, score }) => toMatchResult(theme, score));
 
   return NextResponse.json({
+    mode: "standard",
     matches: finalRanked,
     trace: {
       agent: usedAi ? "ai-reranker" : "mattress-match",
