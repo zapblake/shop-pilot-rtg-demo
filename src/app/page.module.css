@@ -1629,3 +1629,35 @@
   font-style: normal;
   font-weight: 600;
 }
+
+.addToCartButton {
+  width: 100%;
+  margin-top: 12px;
+  border: none;
+  border-radius: 14px;
+  background: #111827;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.addToCartButton:hover {
+  background: #1f2937;
+}
+
+.accessoryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.accessoryCard {
+  border-radius: 22px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #fff;
+  padding: 18px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+}

@@ -18,6 +18,10 @@ type RouteBody = {
   matches?: MatchResult[];
   conversationMode?: string;
   conversationTranscript?: { role: "assistant" | "user"; text: string }[];
+  shoppingPhase?: "mattress-discovery" | "post-cart-accessories";
+  cartContext?: {
+    mattress?: { displayName?: string | null } | null;
+  };
 };
 
 function emphasizeQuestion(text: string) {
@@ -32,6 +36,15 @@ function emphasizeQuestion(text: string) {
   const prefix = normalized.slice(0, normalized.lastIndexOf(questionSentence)).trim();
 
   return prefix ? `${prefix} **${questionSentence}**` : `**${questionSentence}**`;
+}
+
+function buildAccessoryFallbackReply(cartMattressName?: string | null) {
+  return {
+    reply: emphasizeQuestion(
+      `${cartMattressName ? `${cartMattressName} is in the cart.` : "Your mattress is in the cart."} I’ve lined up the most relevant protector, sheets, pillow, base, and adjustable base below. What would you like to add next?`,
+    ),
+    mode: "product-evaluation",
+  };
 }
 
 function buildFallbackReply(message: string, matches: MatchResult[]) {
@@ -68,7 +81,11 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as RouteBody;
   const message = String(body?.message ?? "").trim();
   const matches = body.matches ?? [];
-  const fallback = buildFallbackReply(message, matches);
+  const shoppingPhase = body.shoppingPhase ?? "mattress-discovery";
+  const cartMattressName = body.cartContext?.mattress?.displayName ?? null;
+  const fallback = shoppingPhase === "post-cart-accessories"
+    ? buildAccessoryFallbackReply(cartMattressName)
+    : buildFallbackReply(message, matches);
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
@@ -94,11 +111,15 @@ export async function POST(request: Request) {
       .map((entry) => `${entry.role.toUpperCase()}: ${entry.text}`)
       .join("\n");
 
+    const phaseSpecificInstruction = shoppingPhase === "post-cart-accessories"
+      ? `The shopper has already added a mattress to cart${cartMattressName ? `: ${cartMattressName}` : ""}. Shift into sleep-setup completion mode. Do not keep helping them choose a mattress. Tell them the accessory recommendations are below and ask one crisp next question about what they want to add first.`
+      : `Respond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options.`;
+
     const completion = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 120,
       system:
-        `You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply. Do not mention price or budget unless the shopper explicitly asks about it. Instead of listing recommendations in chat, tell the shopper they can scroll down now to see their current recommendations. Always end with one clear shopper-facing question in double asterisks.
+        `You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply unless the shopper already added one to cart and it is provided in context. Do not mention price or budget unless the shopper explicitly asks about it. Always end with one clear shopper-facing question in double asterisks.
 
 Critical length rules:
 - Keep the full reply to 2 short sentences before the final question.
@@ -113,7 +134,7 @@ ${mattressSellingRules}`,
       messages: [
         {
           role: "user",
-          content: `Shopper message: ${message || "(empty)"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nRecent transcript:\n${transcript || "No recent transcript"}\n\nCurrent top candidate matches:\n${topMatches || "No matches yet"}\n\nRespond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options. If the shopper mentions a specific brand, do not say the store does not carry it unless that is certain from the provided candidates. Keep the reply generic and grounded in the current recommendation state.`,
+          content: `Shopper message: ${message || "(empty)"}\n\nShopping phase: ${shoppingPhase}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nRecent transcript:\n${transcript || "No recent transcript"}\n\nCurrent top candidate matches:\n${topMatches || "No matches yet"}\n\n${phaseSpecificInstruction}`,
         },
       ],
     });

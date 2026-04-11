@@ -42,11 +42,38 @@ type MatchResult = {
 };
 
 type RecommendationMode = "standard" | "split";
+type ShoppingPhase = "mattress-discovery" | "post-cart-accessories";
+type AccessoryCategory = "protector" | "sheets" | "pillow" | "base" | "adjustable-base";
 
 type SplitRecommendation = {
   sleeper1: MatchResult | null;
   sleeper2: MatchResult | null;
   explanation: string;
+};
+
+type AccessoryRecommendation = {
+  category: AccessoryCategory;
+  primary: {
+    theme: string;
+    displayName: string;
+    brand: string;
+    category: AccessoryCategory;
+    priceFrom?: number | null;
+  } | null;
+  explanation: string;
+};
+
+type CartItem = {
+  kind: "mattress" | AccessoryCategory;
+  theme: string;
+  displayName: string;
+  size?: string | null;
+  priceFrom?: number | null;
+};
+
+type CartContext = {
+  mattress: CartItem | null;
+  accessories: CartItem[];
 };
 
 type ShopperMode = "single" | "two-similar" | "two-different" | null;
@@ -60,6 +87,9 @@ type CoupleSetup = {
 };
 
 type PersistedSession = {
+  shoppingPhase: ShoppingPhase;
+  cartContext: CartContext;
+  accessoryRecommendations: AccessoryRecommendation[];
   messages: ChatMessage[];
   matches: MatchResult[];
   splitRecommendation: SplitRecommendation | null;
@@ -107,6 +137,7 @@ const defaultCoupleSetup: CoupleSetup = {
   sleeper2Firmness: null,
 };
 const defaultSplitRecommendation: SplitRecommendation | null = null;
+const defaultCartContext: CartContext = { mattress: null, accessories: [] };
 const startingSizeOptions = ["Queen", "King", "Not Sure", "Other"];
 const otherSizeOptions = ["California King", "Full", "Twin", "Twin XL", "RV King", "Short Queen"];
 const firmnessStops = [
@@ -149,6 +180,9 @@ function getStoredSession(): PersistedSession | null {
   try {
     const parsed = JSON.parse(raw) as Partial<PersistedSession>;
     return {
+      shoppingPhase: parsed.shoppingPhase ?? "mattress-discovery",
+      cartContext: parsed.cartContext ?? defaultCartContext,
+      accessoryRecommendations: parsed.accessoryRecommendations ?? [],
       messages: parsed.messages ?? starterMessages,
       matches: parsed.matches ?? starterMatches,
       splitRecommendation: parsed.splitRecommendation ?? defaultSplitRecommendation,
@@ -372,6 +406,31 @@ async function fetchMatches({
   return response.json();
 }
 
+async function fetchAccessories({
+  cartMattress,
+  memorySummary,
+  conversationTranscript,
+  setupType,
+}: {
+  cartMattress: CartItem;
+  memorySummary: string;
+  conversationTranscript: ChatMessage[];
+  setupType: "standard" | "split-king";
+}) {
+  const response = await fetch("/api/accessories", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      cartMattress,
+      memorySummary,
+      conversationTranscript: conversationTranscript.map(({ role, text }) => ({ role, text })),
+      setupType,
+    }),
+  });
+
+  return response.json();
+}
+
 function buildSplitReasonList(splitRecommendation: SplitRecommendation) {
   return [
     splitRecommendation.sleeper1 ? `Sleeper 1: ${splitRecommendation.sleeper1.displayName}` : null,
@@ -392,6 +451,9 @@ export default function Home() {
   const [showMatchNudge, setShowMatchNudge] = useState(false);
   const [showUpdatedPulse, setShowUpdatedPulse] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [shoppingPhase, setShoppingPhase] = useState<ShoppingPhase>(storedSession?.shoppingPhase ?? "mattress-discovery");
+  const [cartContext, setCartContext] = useState<CartContext>(storedSession?.cartContext ?? defaultCartContext);
+  const [accessoryRecommendations, setAccessoryRecommendations] = useState<AccessoryRecommendation[]>(storedSession?.accessoryRecommendations ?? []);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
   const [draftMessage, setDraftMessage] = useState("");
@@ -439,6 +501,9 @@ export default function Home() {
     window.localStorage.setItem(
       SHOPPER_SESSION_KEY,
       JSON.stringify({
+        shoppingPhase,
+        cartContext,
+        accessoryRecommendations,
         messages,
         matches,
         splitRecommendation,
@@ -452,7 +517,7 @@ export default function Home() {
         coupleSetup,
       } satisfies PersistedSession),
     );
-  }, [conversationMode, currentTheme, matches, messages, selectedSize, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
+  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, matches, messages, selectedSize, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -562,6 +627,8 @@ export default function Home() {
           memorySummary: nextMemorySummary,
           matches,
           conversationTranscript: transcriptForTurn.map(({ role, text }) => ({ role, text })),
+          shoppingPhase,
+          cartContext,
         }),
       });
 
@@ -694,7 +761,65 @@ export default function Home() {
     await submitMessage(combinedMessage, { overrideMemorySummary: nextSummary });
   }
 
+  async function handleAddMattressToCart(match: MatchResult) {
+    const mattressItem: CartItem = {
+      kind: "mattress",
+      theme: match.theme,
+      displayName: match.displayName,
+      size: selectedSize,
+      priceFrom: match.priceFrom,
+    };
+
+    const nextCartContext: CartContext = {
+      mattress: mattressItem,
+      accessories: [],
+    };
+
+    setCartContext(nextCartContext);
+    setShoppingPhase("post-cart-accessories");
+
+    const setupType = coupleSetup.couplePath === "split-king" ? "split-king" : "standard";
+
+    try {
+      const payload = await fetchAccessories({
+        cartMattress: mattressItem,
+        memorySummary,
+        conversationTranscript: messages,
+        setupType,
+      });
+      setAccessoryRecommendations(payload.recommendations ?? []);
+    } catch {
+      setAccessoryRecommendations([]);
+    }
+
+    await submitMessage(
+      `I added ${match.displayName} to cart. Help me complete the setup with the right accessories.`,
+      { skipBackgroundMatch: true },
+    );
+  }
+
+  function handleAddAccessoryToCart(recommendation: AccessoryRecommendation) {
+    const primary = recommendation.primary;
+    if (!primary) return;
+
+    setCartContext((current) => ({
+      ...current,
+      accessories: [
+        ...current.accessories,
+        {
+          kind: recommendation.category,
+          theme: primary.theme,
+          displayName: primary.displayName,
+          priceFrom: primary.priceFrom,
+        },
+      ],
+    }));
+  }
+
   function resetConversationState() {
+    setShoppingPhase("mattress-discovery");
+    setCartContext(defaultCartContext);
+    setAccessoryRecommendations([]);
     setMessages(starterMessages);
     setMatches(starterMatches);
     setSplitRecommendation(defaultSplitRecommendation);
@@ -1249,6 +1374,9 @@ export default function Home() {
                                     <em key={reason}>{reason}</em>
                                   ))}
                                 </div>
+                                <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(match)}>
+                                  Add mattress to cart
+                                </button>
                               </div>
                             </article>
                           );
@@ -1257,6 +1385,38 @@ export default function Home() {
                     </div>
                   </section>
                 )}
+
+                {shoppingPhase === "post-cart-accessories" && cartContext.mattress ? (
+                  <section className={styles.recommendationSection}>
+                    <div className={styles.sectionHeader}>
+                      <h3>Complete your sleep setup</h3>
+                      <p>{cartContext.mattress.displayName} is already in the cart. These are the best next adds.</p>
+                    </div>
+                    <div className={styles.splitSummaryBanner}>
+                      <strong>In cart</strong>
+                      <p>{cartContext.mattress.displayName}</p>
+                    </div>
+                    <div className={styles.accessoryGrid}>
+                      {accessoryRecommendations.map((recommendation) => (
+                        <article key={recommendation.category} className={styles.accessoryCard}>
+                          <div className={styles.candidateTopRow}>
+                            <p>{recommendation.category.replace(/-/g, " ")}</p>
+                            <span className={styles.bestFitPill}>Recommended</span>
+                          </div>
+                          <h4>{recommendation.primary?.displayName ?? "No recommendation yet"}</h4>
+                          {recommendation.primary?.brand ? <span>{recommendation.primary.brand}</span> : null}
+                          {recommendation.primary?.priceFrom ? <strong>{`From $${recommendation.primary.priceFrom.toLocaleString()}`}</strong> : null}
+                          {recommendation.explanation ? <div className={styles.reasonList}><em>{recommendation.explanation}</em></div> : null}
+                          {recommendation.primary ? (
+                            <button type="button" className={styles.addToCartButton} onClick={() => handleAddAccessoryToCart(recommendation)}>
+                              Add to cart
+                            </button>
+                          ) : null}
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
 
                 {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
 
