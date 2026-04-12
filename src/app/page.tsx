@@ -985,7 +985,7 @@ export default function Home() {
             aria-label={isOpen ? "Collapse Shop Pilot" : "Open Shop Pilot"}
           >
             <span className={styles.edgeCaret}>{isOpen ? ">" : "<"}</span>
-            <span className={styles.edgeLabel}>Virtual Assistance</span>
+            <span className={styles.edgeLabel}>Virtual<br />Assistance</span>
           </button>
 
           <div className={styles.overlayBody} ref={overlayBodyRef}>
