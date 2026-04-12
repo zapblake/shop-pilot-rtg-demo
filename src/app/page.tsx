@@ -42,6 +42,7 @@ type MessageOptions = {
   skipAssistantReply?: boolean;
   overrideMemorySummary?: string;
   skipBackgroundMatch?: boolean;
+  siteContextOnly?: boolean;
 };
 
 type MatchResult = {
@@ -679,17 +680,20 @@ export default function Home() {
 
   async function processMessage(messageText: string, options?: MessageOptions) {
     const trimmed = messageText.trim();
+    const isSiteContextOnly = options?.siteContextOnly ?? false;
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: "user",
       text: trimmed,
     };
 
-    const transcriptForTurn = [...messages, userMessage];
+    const transcriptForTurn = isSiteContextOnly ? messages : [...messages, userMessage];
     const nextMemorySummary = options?.overrideMemorySummary ?? buildMemorySummary(transcriptForTurn, matches);
 
-    setMessages((current) => [...current, userMessage]);
-    setDraftMessage("");
+    if (!isSiteContextOnly) {
+      setMessages((current) => [...current, userMessage]);
+      setDraftMessage("");
+    }
     setIsLoading(true);
 
     const runBackgroundMatch = () => {
@@ -939,6 +943,14 @@ export default function Home() {
     setCurrentTheme(themeId);
     setActiveProduct({ theme: themeId, source, reason });
     setCurrentView("pdp");
+
+    const theme = mattressThemes.find((item) => item.theme === themeId);
+    if (theme) {
+      void submitMessage(`Site action: shopper opened the PDP for ${theme.displayName}.`, {
+        skipBackgroundMatch: true,
+        siteContextOnly: true,
+      });
+    }
   }
 
   async function handleAddMattressToCart(match: MatchResult) {
@@ -975,8 +987,8 @@ export default function Home() {
     }
 
     await submitMessage(
-      `I added ${match.displayName} to cart. Help me complete the setup with the right accessories.`,
-      { skipBackgroundMatch: true },
+      `Site action: shopper added ${match.displayName} to cart. Help complete the sleep setup.`,
+      { skipBackgroundMatch: true, siteContextOnly: true },
     );
   }
 
