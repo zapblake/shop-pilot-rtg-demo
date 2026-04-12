@@ -581,6 +581,11 @@ export default function Home() {
       const intent = coupleSetup.couplePath === "split-king" && !!coupleSetup.sleeper1Firmness && !!coupleSetup.sleeper2Firmness
         ? "split"
         : "standard";
+
+      if (coupleSetup.couplePath === "split-king") {
+        setRecommendationMode("split");
+        setMatches([]);
+      }
       void fetchMatches({
         message: trimmed,
         memorySummary: nextMemorySummary,
@@ -597,6 +602,12 @@ export default function Home() {
             setMatches([]);
           } else {
             const incomingMatches: MatchResult[] = matchPayload.matches ?? [];
+            if (coupleSetup.couplePath === "split-king") {
+              setRecommendationMode("split");
+              setSplitRecommendation(null);
+              setMatches([]);
+              return;
+            }
             setRecommendationMode("standard");
             setSplitRecommendation(null);
             setMatches(incomingMatches);
@@ -733,8 +744,9 @@ export default function Home() {
   const shouldAskCouplePath = selectedSize === "King" && coupleSetup.shopperMode === "two-different" && !coupleSetup.couplePath;
   const shouldAskSplitSleeper1 = coupleSetup.couplePath === "split-king" && !coupleSetup.sleeper1Firmness;
   const shouldAskSplitSleeper2 = coupleSetup.couplePath === "split-king" && !!coupleSetup.sleeper1Firmness && !coupleSetup.sleeper2Firmness;
+  const isSplitKingJourney = coupleSetup.couplePath === "split-king" || shouldAskSplitSleeper1 || shouldAskSplitSleeper2;
   const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
-  const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+  const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
 
   const selectedFirmness = useMemo(() => {
     return firmnessStops.reduce((closest, stop) => {
