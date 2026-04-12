@@ -32,8 +32,15 @@ type RouteBody = {
   conversationMode?: string;
   conversationTranscript?: { role: "assistant" | "user"; text: string }[];
   shoppingPhase?: "mattress-discovery" | "post-cart-accessories";
+  currentView?: "plp" | "pdp" | "cart";
+  activeProduct?: {
+    theme?: string | null;
+    source?: "recommendation" | "featured" | "compare" | "split" | null;
+    reason?: string | null;
+  } | null;
   cartContext?: {
-    mattress?: { displayName?: string | null } | null;
+    mattress?: { displayName?: string | null; size?: string | null } | null;
+    accessories?: { displayName?: string | null; kind?: string | null }[];
   };
 };
 
@@ -55,6 +62,26 @@ function buildAccessoryFallbackReply(cartMattressName?: string | null) {
   return {
     reply: emphasizeQuestion(
       `${cartMattressName ? `${cartMattressName} is in the cart.` : "Your mattress is in the cart."} I’ve lined up the most relevant protector, sheets, pillow, base, and adjustable base below. What would you like to add next?`,
+    ),
+    mode: "product-evaluation",
+    questionType: "generic-refine" as QuestionType,
+  };
+}
+
+function buildPdpFallbackReply(activeProductName?: string | null, reason?: string | null) {
+  return {
+    reply: emphasizeQuestion(
+      `${activeProductName ? `You’re looking at ${activeProductName}.` : "You’re on a product page now."} ${reason ? `${reason} ` : ""}I can help you decide if this is the one, or what to compare it against next. What would you like to evaluate first, feel, support, or cooling?`,
+    ),
+    mode: "product-evaluation",
+    questionType: "compare-refine" as QuestionType,
+  };
+}
+
+function buildCartFallbackReply(cartMattressName?: string | null, accessoryCount = 0) {
+  return {
+    reply: emphasizeQuestion(
+      `${cartMattressName ? `${cartMattressName} is already in the cart.` : "Your mattress is already in the cart."} ${accessoryCount > 0 ? `You already have ${accessoryCount} add-on${accessoryCount === 1 ? "" : "s"} selected. ` : ""}Now I can help complete the setup. What would you like to add next, a protector, pillows, sheets, or a base?`,
     ),
     mode: "product-evaluation",
     questionType: "generic-refine" as QuestionType,
@@ -116,10 +143,19 @@ export async function POST(request: Request) {
   const message = String(body?.message ?? "").trim();
   const matches = body.matches ?? [];
   const shoppingPhase = body.shoppingPhase ?? "mattress-discovery";
+  const currentView = body.currentView ?? "plp";
   const cartMattressName = body.cartContext?.mattress?.displayName ?? null;
-  const fallback = shoppingPhase === "post-cart-accessories"
-    ? buildAccessoryFallbackReply(cartMattressName)
-    : buildFallbackReply(message, matches);
+  const cartAccessoryCount = body.cartContext?.accessories?.length ?? 0;
+  const activeProductName = matches.find((match) => match.theme === body.activeProduct?.theme)?.displayName
+    ?? cartMattressName
+    ?? null;
+  const fallback = currentView === "cart"
+    ? buildCartFallbackReply(cartMattressName, cartAccessoryCount)
+    : shoppingPhase === "post-cart-accessories"
+      ? buildAccessoryFallbackReply(cartMattressName)
+      : currentView === "pdp"
+        ? buildPdpFallbackReply(activeProductName, body.activeProduct?.reason ?? null)
+        : buildFallbackReply(message, matches);
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
@@ -146,9 +182,13 @@ export async function POST(request: Request) {
       .map((entry) => `${entry.role.toUpperCase()}: ${entry.text}`)
       .join("\n");
 
-    const phaseSpecificInstruction = shoppingPhase === "post-cart-accessories"
-      ? `The shopper has already added a mattress to cart${cartMattressName ? `: ${cartMattressName}` : ""}. Shift into sleep-setup completion mode. Do not keep helping them choose a mattress. Tell them the accessory recommendations are below and ask one crisp next question about what they want to add first.`
-      : `Respond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options.`;
+    const phaseSpecificInstruction = currentView === "cart"
+      ? `The shopper is actively in the cart view${cartMattressName ? ` with ${cartMattressName} in cart` : ""}. Shift into cart completion mode. Do not act like they are still browsing mattresses from scratch. Reference the cart state, acknowledge that the mattress is already chosen, and guide the next best add.`
+      : shoppingPhase === "post-cart-accessories"
+        ? `The shopper has already added a mattress to cart${cartMattressName ? `: ${cartMattressName}` : ""}. Shift into sleep-setup completion mode. Do not keep helping them choose a mattress. Tell them the accessory recommendations are below and ask one crisp next question about what they want to add first.`
+        : currentView === "pdp"
+          ? `The shopper is actively viewing a product detail page${activeProductName ? ` for ${activeProductName}` : ""}. Stop speaking in broad recommendation-list terms. Anchor to the active PDP, briefly explain why this product fits or what to evaluate on this PDP, and ask one crisp next question about this product.`
+          : `Respond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options.`;
 
     const completion = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
@@ -169,7 +209,7 @@ ${mattressSellingRules}`,
       messages: [
         {
           role: "user",
-          content: `Shopper message: ${message || "(empty)"}\n\nShopping phase: ${shoppingPhase}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nRecent transcript:\n${transcript || "No recent transcript"}\n\nCurrent top candidate matches:\n${topMatches || "No matches yet"}\n\n${phaseSpecificInstruction}`,
+          content: `Shopper message: ${message || "(empty)"}\n\nShopping phase: ${shoppingPhase}\nCurrent view: ${currentView}\nActive product theme: ${body.activeProduct?.theme ?? "None"}\nActive product reason: ${body.activeProduct?.reason ?? "None"}\nCart mattress: ${cartMattressName ?? "None"}\nCart accessories: ${(body.cartContext?.accessories ?? []).map((item) => item.displayName || item.kind || "Unknown").join(", ") || "None"}\n\nMemory summary: ${body.memorySummary ?? "None"}\n\nConversation mode: ${body.conversationMode ?? "guided-discovery"}\n\nRecent transcript:\n${transcript || "No recent transcript"}\n\nCurrent top candidate matches:\n${topMatches || "No matches yet"}\n\n${phaseSpecificInstruction}`,
         },
       ],
     });
