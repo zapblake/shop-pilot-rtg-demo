@@ -818,11 +818,12 @@ export default function Home() {
 
   useEffect(() => {
     if (!sizeCapturedViaPill || !selectedSize) return;
+    if (!messages.some((message) => message.role === "user" && /I want a .* feel\./i.test(message.text))) return;
     if (coupleSetup.couplePath === "split-king") return;
     if (!firmnessAnswered) {
       setFirmnessAnswered(true);
     }
-  }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered]);
+  }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
   const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
 
   const selectedFirmness = useMemo(() => {
