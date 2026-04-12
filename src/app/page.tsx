@@ -89,6 +89,14 @@ type CartContext = {
   accessories: CartItem[];
 };
 
+type DemoView = "plp" | "pdp" | "cart";
+
+type ActiveProductContext = {
+  theme: string;
+  source: "recommendation" | "featured" | "compare" | "split";
+  reason: string | null;
+};
+
 type ShopperMode = "single" | "two-similar" | "two-different" | null;
 type CouplePath = "compromise" | "split-king" | null;
 
@@ -109,6 +117,8 @@ type PersistedSession = {
   recommendationMode: RecommendationMode;
   conversationMode: ConversationMode;
   currentTheme: string | null;
+  currentView: DemoView;
+  activeProduct: ActiveProductContext | null;
   activeQuestionType: QuestionType;
   memorySummary: string;
   selectedSize: string | null;
@@ -204,6 +214,8 @@ function getStoredSession(): PersistedSession | null {
       recommendationMode: parsed.recommendationMode ?? "standard",
       conversationMode: parsed.conversationMode ?? "guided-discovery",
       currentTheme: parsed.currentTheme ?? featuredThemes[0]?.theme ?? null,
+      currentView: parsed.currentView ?? "plp",
+      activeProduct: parsed.activeProduct ?? null,
       activeQuestionType: parsed.activeQuestionType ?? "size",
       memorySummary: parsed.memorySummary ?? buildMemorySummary(starterMessages, starterMatches),
       selectedSize: parsed.selectedSize ?? null,
@@ -537,6 +549,8 @@ export default function Home() {
   const [accessoryRecommendations, setAccessoryRecommendations] = useState<AccessoryRecommendation[]>(storedSession?.accessoryRecommendations ?? []);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
+  const [currentView, setCurrentView] = useState<DemoView>(storedSession?.currentView ?? "plp");
+  const [activeProduct, setActiveProduct] = useState<ActiveProductContext | null>(storedSession?.activeProduct ?? null);
   const [activeQuestionType, setActiveQuestionType] = useState<QuestionType>(storedSession?.activeQuestionType ?? "size");
   const [draftMessage, setDraftMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -592,6 +606,8 @@ export default function Home() {
         recommendationMode,
         conversationMode,
         currentTheme,
+        currentView,
+        activeProduct,
         activeQuestionType,
         memorySummary: nextSummary,
         selectedSize,
@@ -601,7 +617,7 @@ export default function Home() {
         coupleSetup,
       } satisfies PersistedSession),
     );
-  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, activeQuestionType, matches, messages, selectedSize, selectedFirmnessValue, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
+  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, currentView, activeProduct, activeQuestionType, matches, messages, selectedSize, selectedFirmnessValue, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -734,6 +750,8 @@ export default function Home() {
         body: JSON.stringify({
           message: trimmed,
           currentTheme,
+          currentView,
+          activeProduct,
           shopperId: shopperMemory?.shopperId,
           conversationMode,
           memorySummary: nextMemorySummary,
@@ -841,6 +859,7 @@ export default function Home() {
   const comparisonNote = getComparisonNote(matches, conversationMode, recommendationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
+  const activeThemeRecord = useMemo(() => mattressThemes.find((theme) => theme.theme === (activeProduct?.theme ?? currentTheme)) ?? null, [activeProduct, currentTheme]);
   const shouldAskShopperMode = sizeCapturedViaPill && selectedSize === "King" && !coupleSetup.shopperMode;
   const shouldAskCouplePath = selectedSize === "King" && coupleSetup.shopperMode === "two-different" && !coupleSetup.couplePath;
   const shouldAskSplitSleeper1 = coupleSetup.couplePath === "split-king" && !coupleSetup.sleeper1Firmness;
@@ -916,6 +935,12 @@ export default function Home() {
     await submitMessage(combinedMessage, { overrideMemorySummary: nextSummary });
   }
 
+  function openProductDetail(themeId: string, source: ActiveProductContext["source"], reason: string | null = null) {
+    setCurrentTheme(themeId);
+    setActiveProduct({ theme: themeId, source, reason });
+    setCurrentView("pdp");
+  }
+
   async function handleAddMattressToCart(match: MatchResult) {
     const mattressItem: CartItem = {
       kind: "mattress",
@@ -932,6 +957,8 @@ export default function Home() {
 
     setCartContext(nextCartContext);
     setShoppingPhase("post-cart-accessories");
+    setCurrentView("cart");
+    setActiveProduct({ theme: match.theme, source: "recommendation", reason: "Added from recommendation flow" });
 
     const setupType = coupleSetup.couplePath === "split-king" ? "split-king" : "standard";
 
@@ -980,6 +1007,8 @@ export default function Home() {
     setSplitRecommendation(defaultSplitRecommendation);
     setRecommendationMode("standard");
     setConversationMode("guided-discovery");
+    setCurrentView("plp");
+    setActiveProduct(null);
     setActiveQuestionType("size");
     setCurrentTheme(featuredThemes[0]?.theme ?? null);
     setDraftMessage("");
@@ -1083,41 +1112,135 @@ export default function Home() {
               </div>
             </section>
 
-            <div className={styles.resultsMeta}>
-              <strong>Shop Mattresses</strong>
-              <span>Scrape-derived shell with RTG-category visuals and structure</span>
-            </div>
-
-            <div className={styles.productGrid}>
-              {featuredThemes.map((theme) => (
-                <article
-                  key={theme.theme}
-                  className={`${styles.productTile} ${currentTheme === theme.theme ? styles.productTileActive : ""}`}
-                  onClick={() => setCurrentTheme(theme.theme)}
-                >
-                  <div className={styles.productTileImageWrap}>
-                    {theme.heroImage ? (
-                      <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.productTileImage} />
+            {currentView === "pdp" && activeThemeRecord ? (
+              <section className={styles.mockPdpSection}>
+                <div className={styles.mockPdpHeaderRow}>
+                  <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView("plp")}>← Back to results</button>
+                  <button type="button" className={styles.pdpCartButton} onClick={() => setCurrentView("cart")}>View Cart</button>
+                </div>
+                <div className={styles.mockPdpGrid}>
+                  <div className={styles.mockPdpGallery}>
+                    {activeThemeRecord.heroImage ? (
+                      <Image src={activeThemeRecord.heroImage} alt={activeThemeRecord.displayName} fill unoptimized className={styles.productTileImage} />
                     ) : (
-                      <div className={styles.productImagePlaceholder}><span>{theme.brand}</span></div>
+                      <div className={styles.productImagePlaceholder}><span>{activeThemeRecord.brand}</span></div>
                     )}
                   </div>
-                  <div className={styles.productTileBody}>
-                    <p>{theme.brand}</p>
-                    <h3>{theme.displayName}</h3>
+                  <div className={styles.mockPdpSummary}>
+                    <p className={styles.mockPdpBrand}>{activeThemeRecord.brand}</p>
+                    <h2>{activeThemeRecord.displayName}</h2>
                     <div className={styles.tagRow}>
-                      <span>{theme.type || "Type TBD"}</span>
-                      <span>{theme.comfort || "Comfort TBD"}</span>
+                      <span>{activeThemeRecord.type || "Type TBD"}</span>
+                      <span>{activeThemeRecord.comfort || "Comfort TBD"}</span>
                     </div>
-                    <strong>
-                      {theme.priceRange?.min
-                        ? `From $${theme.priceRange.min.toLocaleString()}`
-                        : "Price TBD"}
+                    <strong className={styles.mockPdpPrice}>
+                      {activeThemeRecord.priceRange?.min ? `From $${activeThemeRecord.priceRange.min.toLocaleString()}` : "Price TBD"}
                     </strong>
+                    <p className={styles.mockPdpReason}>
+                      {activeProduct?.reason ?? "Shop Pilot is carrying your recommendation context directly into this PDP."}
+                    </p>
+                    <div className={styles.mockPdpFeatureList}>
+                      <div><span>Cooling</span><b>{activeThemeRecord.temperatureManagement?.label ?? "Balanced"}</b></div>
+                      <div><span>Support</span><b>{activeThemeRecord.supportLevel?.label ?? "Supportive"}</b></div>
+                      <div><span>Pressure relief</span><b>{activeThemeRecord.pressureRelief?.label ?? "Responsive"}</b></div>
+                    </div>
+                    <div className={styles.mockPdpActions}>
+                      <button
+                        type="button"
+                        className={styles.addToCartButton}
+                        onClick={() => handleAddMattressToCart({
+                          theme: activeThemeRecord.theme,
+                          displayName: activeThemeRecord.displayName,
+                          brand: activeThemeRecord.brand,
+                          type: activeThemeRecord.type,
+                          comfort: activeThemeRecord.comfort,
+                          priceFrom: activeThemeRecord.priceRange?.min ?? null,
+                          score: 0,
+                        })}
+                      >
+                        Add to cart
+                      </button>
+                      <button type="button" className={styles.pdpSecondaryButton} onClick={() => setCurrentView("plp")}>Back to compare</button>
+                    </div>
                   </div>
-                </article>
-              ))}
-            </div>
+                </div>
+              </section>
+            ) : currentView === "cart" ? (
+              <section className={styles.mockCartSection}>
+                <div className={styles.mockPdpHeaderRow}>
+                  <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView(cartContext.mattress ? "pdp" : "plp")}>← Continue shopping</button>
+                </div>
+                <div className={styles.mockCartShell}>
+                  <div className={styles.mockCartItems}>
+                    <h2>Mock Cart</h2>
+                    {cartContext.mattress ? (
+                      <article className={styles.mockCartItem}>
+                        <div>
+                          <p>Mattress</p>
+                          <h3>{cartContext.mattress.displayName}</h3>
+                          <span>{cartContext.mattress.size ?? selectedSize ?? "Size not selected"}</span>
+                        </div>
+                        <strong>{cartContext.mattress.priceFrom ? `From $${cartContext.mattress.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
+                      </article>
+                    ) : (
+                      <div className={styles.mockCartEmpty}>No mattress in cart yet.</div>
+                    )}
+                    {cartContext.accessories.map((item) => (
+                      <article key={`${item.kind}-${item.theme}`} className={styles.mockCartItem}>
+                        <div>
+                          <p>{item.kind.replace(/-/g, " ")}</p>
+                          <h3>{item.displayName}</h3>
+                        </div>
+                        <strong>{item.priceFrom ? `From $${item.priceFrom.toLocaleString()}` : "Included"}</strong>
+                      </article>
+                    ))}
+                  </div>
+                  <div className={styles.mockCartSummaryBox}>
+                    <h3>Summary</h3>
+                    <p>Shop Pilot stays aware of what’s already in the cart and shifts into completion mode.</p>
+                    <button type="button" className={styles.addToCartButton} onClick={() => setIsOpen(true)}>Ask Shop Pilot for next best add-ons</button>
+                  </div>
+                </div>
+              </section>
+            ) : (
+              <>
+                <div className={styles.resultsMeta}>
+                  <strong>Shop Mattresses</strong>
+                  <span>Scrape-derived shell with RTG-category visuals and structure</span>
+                </div>
+
+                <div className={styles.productGrid}>
+                  {featuredThemes.map((theme) => (
+                    <article
+                      key={theme.theme}
+                      className={`${styles.productTile} ${currentTheme === theme.theme ? styles.productTileActive : ""}`}
+                      onClick={() => openProductDetail(theme.theme, "featured", "Opened from the category browsing experience.")}
+                    >
+                      <div className={styles.productTileImageWrap}>
+                        {theme.heroImage ? (
+                          <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.productTileImage} />
+                        ) : (
+                          <div className={styles.productImagePlaceholder}><span>{theme.brand}</span></div>
+                        )}
+                      </div>
+                      <div className={styles.productTileBody}>
+                        <p>{theme.brand}</p>
+                        <h3>{theme.displayName}</h3>
+                        <div className={styles.tagRow}>
+                          <span>{theme.type || "Type TBD"}</span>
+                          <span>{theme.comfort || "Comfort TBD"}</span>
+                        </div>
+                        <strong>
+                          {theme.priceRange?.min
+                            ? `From $${theme.priceRange.min.toLocaleString()}`
+                            : "Price TBD"}
+                        </strong>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </>
+            )}
           </section>
         </section>
 
@@ -1543,9 +1666,14 @@ export default function Home() {
                                     <em key={reason}>{reason}</em>
                                   ))}
                                 </div>
-                                <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(match)}>
-                                  Add mattress to cart
-                                </button>
+                                <div className={styles.recommendationCardActions}>
+                                  <button type="button" className={styles.pdpSecondaryButton} onClick={() => openProductDetail(match.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}>
+                                    View PDP
+                                  </button>
+                                  <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(match)}>
+                                    Add mattress to cart
+                                  </button>
+                                </div>
                               </div>
                             </article>
                           );

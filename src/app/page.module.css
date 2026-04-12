@@ -260,6 +260,144 @@
   gap: 20px;
 }
 
+.mockPdpSection,
+.mockCartSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mockPdpHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.pdpBackButton,
+.pdpCartButton,
+.pdpSecondaryButton {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111827;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mockPdpGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.mockPdpGallery {
+  position: relative;
+  min-height: 500px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.mockPdpSummary,
+.mockCartItems,
+.mockCartSummaryBox {
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.mockPdpBrand {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.mockPdpPrice {
+  display: block;
+  margin-top: 14px;
+  font-size: 28px;
+  color: #111827;
+}
+
+.mockPdpReason {
+  margin: 16px 0 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.mockPdpFeatureList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.mockPdpFeatureList div,
+.mockCartItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 14px 16px;
+  background: #f9fafb;
+}
+
+.mockPdpFeatureList span,
+.mockCartItem p {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.mockPdpActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.recommendationCardActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.mockCartShell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.mockCartItems {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mockCartSummaryBox {
+  position: sticky;
+  top: 20px;
+}
+
+.mockCartEmpty {
+  padding: 24px;
+  border-radius: 20px;
+  background: #f9fafb;
+  color: #6b7280;
+  border: 1px dashed #d1d5db;
+}
+
 .productTile {
   display: flex;
   flex-direction: column;
@@ -617,6 +755,19 @@
 
   .sizeRail {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mockPdpGrid,
+  .mockCartShell {
+    grid-template-columns: 1fr;
+  }
+
+  .mockPdpGallery {
+    min-height: 360px;
+  }
+
+  .mockPdpFeatureList {
+    grid-template-columns: 1fr;
   }
 }
 
