@@ -98,6 +98,7 @@ type PersistedSession = {
   currentTheme: string | null;
   memorySummary: string;
   selectedSize: string | null;
+  selectedFirmnessValue: number;
   sizeCapturedViaPill: boolean;
   firmnessAnswered: boolean;
   coupleSetup: CoupleSetup;
@@ -191,6 +192,7 @@ function getStoredSession(): PersistedSession | null {
       currentTheme: parsed.currentTheme ?? featuredThemes[0]?.theme ?? null,
       memorySummary: parsed.memorySummary ?? buildMemorySummary(starterMessages, starterMatches),
       selectedSize: parsed.selectedSize ?? null,
+      selectedFirmnessValue: parsed.selectedFirmnessValue ?? 50,
       sizeCapturedViaPill: parsed.sizeCapturedViaPill ?? false,
       firmnessAnswered: parsed.firmnessAnswered ?? false,
       coupleSetup: {
@@ -531,7 +533,7 @@ export default function Home() {
   const [memorySummary, setMemorySummary] = useState(storedSession?.memorySummary ?? buildMemorySummary(starterMessages, starterMatches));
   const [showOpeningOptions, setShowOpeningOptions] = useState(false);
   const [showOtherSizes, setShowOtherSizes] = useState(false);
-  const [selectedFirmnessValue, setSelectedFirmnessValue] = useState(50);
+  const [selectedFirmnessValue, setSelectedFirmnessValue] = useState(storedSession?.selectedFirmnessValue ?? 50);
   const [selectedSize, setSelectedSize] = useState<string | null>(storedSession?.selectedSize ?? null);
   const [sizeCapturedViaPill, setSizeCapturedViaPill] = useState(storedSession?.sizeCapturedViaPill ?? false);
   const [firmnessAnswered, setFirmnessAnswered] = useState(storedSession?.firmnessAnswered ?? false);
@@ -578,12 +580,13 @@ export default function Home() {
         currentTheme,
         memorySummary: nextSummary,
         selectedSize,
+        selectedFirmnessValue,
         sizeCapturedViaPill,
         firmnessAnswered,
         coupleSetup,
       } satisfies PersistedSession),
     );
-  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, matches, messages, selectedSize, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
+  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, matches, messages, selectedSize, selectedFirmnessValue, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -812,6 +815,14 @@ export default function Home() {
   const shouldAskSplitSleeper2 = coupleSetup.couplePath === "split-king" && !!coupleSetup.sleeper1Firmness && !coupleSetup.sleeper2Firmness;
   const isSplitKingJourney = coupleSetup.couplePath === "split-king" || shouldAskSplitSleeper1 || shouldAskSplitSleeper2;
   const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+
+  useEffect(() => {
+    if (!sizeCapturedViaPill || !selectedSize) return;
+    if (coupleSetup.couplePath === "split-king") return;
+    if (!firmnessAnswered) {
+      setFirmnessAnswered(true);
+    }
+  }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered]);
   const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
 
   const selectedFirmness = useMemo(() => {
