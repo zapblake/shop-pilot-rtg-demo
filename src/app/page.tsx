@@ -261,6 +261,9 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
+  const latestAssistantQuestion = [...messages]
+    .reverse()
+    .find((message) => message.role === "assistant" && message.text.trim())?.text.toLowerCase() ?? "";
 
   if (recommendationMode === "split") {
     return [
@@ -270,12 +273,83 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
+  if (/what size|which size|size mattress/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Queen", message: "I’m looking for a queen." },
+      { label: "King", message: "I’m looking for a king." },
+      { label: "Not sure", message: "I’m not sure on size yet." },
+    ];
+  }
+
+  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Just me", message: "Just me." },
+      { label: "Two sleepers", message: "Two sleepers." },
+      { label: "Different preferences", message: "Two sleepers with different preferences." },
+    ];
+  }
+
+  if (/how would you like to shop this king setup|compromise|split king/.test(latestAssistantQuestion)) {
+    return [
+      { label: "One mattress", message: "We want one mattress that works for both of us." },
+      { label: "Split king", message: "We want to explore a split king / Twin XL setup." },
+      { label: "Not sure yet", message: "We are not sure yet." },
+    ];
+  }
+
+  if (/what firmness|feel best to you|plush|medium|firm/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Plush", message: "I want a plush feel." },
+      { label: "Medium", message: "I want a medium feel." },
+      { label: "Firm", message: "I want a firm feel." },
+    ];
+  }
+
+  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Side sleeper", message: "I’m a side sleeper." },
+      { label: "Back sleeper", message: "I’m a back sleeper." },
+      { label: "Stomach sleeper", message: "I’m a stomach sleeper." },
+    ];
+  }
+
+  if (/sleep hot|cooling|temperature/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Yes, I sleep hot", message: "Yes, I sleep hot at night." },
+      { label: "Somewhat", message: "Somewhat, cooling matters to me." },
+      { label: "Not really", message: "No, temperature is not a big factor." },
+    ];
+  }
+
+  if (/pressure relief|shoulder|hip|back pain|pain/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
+      { label: "Hip pressure", message: "I need pressure relief at my hips." },
+      { label: "Lower back", message: "Lower back support matters most to me." },
+    ];
+  }
+
+  if (/budget|price range|under \$|value/.test(latestAssistantQuestion)) {
+    return [
+      { label: "Best value", message: "I care most about getting the best value." },
+      { label: "Mid-range", message: "I want something solid in the middle." },
+      { label: "Premium", message: "I’m open to premium options if the fit is better." },
+    ];
+  }
+
+  if (/which one sounds better|compare|top options|best fit/.test(latestAssistantQuestion) || matches.length > 1) {
+    return [
+      { label: "More support", message: "I want something with stronger support." },
+      { label: "Softer feel", message: "I want a softer feel." },
+      { label: "Cooling", message: "Cooling matters most to me." },
+    ];
+  }
+
   const wantsSoft = /soft|plush/.test(userText);
   const knowsPosition = /side|back|stomach/.test(userText);
   const knowsCooling = /hot|cool|cooling/.test(userText);
   const knowsWeight = /\b(under 180|180|230|over 230|heavy|heavier|light|medium weight|300lb|300 lbs|250lb|250 lbs)\b/.test(userText);
   const knowsPain = /back pain|lower back|shoulder pain|hip pain|pressure/.test(userText);
-  const inComparison = matches.length > 1;
 
   if (!knowsPosition) {
     return [
@@ -306,14 +380,6 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
       { label: "Lower back pain", message: "Lower back support matters to me." },
       { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
       { label: "Hip pressure", message: "I need pressure relief at my hips." },
-    ];
-  }
-
-  if (inComparison) {
-    return [
-      { label: "More support", message: "I want something with stronger support." },
-      { label: "Softer feel", message: "I want a softer feel." },
-      { label: "Best value", message: "I care most about getting the best value." },
     ];
   }
 
