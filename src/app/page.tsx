@@ -19,6 +19,19 @@ type ShopperMemory = {
   summary: string;
 };
 
+type QuestionType =
+  | "size"
+  | "shopper-mode"
+  | "king-path"
+  | "firmness"
+  | "sleep-position"
+  | "cooling"
+  | "pressure-relief"
+  | "budget"
+  | "compare-refine"
+  | "generic-refine"
+  | null;
+
 type ChatMessage = {
   id: string;
   role: "assistant" | "user";
@@ -96,6 +109,7 @@ type PersistedSession = {
   recommendationMode: RecommendationMode;
   conversationMode: ConversationMode;
   currentTheme: string | null;
+  activeQuestionType: QuestionType;
   memorySummary: string;
   selectedSize: string | null;
   selectedFirmnessValue: number;
@@ -190,6 +204,7 @@ function getStoredSession(): PersistedSession | null {
       recommendationMode: parsed.recommendationMode ?? "standard",
       conversationMode: parsed.conversationMode ?? "guided-discovery",
       currentTheme: parsed.currentTheme ?? featuredThemes[0]?.theme ?? null,
+      activeQuestionType: parsed.activeQuestionType ?? "size",
       memorySummary: parsed.memorySummary ?? buildMemorySummary(starterMessages, starterMatches),
       selectedSize: parsed.selectedSize ?? null,
       selectedFirmnessValue: parsed.selectedFirmnessValue ?? 50,
@@ -257,19 +272,12 @@ function getFitReasons(match: MatchResult, summary: string) {
   return reasons.slice(0, 3);
 }
 
-function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches: MatchResult[], recommendationMode: RecommendationMode) {
+function getDynamicReplyPills(activeQuestionType: QuestionType, messages: ChatMessage[], summary: string, matches: MatchResult[], recommendationMode: RecommendationMode) {
   const userText = messages
     .filter((message) => message.role === "user")
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
-  const assistantMessages = messages
-    .filter((message) => message.role === "assistant" && message.text.trim())
-    .map((message) => message.text.toLowerCase());
-  const latestAssistantQuestion = assistantMessages.at(-1) ?? "";
-  const recentAssistantContext = assistantMessages.slice(-3).join(" ");
-  const activePrompt = `${recentAssistantContext} ${latestAssistantQuestion}`.trim();
-
   if (recommendationMode === "split") {
     return [
       { label: "More pressure relief", message: "We want more pressure relief on one side." },
@@ -278,7 +286,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/what size|which size|size mattress/.test(activePrompt)) {
+  if (activeQuestionType === "size") {
     return [
       { label: "Queen", message: "I’m looking for a queen." },
       { label: "King", message: "I’m looking for a king." },
@@ -286,7 +294,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(activePrompt)) {
+  if (activeQuestionType === "shopper-mode") {
     return [
       { label: "Just me", message: "Just me." },
       { label: "Two sleepers", message: "Two sleepers." },
@@ -294,7 +302,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/how would you like to shop this king setup|compromise|split king/.test(activePrompt)) {
+  if (activeQuestionType === "king-path") {
     return [
       { label: "One mattress", message: "We want one mattress that works for both of us." },
       { label: "Split king", message: "We want to explore a split king / Twin XL setup." },
@@ -302,7 +310,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/what firmness|feel best to you|plush|medium|firm/.test(activePrompt)) {
+  if (activeQuestionType === "firmness") {
     return [
       { label: "Plush", message: "I want a plush feel." },
       { label: "Medium", message: "I want a medium feel." },
@@ -310,7 +318,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(activePrompt)) {
+  if (activeQuestionType === "sleep-position") {
     return [
       { label: "Side sleeper", message: "I’m a side sleeper." },
       { label: "Back sleeper", message: "I’m a back sleeper." },
@@ -318,7 +326,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/sleep hot|cooling|temperature/.test(activePrompt)) {
+  if (activeQuestionType === "cooling") {
     return [
       { label: "Yes, I sleep hot", message: "Yes, I sleep hot at night." },
       { label: "Somewhat", message: "Somewhat, cooling matters to me." },
@@ -326,7 +334,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/pressure relief|shoulder|hip|back pain|pain/.test(activePrompt)) {
+  if (activeQuestionType === "pressure-relief") {
     return [
       { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
       { label: "Hip pressure", message: "I need pressure relief at my hips." },
@@ -334,7 +342,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/budget|price range|under \$|value/.test(activePrompt)) {
+  if (activeQuestionType === "budget") {
     return [
       { label: "Best value", message: "I care most about getting the best value." },
       { label: "Mid-range", message: "I want something solid in the middle." },
@@ -342,7 +350,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/which one sounds better|compare|top options|best fit/.test(activePrompt)) {
+  if (activeQuestionType === "compare-refine") {
     return [
       { label: "More support", message: "I want something with stronger support." },
       { label: "Softer feel", message: "I want a softer feel." },
@@ -529,6 +537,7 @@ export default function Home() {
   const [accessoryRecommendations, setAccessoryRecommendations] = useState<AccessoryRecommendation[]>(storedSession?.accessoryRecommendations ?? []);
   const [conversationMode, setConversationMode] = useState<ConversationMode>(storedSession?.conversationMode ?? "guided-discovery");
   const [currentTheme, setCurrentTheme] = useState<string | null>(storedSession?.currentTheme ?? featuredThemes[0]?.theme ?? null);
+  const [activeQuestionType, setActiveQuestionType] = useState<QuestionType>(storedSession?.activeQuestionType ?? "size");
   const [draftMessage, setDraftMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<MatchResult[]>(storedSession?.matches ?? starterMatches);
@@ -583,6 +592,7 @@ export default function Home() {
         recommendationMode,
         conversationMode,
         currentTheme,
+        activeQuestionType,
         memorySummary: nextSummary,
         selectedSize,
         selectedFirmnessValue,
@@ -591,7 +601,7 @@ export default function Home() {
         coupleSetup,
       } satisfies PersistedSession),
     );
-  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, matches, messages, selectedSize, selectedFirmnessValue, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
+  }, [shoppingPhase, cartContext, accessoryRecommendations, conversationMode, currentTheme, activeQuestionType, matches, messages, selectedSize, selectedFirmnessValue, sizeCapturedViaPill, firmnessAnswered, splitRecommendation, recommendationMode, coupleSetup]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -736,6 +746,7 @@ export default function Home() {
 
       const payload = await response.json();
       setConversationMode(payload.mode ?? "guided-discovery");
+      setActiveQuestionType(payload.questionType ?? null);
 
       if (!options?.skipAssistantReply) {
         const assistantId = `assistant-${Date.now()}`;
@@ -830,13 +841,32 @@ export default function Home() {
   const comparisonNote = getComparisonNote(matches, conversationMode, recommendationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
-  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(messages, memorySummary, matches, recommendationMode), [messages, memorySummary, matches, recommendationMode]);
+  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(activeQuestionType, messages, memorySummary, matches, recommendationMode), [activeQuestionType, messages, memorySummary, matches, recommendationMode]);
   const shouldAskShopperMode = sizeCapturedViaPill && selectedSize === "King" && !coupleSetup.shopperMode;
   const shouldAskCouplePath = selectedSize === "King" && coupleSetup.shopperMode === "two-different" && !coupleSetup.couplePath;
   const shouldAskSplitSleeper1 = coupleSetup.couplePath === "split-king" && !coupleSetup.sleeper1Firmness;
   const shouldAskSplitSleeper2 = coupleSetup.couplePath === "split-king" && !!coupleSetup.sleeper1Firmness && !coupleSetup.sleeper2Firmness;
   const isSplitKingJourney = coupleSetup.couplePath === "split-king" || shouldAskSplitSleeper1 || shouldAskSplitSleeper2;
   const shouldAskFirmness = sizeCapturedViaPill && !!selectedSize && !firmnessAnswered && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+
+  useEffect(() => {
+    if (shouldAskSplitSleeper1 || shouldAskSplitSleeper2) {
+      setActiveQuestionType("firmness");
+      return;
+    }
+    if (shouldAskCouplePath) {
+      setActiveQuestionType("king-path");
+      return;
+    }
+    if (shouldAskShopperMode) {
+      setActiveQuestionType("shopper-mode");
+      return;
+    }
+    if (shouldAskFirmness) {
+      setActiveQuestionType("firmness");
+      return;
+    }
+  }, [shouldAskFirmness, shouldAskShopperMode, shouldAskCouplePath, shouldAskSplitSleeper1, shouldAskSplitSleeper2]);
 
   useEffect(() => {
     if (!sizeCapturedViaPill || !selectedSize) return;
@@ -941,6 +971,7 @@ export default function Home() {
     setSplitRecommendation(defaultSplitRecommendation);
     setRecommendationMode("standard");
     setConversationMode("guided-discovery");
+    setActiveQuestionType("size");
     setCurrentTheme(featuredThemes[0]?.theme ?? null);
     setDraftMessage("");
     setShowOpeningOptions(false);

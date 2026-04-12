@@ -12,6 +12,19 @@ type MatchResult = {
   score: number;
 };
 
+type QuestionType =
+  | "size"
+  | "shopper-mode"
+  | "king-path"
+  | "firmness"
+  | "sleep-position"
+  | "cooling"
+  | "pressure-relief"
+  | "budget"
+  | "compare-refine"
+  | "generic-refine"
+  | null;
+
 type RouteBody = {
   message?: string;
   memorySummary?: string;
@@ -44,7 +57,25 @@ function buildAccessoryFallbackReply(cartMattressName?: string | null) {
       `${cartMattressName ? `${cartMattressName} is in the cart.` : "Your mattress is in the cart."} I’ve lined up the most relevant protector, sheets, pillow, base, and adjustable base below. What would you like to add next?`,
     ),
     mode: "product-evaluation",
+    questionType: "generic-refine" as QuestionType,
   };
+}
+
+function inferQuestionType(text: string, message: string, matches: MatchResult[]): QuestionType {
+  const lowerText = text.toLowerCase();
+  const lowerMessage = message.toLowerCase();
+
+  if (/what size|which size|size mattress/.test(lowerText)) return "size";
+  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(lowerText)) return "shopper-mode";
+  if (/how would you like to shop this king setup|compromise|split king/.test(lowerText)) return "king-path";
+  if (/what firmness|feel best to you|plush|medium|firm/.test(lowerText)) return "firmness";
+  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(lowerText)) return "sleep-position";
+  if (/sleep hot|cooling|temperature|cooler sleep/.test(lowerText)) return "cooling";
+  if (/pressure relief|shoulder|hip|back pain|pain|easy movement/.test(lowerText)) return "pressure-relief";
+  if (/budget|price range|under \$|value|premium options/.test(lowerText)) return "budget";
+  if (/which one sounds better|compare|top options|best fit|narrow on first/.test(lowerText)) return "compare-refine";
+  if (lowerMessage.includes("compare") && matches.length > 1) return "compare-refine";
+  return "generic-refine";
 }
 
 function buildFallbackReply(message: string, matches: MatchResult[]) {
@@ -57,6 +88,7 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
         "You can scroll down now to see your current recommendations. I can keep refining them based on what you care about most. What matters most to you next, cooling, pressure relief, support, or feel?",
       ),
       mode: matches.length ? "product-evaluation" : "guided-discovery",
+      questionType: "compare-refine" as QuestionType,
     };
   }
 
@@ -66,6 +98,7 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
         "You can scroll down now to see your current recommendations and compare the top options side by side. What would you like to narrow on first, feel, cooling, or pressure relief?",
       ),
       mode: "comparison",
+      questionType: "compare-refine" as QuestionType,
     };
   }
 
@@ -74,6 +107,7 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
       "You can scroll down now to see your current recommendations. I can keep refining them based on how you sleep. What matters more for the next step, cooler sleep, pressure relief, or easier movement?",
     ),
     mode: matches.length ? "product-evaluation" : "guided-discovery",
+    questionType: "generic-refine" as QuestionType,
   };
 }
 
@@ -92,6 +126,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reply: fallback.reply,
       mode: fallback.mode,
+      questionType: fallback.questionType,
       liveModel: false,
     });
   }
@@ -148,12 +183,14 @@ ${mattressSellingRules}`,
     return NextResponse.json({
       reply: text || fallback.reply,
       mode: /compare/i.test(message) && matches.length > 1 ? "comparison" : fallback.mode,
+      questionType: inferQuestionType(text || fallback.reply, message, matches),
       liveModel: true,
     });
   } catch {
     return NextResponse.json({
       reply: fallback.reply,
       mode: fallback.mode,
+      questionType: fallback.questionType,
       liveModel: false,
     });
   }
