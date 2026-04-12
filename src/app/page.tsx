@@ -841,7 +841,6 @@ export default function Home() {
   const comparisonNote = getComparisonNote(matches, conversationMode, recommendationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
   const compareWinner = compareThemes[0] ?? null;
-  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(activeQuestionType, messages, memorySummary, matches, recommendationMode), [activeQuestionType, messages, memorySummary, matches, recommendationMode]);
   const shouldAskShopperMode = sizeCapturedViaPill && selectedSize === "King" && !coupleSetup.shopperMode;
   const shouldAskCouplePath = selectedSize === "King" && coupleSetup.shopperMode === "two-different" && !coupleSetup.couplePath;
   const shouldAskSplitSleeper1 = coupleSetup.couplePath === "split-king" && !coupleSetup.sleeper1Firmness;
@@ -877,6 +876,16 @@ export default function Home() {
     }
   }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
   const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+  const effectiveQuestionType: QuestionType = showOpeningOptions
+    ? "size"
+    : shouldAskShopperMode
+      ? "shopper-mode"
+      : shouldAskCouplePath
+        ? "king-path"
+        : shouldAskSplitSleeper1 || shouldAskSplitSleeper2 || shouldAskFirmness
+          ? "firmness"
+          : activeQuestionType;
+  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(effectiveQuestionType, messages, memorySummary, matches, recommendationMode), [effectiveQuestionType, messages, memorySummary, matches, recommendationMode]);
 
   useEffect(() => {
     scrollChatWithPeek();
