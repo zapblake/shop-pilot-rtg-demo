@@ -1078,7 +1078,7 @@ export default function Home() {
                   aria-label="View cart"
                   title="View cart"
                 >
-                  🛒
+                  <span className={styles.panelCartIcon}>🛒</span>
                 </button>
                 <button
                   type="button"
