@@ -537,10 +537,20 @@
   margin-bottom: 12px;
 }
 
+.recommendationHeading {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #00529f;
+  text-shadow: 0 0 18px rgba(0, 82, 159, 0.18), 0 2px 0 rgba(255, 255, 255, 0.75);
+}
+
 .sectionHeader p {
   color: #6b7280;
   font-size: 14px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .candidateList {
