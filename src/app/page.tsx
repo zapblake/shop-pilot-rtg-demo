@@ -263,9 +263,12 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
-  const latestAssistantQuestion = [...messages]
-    .reverse()
-    .find((message) => message.role === "assistant" && message.text.trim())?.text.toLowerCase() ?? "";
+  const assistantMessages = messages
+    .filter((message) => message.role === "assistant" && message.text.trim())
+    .map((message) => message.text.toLowerCase());
+  const latestAssistantQuestion = assistantMessages.at(-1) ?? "";
+  const recentAssistantContext = assistantMessages.slice(-3).join(" ");
+  const activePrompt = `${recentAssistantContext} ${latestAssistantQuestion}`.trim();
 
   if (recommendationMode === "split") {
     return [
@@ -275,7 +278,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/what size|which size|size mattress/.test(latestAssistantQuestion)) {
+  if (/what size|which size|size mattress/.test(activePrompt)) {
     return [
       { label: "Queen", message: "I’m looking for a queen." },
       { label: "King", message: "I’m looking for a king." },
@@ -283,7 +286,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(latestAssistantQuestion)) {
+  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(activePrompt)) {
     return [
       { label: "Just me", message: "Just me." },
       { label: "Two sleepers", message: "Two sleepers." },
@@ -291,7 +294,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/how would you like to shop this king setup|compromise|split king/.test(latestAssistantQuestion)) {
+  if (/how would you like to shop this king setup|compromise|split king/.test(activePrompt)) {
     return [
       { label: "One mattress", message: "We want one mattress that works for both of us." },
       { label: "Split king", message: "We want to explore a split king / Twin XL setup." },
@@ -299,7 +302,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/what firmness|feel best to you|plush|medium|firm/.test(latestAssistantQuestion)) {
+  if (/what firmness|feel best to you|plush|medium|firm/.test(activePrompt)) {
     return [
       { label: "Plush", message: "I want a plush feel." },
       { label: "Medium", message: "I want a medium feel." },
@@ -307,7 +310,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(latestAssistantQuestion)) {
+  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(activePrompt)) {
     return [
       { label: "Side sleeper", message: "I’m a side sleeper." },
       { label: "Back sleeper", message: "I’m a back sleeper." },
@@ -315,7 +318,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/sleep hot|cooling|temperature/.test(latestAssistantQuestion)) {
+  if (/sleep hot|cooling|temperature/.test(activePrompt)) {
     return [
       { label: "Yes, I sleep hot", message: "Yes, I sleep hot at night." },
       { label: "Somewhat", message: "Somewhat, cooling matters to me." },
@@ -323,7 +326,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/pressure relief|shoulder|hip|back pain|pain/.test(latestAssistantQuestion)) {
+  if (/pressure relief|shoulder|hip|back pain|pain/.test(activePrompt)) {
     return [
       { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
       { label: "Hip pressure", message: "I need pressure relief at my hips." },
@@ -331,7 +334,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/budget|price range|under \$|value/.test(latestAssistantQuestion)) {
+  if (/budget|price range|under \$|value/.test(activePrompt)) {
     return [
       { label: "Best value", message: "I care most about getting the best value." },
       { label: "Mid-range", message: "I want something solid in the middle." },
@@ -339,7 +342,7 @@ function getDynamicReplyPills(messages: ChatMessage[], summary: string, matches:
     ];
   }
 
-  if (/which one sounds better|compare|top options|best fit/.test(latestAssistantQuestion) || matches.length > 1) {
+  if (/which one sounds better|compare|top options|best fit/.test(activePrompt)) {
     return [
       { label: "More support", message: "I want something with stronger support." },
       { label: "Softer feel", message: "I want a softer feel." },
