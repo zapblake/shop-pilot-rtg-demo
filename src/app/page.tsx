@@ -512,6 +512,8 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
   const overlayBodyRef = useRef<HTMLDivElement | null>(null);
+  const suggestedSectionRef = useRef<HTMLElement | null>(null);
+  const recommendationSectionRef = useRef<HTMLElement | null>(null);
   const queuedMessagesRef = useRef<string[]>([]);
   const inactivityTimerRef = useRef<number | null>(null);
   const matchRequestVersionRef = useRef(0);
@@ -592,9 +594,26 @@ export default function Home() {
     inputRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [messages]);
+  const scrollChatWithPeek = () => {
+    if (typeof window === "undefined") return;
+    const overlay = overlayBodyRef.current;
+    const bottom = chatBottomRef.current;
+    if (!overlay || !bottom) return;
+
+    const bottomRect = bottom.getBoundingClientRect();
+    const overlayRect = overlay.getBoundingClientRect();
+    const suggestedHeight = suggestedSectionRef.current?.offsetHeight ?? 0;
+    const recommendationPeek = recommendationSectionRef.current ? 140 : 0;
+    const reservedPeek = suggestedHeight + recommendationPeek + 24;
+    const targetBottom = overlayRect.bottom - reservedPeek;
+
+    if (bottomRect.bottom > targetBottom) {
+      const delta = bottomRect.bottom - targetBottom;
+      overlay.scrollTo({ top: overlay.scrollTop + delta, behavior: "smooth" });
+    } else if (bottomRect.bottom < overlayRect.bottom - 120) {
+      bottom.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  };
 
   const resetInactivityTimer = () => {
     if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
@@ -763,7 +782,7 @@ export default function Home() {
       setIsLoading(false);
       window.setTimeout(() => {
         inputRef.current?.focus();
-        chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        scrollChatWithPeek();
       }, 20);
 
       const nextQueuedMessage = queuedMessagesRef.current.shift();
@@ -825,6 +844,10 @@ export default function Home() {
     }
   }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
   const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+
+  useEffect(() => {
+    scrollChatWithPeek();
+  }, [messages, showDynamicSections, recommendationMode]);
 
   const selectedFirmness = useMemo(() => {
     return firmnessStops.reduce((closest, stop) => {
@@ -1371,7 +1394,7 @@ export default function Home() {
             {showDynamicSections ? (
               <>
                 {recommendationMode !== "split" ? (
-                  <section className={styles.suggestedSection}>
+                  <section className={styles.suggestedSection} ref={suggestedSectionRef}>
                     <span className={styles.suggestedLabel}>Easy Reply</span>
                     <div className={styles.chipsSection}>
                       {dynamicReplyPills.map((pill) => (
@@ -1382,7 +1405,7 @@ export default function Home() {
                 ) : null}
 
                 {recommendationMode === "split" && splitRecommendation ? (
-                  <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
+                  <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
                       <h3>Split king recommendations</h3>
                       <p>Individual Twin XL fits for each sleeper, with one shared setup</p>
@@ -1437,7 +1460,7 @@ export default function Home() {
                     </div>
                   </section>
                 ) : (
-                  <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
+                  <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
                       <h3 className={styles.recommendationHeading}>Current Recommendations</h3>
                       <p>Keep chatting to refine options</p>
