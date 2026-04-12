@@ -858,7 +858,7 @@ export default function Home() {
             <div className={styles.headerRow}>
               <button type="button" className={styles.iconButton}>☰</button>
               <div className={styles.logoWrap}>
-                <Image src="/assets/RoomsToGoVMM.png" alt="Rooms To Go" width={190} height={40} className={styles.headerBrandImage} />
+                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={190} height={40} className={styles.headerBrandImage} />
               </div>
               <div className={styles.searchWrap}>
                 <input value="Find your furniture" readOnly aria-label="Search" />
@@ -991,7 +991,7 @@ export default function Home() {
           <div className={styles.overlayBody} ref={overlayBodyRef}>
             <div className={styles.panelBrandBar}>
               <div className={styles.panelBrandCluster}>
-                <Image src="/assets/rooms-to-go-logo-2.png" alt="Rooms To Go" width={260} height={64} className={styles.panelPartnerImage} />
+                <Image src="/assets/RoomsToGoVMM.png" alt="Rooms To Go" width={260} height={64} className={styles.panelPartnerImage} />
               </div>
               <button
                 type="button"
