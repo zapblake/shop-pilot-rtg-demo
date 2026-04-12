@@ -1514,8 +1514,8 @@ export default function Home() {
                 {recommendationMode === "standard" && compareThemes.length >= 2 ? (
                   <section className={styles.compareSection}>
                     <div className={styles.sectionHeader}>
-                      <h3>Compare top options</h3>
-                      <p>Side-by-side based on the shopper’s current priorities</p>
+                      <h3 className={styles.recommendationHeading}>Compare</h3>
+                      <p>Your top two recommendations side by side</p>
                     </div>
                     <div className={styles.compareScroller}>
                       <div className={styles.compareGrid}>
