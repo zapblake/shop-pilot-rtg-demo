@@ -1269,14 +1269,16 @@ export default function Home() {
 
             {showDynamicSections ? (
               <>
-                <section className={styles.suggestedSection}>
-                  <span className={styles.suggestedLabel}>Easy Reply</span>
-                  <div className={styles.chipsSection}>
-                    {dynamicReplyPills.map((pill) => (
-                      <button key={pill.label} type="button" onClick={() => submitMessage(pill.message)}>{pill.label}</button>
-                    ))}
-                  </div>
-                </section>
+                {recommendationMode !== "split" ? (
+                  <section className={styles.suggestedSection}>
+                    <span className={styles.suggestedLabel}>Easy Reply</span>
+                    <div className={styles.chipsSection}>
+                      {dynamicReplyPills.map((pill) => (
+                        <button key={pill.label} type="button" onClick={() => submitMessage(pill.message)}>{pill.label}</button>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
 
                 {recommendationMode === "split" && splitRecommendation ? (
                   <section className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>

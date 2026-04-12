@@ -30,6 +30,36 @@ type CoupleSetup = {
   sleeper2Firmness?: string | null;
 };
 
+function isMattressTheme(theme: ThemeRecord) {
+  const searchable = [theme.displayName, theme.brand, theme.type, theme.description, theme.themeSummary]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (searchable.includes("pillow")) return false;
+  if (searchable.includes("ergo") || searchable.includes("adjustable base") || searchable.includes("base")) return false;
+  return true;
+}
+
+function scorePremiumIntent(theme: ThemeRecord) {
+  let score = 0;
+  const price = theme.priceRange?.min ?? 0;
+  const searchable = [theme.displayName, theme.brand, theme.type, theme.description, theme.themeSummary]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (price >= 2500) score += 2;
+  if (price >= 3500) score += 1;
+  if (theme.supportLevel?.score) score += theme.supportLevel.score >= 4 ? 2 : 1;
+  if (theme.pressureRelief?.score) score += theme.pressureRelief.score >= 4 ? 2 : 1;
+  if (theme.temperatureManagement?.score) score += theme.temperatureManagement.score >= 4 ? 1 : 0;
+  if (searchable.includes("tempur")) score += 1;
+  if (searchable.includes("hybrid") || searchable.includes("breeze") || searchable.includes("luxe") || searchable.includes("proadapt")) score += 1;
+
+  return score;
+}
+
 const sizeAliases: Record<string, string[]> = {
   twin: ["Twin", "Twin XL", "Twin,Twin Xl"],
   "twin xl": ["Twin XL", "Twin,Twin Xl"],
@@ -62,15 +92,18 @@ function themeHasSize(theme: { availableSizes?: string[] | null }, requestedSize
   );
 }
 
-function baseScoreThemes(combinedInput: string, requestedBrand?: string, requestedSize?: string | null) {
+function baseScoreThemes(
+  combinedInput: string,
+  requestedBrand?: string,
+  requestedSize?: string | null,
+  options?: { premiumIntent?: boolean },
+) {
+  const premiumIntent = options?.premiumIntent ?? false;
+
   return mattressThemes
     .filter((theme) => {
+      if (!isMattressTheme(theme)) return false;
       if (requestedSize && !themeHasSize(theme, requestedSize)) return false;
-      const searchable = [theme.displayName, theme.brand, theme.type, theme.comfort, theme.description, theme.themeSummary]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      if (searchable.includes("pillow")) return false;
       return true;
     })
     .map((theme) => {
@@ -108,16 +141,25 @@ function baseScoreThemes(combinedInput: string, requestedBrand?: string, request
       if (combinedInput.includes("support")) {
         if (theme.supportLevel?.score) score += theme.supportLevel.score / 2;
       }
-      if (combinedInput.includes("budget") || combinedInput.includes("under") || combinedInput.includes("$") || combinedInput.includes("value")) {
+      if (!premiumIntent && (combinedInput.includes("budget") || combinedInput.includes("under") || combinedInput.includes("$") || combinedInput.includes("value"))) {
         if ((theme.priceRange?.min ?? 999999) < 2000) score += 1;
       }
       if (combinedInput.includes("split king") || combinedInput.includes("twin xl")) {
         if (themeHasSize(theme, "twin xl")) score += 2;
+        if (premiumIntent) score += scorePremiumIntent(theme) + 3;
+      }
+      if (premiumIntent) {
+        score += scorePremiumIntent(theme);
       }
 
       return { theme, score } satisfies RankedCandidate;
     })
-    .sort((a, b) => b.score - a.score || (a.theme.priceRange?.min ?? 0) - (b.theme.priceRange?.min ?? 0));
+    .sort((a, b) => {
+      const scoreDiff = b.score - a.score;
+      if (scoreDiff !== 0) return scoreDiff;
+      if (premiumIntent) return (b.theme.priceRange?.min ?? 0) - (a.theme.priceRange?.min ?? 0);
+      return (a.theme.priceRange?.min ?? 0) - (b.theme.priceRange?.min ?? 0);
+    });
 }
 
 function toMatchResult(theme: ThemeRecord, score: number): MatchResult {
@@ -175,7 +217,7 @@ async function rerankWithAi({
       model: "claude-sonnet-4-20250514",
       max_tokens: 500,
       system:
-        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
+        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. If the shopper is asking about split king or Twin XL for two sleepers, treat that as premium purchase intent and avoid cheap entry-level recommendations unless the shopper explicitly asks for budget/value. Never rank adjustable bases, pillows, or non-mattress products above mattresses. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
       messages: [
         {
           role: "user",
@@ -226,8 +268,8 @@ async function buildSplitRecommendation({
   const sleeper1Prompt = `Twin XL. Sleeper 1 prefers ${coupleSetup.sleeper1Firmness ?? "medium"}. Split king setup. ${memorySummary}`;
   const sleeper2Prompt = `Twin XL. Sleeper 2 prefers ${coupleSetup.sleeper2Firmness ?? "medium"}. Split king setup. ${memorySummary}`;
 
-  const sleeper1Candidates = baseScoreThemes(sleeper1Prompt.toLowerCase(), undefined, "twin xl");
-  const sleeper2Candidates = baseScoreThemes(sleeper2Prompt.toLowerCase(), undefined, "twin xl");
+  const sleeper1Candidates = baseScoreThemes(sleeper1Prompt.toLowerCase(), undefined, "twin xl", { premiumIntent: true });
+  const sleeper2Candidates = baseScoreThemes(sleeper2Prompt.toLowerCase(), undefined, "twin xl", { premiumIntent: true });
 
   const sleeper1Top = sleeper1Candidates[0] ? toMatchResult(sleeper1Candidates[0].theme, sleeper1Candidates[0].score) : null;
   const sleeper2Top = sleeper2Candidates[0] ? toMatchResult(sleeper2Candidates[0].theme, sleeper2Candidates[0].score) : null;
@@ -275,8 +317,13 @@ export async function POST(request: Request) {
 
   const requestedBrand = brandTerms.find((brand) => combinedInput.includes(brand));
   const requestedSize = shopperSizeFromInput(combinedInput);
+  const premiumIntent =
+    recommendationIntent === "split" ||
+    coupleSetup?.couplePath === "split-king" ||
+    combinedInput.includes("split king") ||
+    combinedInput.includes("twin xl");
 
-  const heuristicRanked = baseScoreThemes(combinedInput, requestedBrand, requestedSize);
+  const heuristicRanked = baseScoreThemes(combinedInput, requestedBrand, requestedSize, { premiumIntent });
   const topCandidates = heuristicRanked.slice(0, MAX_CANDIDATES_FOR_AI);
   const { usedAi, reranked } = await rerankWithAi({
     candidates: topCandidates,
