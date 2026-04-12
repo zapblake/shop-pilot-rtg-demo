@@ -669,10 +669,17 @@
 
 
 .panelBrandBar {
+  position: sticky;
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  z-index: 3;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px);
 }
 
 .shopPilotMark {
@@ -757,6 +764,23 @@
   object-fit: contain;
 }
 
+
+.panelActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panelTextButton {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: white;
+  color: #111827;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
 
 .panelIconButton {
   width: 46px;

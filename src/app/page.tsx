@@ -1059,15 +1059,26 @@ export default function Home() {
               <div className={styles.panelBrandCluster}>
                 <Image src="/assets/RoomsToGoVMM.png" alt="Rooms To Go" width={260} height={64} className={styles.panelPartnerImage} />
               </div>
-              <button
-                type="button"
-                className={styles.panelIconButton}
-                onClick={resetConversationState}
-                aria-label="Restart chat"
-                title="Restart chat"
-              >
-                ↻
-              </button>
+              <div className={styles.panelActions}>
+                <button
+                  type="button"
+                  className={styles.panelTextButton}
+                  onClick={() => setShoppingPhase("post-cart-accessories")}
+                  aria-label="View cart"
+                  title="View cart"
+                >
+                  Cart
+                </button>
+                <button
+                  type="button"
+                  className={styles.panelIconButton}
+                  onClick={resetConversationState}
+                  aria-label="Restart chat"
+                  title="Restart chat"
+                >
+                  ↻
+                </button>
+              </div>
             </div>
 
             <section className={styles.chatSurface}>
