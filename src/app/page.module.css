@@ -539,10 +539,10 @@
 
 .recommendationHeading {
   margin: 0;
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   color: #00529f;
   text-shadow: 0 0 18px rgba(0, 82, 159, 0.18), 0 2px 0 rgba(255, 255, 255, 0.75);
 }
