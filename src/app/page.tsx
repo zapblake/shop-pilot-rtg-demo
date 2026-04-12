@@ -1062,12 +1062,12 @@ export default function Home() {
               <div className={styles.panelActions}>
                 <button
                   type="button"
-                  className={styles.panelTextButton}
+                  className={styles.panelIconButton}
                   onClick={() => setShoppingPhase("post-cart-accessories")}
                   aria-label="View cart"
                   title="View cart"
                 >
-                  Cart
+                  🛒
                 </button>
                 <button
                   type="button"
