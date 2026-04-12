@@ -117,23 +117,31 @@ function baseScoreThemes(
       if (combinedInput.includes("cool") || combinedInput.includes("hot")) {
         if (haystack.includes("cool") || haystack.includes("foam") || haystack.includes("hybrid")) score += 2;
       }
+      const wantsMedium = combinedInput.includes("medium");
+      const wantsPlush = combinedInput.includes("plush") || combinedInput.includes("soft");
+      const wantsFirm = combinedInput.includes("firm");
+      const hasExplicitFirmnessPreference = wantsMedium || wantsPlush || wantsFirm;
+
       if (combinedInput.includes("side")) {
-        if (haystack.includes("plush") || haystack.includes("medium")) score += 2;
+        if (haystack.includes("plush") || haystack.includes("medium")) score += hasExplicitFirmnessPreference ? 0.75 : 2;
       }
       if (combinedInput.includes("back")) {
-        if (haystack.includes("medium") || haystack.includes("firm")) score += 1;
+        if (haystack.includes("medium") || haystack.includes("firm")) score += hasExplicitFirmnessPreference ? 0.5 : 1;
       }
       if (combinedInput.includes("stomach")) {
-        if (haystack.includes("firm")) score += 2;
+        if (haystack.includes("firm")) score += hasExplicitFirmnessPreference ? 0.75 : 2;
       }
-      if (combinedInput.includes("medium")) {
-        if (haystack.includes("medium")) score += 2;
+      if (wantsMedium) {
+        if (haystack.includes("medium")) score += 8;
+        else if (haystack.includes("medium-firm") || haystack.includes("medium plush")) score += 4;
       }
-      if (combinedInput.includes("plush") || combinedInput.includes("soft")) {
-        if (haystack.includes("plush") || haystack.includes("soft")) score += 2;
+      if (wantsPlush) {
+        if (haystack.includes("plush") || haystack.includes("soft")) score += 8;
+        else if (haystack.includes("medium")) score += 3;
       }
-      if (combinedInput.includes("firm")) {
-        if (haystack.includes("firm")) score += 2;
+      if (wantsFirm) {
+        if (haystack.includes("firm")) score += 8;
+        else if (haystack.includes("medium firm")) score += 4;
       }
       if (combinedInput.includes("pressure") || combinedInput.includes("hip") || combinedInput.includes("shoulder")) {
         if (haystack.includes("foam") || haystack.includes("plush") || haystack.includes("medium")) score += 2;
