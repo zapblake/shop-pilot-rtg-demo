@@ -1702,7 +1702,7 @@ export default function Home() {
                             {theme?.heroImage ? (
                               <Image src={theme.heroImage} alt={leadMatch.displayName} fill unoptimized className={styles.candidateImage} />
                             ) : null}
-                            <span className={styles.candidateHeroBadge}>Top recommendation</span>
+                            <span className={styles.candidateHeroBadge}>Current Match</span>
                           </div>
                           <div className={styles.candidateCardBody}>
                             <div className={styles.candidateTopRow}>
