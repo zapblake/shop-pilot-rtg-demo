@@ -831,7 +831,7 @@ export default function Home() {
     }
   }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
   const isPostCartAccessoryMode = shoppingPhase === "post-cart-accessories" && !!cartContext.mattress;
-  const showDynamicSections = !isPostCartAccessoryMode && ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+  const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
   const effectiveQuestionType: QuestionType = showOpeningOptions
     ? "size"
     : shouldAskShopperMode
@@ -1512,7 +1512,7 @@ export default function Home() {
 
             {showDynamicSections ? (
               <>
-                {recommendationMode !== "split" && easyRepliesReady ? (
+                {!isPostCartAccessoryMode && recommendationMode !== "split" && easyRepliesReady ? (
                   <section className={styles.suggestedSection} ref={suggestedSectionRef}>
                     <span className={styles.suggestedLabel}>Easy Reply</span>
                     <div className={styles.chipsSection}>
