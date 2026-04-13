@@ -75,6 +75,7 @@ type AccessoryRecommendation = {
     brand: string;
     category: AccessoryCategory;
     priceFrom?: number | null;
+    heroImage?: string | null;
   } | null;
   explanation: string;
 };
@@ -1779,7 +1780,19 @@ export default function Home() {
                         );
                         return (
                           <article key={recommendation.category} className={styles.accessoryCard}>
-                            <div className={styles.accessoryCardIcon}>{icon}</div>
+                            <div className={styles.accessoryCardIcon}>
+                              {recommendation.primary?.heroImage ? (
+                                <Image
+                                  src={recommendation.primary.heroImage}
+                                  alt={recommendation.primary.displayName}
+                                  fill
+                                  unoptimized
+                                  className={styles.accessoryCardImage}
+                                />
+                              ) : (
+                                icon
+                              )}
+                            </div>
                             <div className={styles.accessoryCardContent}>
                               <span className={styles.accessoryCategoryLabel}>
                                 {recommendation.category.replace(/-/g, " ")}

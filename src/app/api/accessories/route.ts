@@ -21,6 +21,7 @@ type AccessoryRecommendation = {
     brand: string;
     category: AccessoryCategory;
     priceFrom?: number | null;
+    heroImage?: string | null;
   } | null;
   explanation: string;
 };
@@ -124,6 +125,7 @@ export async function POST(request: Request) {
             brand: top.brand,
             category: top.category as AccessoryCategory,
             priceFrom: top.priceRange?.min ?? null,
+            heroImage: (top as { heroImage?: string | null }).heroImage ?? null,
           }
         : null,
       explanation: top ? buildExplanation(category, top, setupType, shopperContext) : "",
