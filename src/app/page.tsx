@@ -830,7 +830,8 @@ export default function Home() {
       setFirmnessAnswered(true);
     }
   }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
-  const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
+  const isPostCartAccessoryMode = shoppingPhase === "post-cart-accessories" && !!cartContext.mattress;
+  const showDynamicSections = !isPostCartAccessoryMode && ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
   const effectiveQuestionType: QuestionType = showOpeningOptions
     ? "size"
     : shouldAskShopperMode
@@ -918,6 +919,11 @@ export default function Home() {
     setShoppingPhase("post-cart-accessories");
     setCurrentView("cart");
     setActiveProduct({ theme: match.theme, source: "recommendation", reason: "Added from recommendation flow" });
+    setMessages([]);
+    setEasyRepliesLocked(true);
+    setCurrentAssistantTurnId(null);
+    setLastAssistantMeta(null);
+    setDraftMessage("");
 
     const setupType = coupleSetup.couplePath === "split-king" ? "split-king" : "standard";
 
@@ -933,10 +939,6 @@ export default function Home() {
       setAccessoryRecommendations([]);
     }
 
-    await submitMessage(
-      `Site action: shopper added ${match.displayName} to cart. Help complete the sleep setup.`,
-      { skipBackgroundMatch: true, siteContextOnly: true },
-    );
   }
 
   function handleAddAccessoryToCart(recommendation: AccessoryRecommendation) {
@@ -1242,33 +1244,35 @@ export default function Home() {
             </div>
 
             <section className={styles.chatSurface}>
-              <div className={styles.messageList}>
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
-                  >
-                    {message.role === "assistant" ? (
-                      <Image
-                        src="/assets/rtg-chat-logo.png"
-                        alt="Shop Pilot avatar"
-                        width={40}
-                        height={40}
-                        className={styles.chatAvatar}
-                      />
-                    ) : null}
-                    <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
-                      <p>{renderMessageText(message.text)}</p>
+              {!isPostCartAccessoryMode ? (
+                <div className={styles.messageList}>
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
+                    >
+                      {message.role === "assistant" ? (
+                        <Image
+                          src="/assets/rtg-chat-logo.png"
+                          alt="Shop Pilot avatar"
+                          width={40}
+                          height={40}
+                          className={styles.chatAvatar}
+                        />
+                      ) : null}
+                      <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
+                        <p>{renderMessageText(message.text)}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {isLoading ? (
-                  <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
-                    <p>Considering…</p>
-                  </div>
-                ) : null}
-                <div ref={chatBottomRef} />
-              </div>
+                  ))}
+                  {isLoading ? (
+                    <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
+                      <p>Considering…</p>
+                    </div>
+                  ) : null}
+                  <div ref={chatBottomRef} />
+                </div>
+              ) : null}
 
               {showOpeningOptions ? (
                 <section className={styles.openingOptions}>
@@ -1490,18 +1494,20 @@ export default function Home() {
                 </section>
               ) : null}
 
-              <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
-                <input
-                  ref={inputRef}
-                  value={draftMessage}
-                  onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
-                  placeholder="What matters most to you?"
-                  aria-label="Message Shop Pilot"
-                />
-                <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
-                  {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
-                </button>
-              </form>
+              {!isPostCartAccessoryMode ? (
+                <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
+                  <input
+                    ref={inputRef}
+                    value={draftMessage}
+                    onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
+                    placeholder="What matters most to you?"
+                    aria-label="Message Shop Pilot"
+                  />
+                  <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
+                    {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
+                  </button>
+                </form>
+              ) : null}
             </section>
 
             {showDynamicSections ? (
