@@ -60,7 +60,7 @@ async function rerankWithAi({
       model: "claude-sonnet-4-20250514",
       max_tokens: 500,
       system:
-        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the resolved shopper profile, shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. If the shopper profile signals firm or medium-firm preference, do not let soft or plush options float to the top unless the profile clearly prefers softness. If the shopper profile signals higher body weight or mobility priority, reward stronger support and easier movement and avoid sinky options. If the shopper is asking about split king or Twin XL for two sleepers, treat that as premium purchase intent and avoid cheap entry-level recommendations unless the shopper explicitly asks for budget/value. Never rank adjustable bases, pillows, or non-mattress products above mattresses. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
+        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the resolved shopper profile, shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige, unless brand intent is explicit in the shopper profile. If brandMode is require, stay inside those preferred brands unless there are no viable candidates. If brandMode is prefer, keep matching brands ahead when the fit is close. Respect size preference if present. If the shopper profile signals firm or medium-firm preference, do not let soft or plush options float to the top unless the profile clearly prefers softness. If the shopper profile signals higher body weight or mobility priority, reward stronger support and easier movement and avoid sinky options. If the shopper is asking about split king or Twin XL for two sleepers, treat that as premium purchase intent and avoid cheap entry-level recommendations unless the shopper explicitly asks for budget/value. Never rank adjustable bases, pillows, or non-mattress products above mattresses. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
       messages: [
         {
           role: "user",
@@ -115,6 +115,7 @@ function buildProfileSummary(profile: ReturnType<typeof resolveShopperProfile>) 
     supportPriority: profile.supportPriority,
     budgetSensitivity: profile.budgetSensitivity,
     preferredBrands: profile.preferredBrands,
+    brandMode: profile.brandMode,
     excludedComfortBands: profile.excludedComfortBands,
     premiumIntent: profile.premiumIntent,
     coupleContext: profile.coupleContext,
@@ -208,6 +209,7 @@ export async function POST(request: Request) {
       invoked: true,
       requestedSize: profile.size,
       requestedBrand: profile.preferredBrands[0] ?? null,
+      brandMode: profile.brandMode,
       usedAi,
       candidateCount: topCandidates.length,
       profile,

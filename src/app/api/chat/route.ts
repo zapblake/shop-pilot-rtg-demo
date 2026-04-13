@@ -45,6 +45,16 @@ type RouteBody = {
   };
 };
 
+const brandPatterns = [
+  { key: "Sealy", pattern: /\bsealy\b|\bposturepedic\b/i },
+  { key: "Tempur-Pedic", pattern: /\btempur\b|\btempurpedic\b|\btempur-pedic\b/i },
+  { key: "Helix", pattern: /\bhelix\b/i },
+  { key: "Purple", pattern: /\bpurple\b/i },
+  { key: "Beautyrest", pattern: /\bbeautyrest\b|\bbeauty rest\b/i },
+  { key: "Stearns & Foster", pattern: /\bstearns\b|\bsterns\b/i },
+  { key: "Serta", pattern: /\bserta\b/i },
+];
+
 function emphasizeQuestion(text: string) {
   const normalized = text.replace(/\s+/g, " ").trim();
   const lastQuestionIndex = normalized.lastIndexOf("?");
@@ -57,6 +67,60 @@ function emphasizeQuestion(text: string) {
   const prefix = normalized.slice(0, normalized.lastIndexOf(questionSentence)).trim();
 
   return prefix ? `${prefix} **${questionSentence}**` : `**${questionSentence}**`;
+}
+
+function extractMentionedBrands(message: string) {
+  return brandPatterns.filter(({ pattern }) => pattern.test(message)).map(({ key }) => key);
+}
+
+function inferBrandMode(message: string, brands: string[]) {
+  if (!brands.length) return "none" as const;
+  const lower = message.toLowerCase();
+  if (/\bi want\b|\bshow me\b|\bonly want\b|\bneed this brand\b|\bkeep it to\b/.test(lower)) return "require" as const;
+  if (/\bi like\b|\bi(?:'ve| have) been looking at\b|\bi(?:'m| am) interested in\b|\bi prefer\b/.test(lower)) return "prefer" as const;
+  if (/\bdo you carry\b|\btell me about\b|\bwhat do you think about\b|\bis .* good\b|\bwhat brand is best\b/.test(lower)) return "explore" as const;
+  return "explore" as const;
+}
+
+function buildBrandAwareReply(message: string, matches: MatchResult[]) {
+  const brands = extractMentionedBrands(message);
+  const brandMode = inferBrandMode(message, brands);
+  if (!brands.length) return null;
+
+  const brandLabel = brands.length === 1
+    ? brands[0]
+    : `${brands.slice(0, -1).join(" or ")} or ${brands[brands.length - 1]}`;
+  const matchingCount = matches.filter((match) => brands.some((brand) => match.brand.toLowerCase().includes(brand.toLowerCase().replace(/-pedic/, "pedic").replace(/ & /g, " ")))).length;
+
+  if (brandMode === "require") {
+    if (matches.length > 0 && matchingCount === 0) {
+      return {
+        reply: emphasizeQuestion(`Got it, I’ll keep this focused on ${brandLabel}. I’m not seeing a clean in-brand match in the current results yet. **Do you want to stay with ${brandLabel} and adjust size or feel, or open up one nearby alternative?**`),
+        mode: "guided-discovery",
+        questionType: "compare-refine" as QuestionType,
+      };
+    }
+
+    return {
+      reply: emphasizeQuestion(`Absolutely, I’ll keep this focused on ${brandLabel}. **What should I narrow first within ${brandLabel}, feel, support, cooling, or size?**`),
+      mode: matches.length ? "product-evaluation" : "guided-discovery",
+      questionType: "compare-refine" as QuestionType,
+    };
+  }
+
+  if (brandMode === "prefer") {
+    return {
+      reply: emphasizeQuestion(`Got it, I’ll lean this toward ${brandLabel} first. **What matters most inside ${brandLabel}, feel, support, cooling, or value?**`),
+      mode: matches.length ? "product-evaluation" : "guided-discovery",
+      questionType: "compare-refine" as QuestionType,
+    };
+  }
+
+  return {
+    reply: emphasizeQuestion(`Absolutely, I can help with ${brandLabel}. **Are you looking to shop inside ${brandLabel}, or just compare it against other strong options?**`),
+    mode: matches.length ? "product-evaluation" : "guided-discovery",
+    questionType: "compare-refine" as QuestionType,
+  };
 }
 
 function buildAccessoryFallbackReply(cartMattressName?: string | null) {
@@ -122,18 +186,10 @@ function inferQuestionType(text: string, message: string, matches: MatchResult[]
 }
 
 function buildFallbackReply(message: string, matches: MatchResult[]) {
-  const lower = message.toLowerCase();
-  const askedBrand = /helix|sealy|tempur|serta|beautyrest|purple|sleepy'?s/i.test(lower);
+  const brandAware = buildBrandAwareReply(message, matches);
+  if (brandAware) return brandAware;
 
-  if (askedBrand) {
-    return {
-      reply: emphasizeQuestion(
-        "You can scroll down now to see your current recommendations. I can keep refining them based on what you care about most. What matters most to you next, cooling, pressure relief, support, or feel?",
-      ),
-      mode: matches.length ? "product-evaluation" : "guided-discovery",
-      questionType: "compare-refine" as QuestionType,
-    };
-  }
+  const lower = message.toLowerCase();
 
   if (lower.includes("compare") && matches.length > 1) {
     return {
@@ -214,13 +270,13 @@ export async function POST(request: Request) {
         ? `The shopper has already added a mattress to cart${cartMattressName ? `: ${cartMattressName}` : ""}. Shift into sleep-setup completion mode. Do not keep helping them choose a mattress. Tell them the accessory recommendations are below and ask one crisp next question about what they want to add first.`
         : currentView === "pdp"
           ? `The shopper is actively viewing a product detail page${activeProductName ? ` for ${activeProductName}` : ""}. Stop speaking in broad recommendation-list terms. Anchor to the active PDP, briefly explain why this product fits or what to evaluate on this PDP, and ask one crisp next question about this product.`
-          : `Respond as Shop Pilot with a premium retail-sales-assistant tone. If compare intent is present, invite the shopper to scroll down to compare the top options.`;
+          : `Respond as Shop Pilot with a premium retail-sales-assistant tone. If the shopper names a brand explicitly, acknowledge it directly and stay brand-aware in your reply. If brand intent sounds explicit, say you will keep the guidance focused on that brand. If compare intent is present, invite the shopper to scroll down to compare the top options.`;
 
     const completion = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 120,
       system:
-        `You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. Do not name mattress models or brands in the reply unless the shopper already added one to cart and it is provided in context. Do not mention price or budget unless the shopper explicitly asks about it. Always end with one clear shopper-facing question in double asterisks.
+        `You are Shop Pilot, a premium mattress shopping assistant for a Rooms To Go demo. Be concise, warm, calm, and consultative. Ask only one smart next question. Stay grounded in the provided memory summary, recent transcript, and current candidate matches. Do not mention internal architecture, agents, APIs, or implementation. Keep responses easy to scan, with short sentences. If the shopper explicitly asks for a brand, acknowledge that brand clearly and say you will stay focused on it. Keep brand-aware replies short and sales-oriented. Do not mention price or budget unless the shopper explicitly asks about it. Always end with one clear shopper-facing question in double asterisks.
 
 Critical length rules:
 - Keep the full reply to 2 short sentences before the final question.

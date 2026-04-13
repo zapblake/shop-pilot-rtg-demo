@@ -42,4 +42,64 @@ describe("resolveShopperProfile", () => {
     expect(profile.weightTier).toBe("unknown");
     expect(profile.supportPriority).toBe(false);
   });
+
+  it("treats explicit brand demand as require", () => {
+    const profile = resolveShopperProfile({
+      shopperMessage: "I want Sealy.",
+      memorySummary: "",
+      conversationTranscript: [],
+      coupleSetup: {},
+    });
+
+    expect(profile.preferredBrands).toEqual(["sealy"]);
+    expect(profile.brandMode).toBe("require");
+  });
+
+  it("treats softer brand interest as prefer", () => {
+    const profile = resolveShopperProfile({
+      shopperMessage: "I like Purple.",
+      memorySummary: "",
+      conversationTranscript: [],
+      coupleSetup: {},
+    });
+
+    expect(profile.preferredBrands).toEqual(["purple"]);
+    expect(profile.brandMode).toBe("prefer");
+  });
+
+  it("treats carry/about questions as explore", () => {
+    const profile = resolveShopperProfile({
+      shopperMessage: "Do you carry Tempur-Pedic?",
+      memorySummary: "",
+      conversationTranscript: [],
+      coupleSetup: {},
+    });
+
+    expect(profile.preferredBrands).toEqual(["tempurpedic"]);
+    expect(profile.brandMode).toBe("explore");
+  });
+
+  it("preserves multi-brand narrowing", () => {
+    const profile = resolveShopperProfile({
+      shopperMessage: "Sealy or Tempur.",
+      memorySummary: "",
+      conversationTranscript: [],
+      coupleSetup: {},
+    });
+
+    expect(profile.preferredBrands).toEqual(["sealy", "tempurpedic"]);
+    expect(profile.rawSignals.mentionedMultipleBrands).toBe(true);
+  });
+
+  it("preserves brand intent inside a use case", () => {
+    const profile = resolveShopperProfile({
+      shopperMessage: "I want a Helix for my child.",
+      memorySummary: "",
+      conversationTranscript: [],
+      coupleSetup: {},
+    });
+
+    expect(profile.preferredBrands).toEqual(["helix"]);
+    expect(profile.brandMode).toBe("require");
+  });
 });

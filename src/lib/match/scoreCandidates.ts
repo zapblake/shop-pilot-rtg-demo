@@ -35,6 +35,25 @@ function themeHasSize(theme: { availableSizes?: string[] | null }, requestedSize
   );
 }
 
+function normalizeBrand(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/tempur-pedic/g, "tempurpedic")
+    .replace(/stearns\s*&\s*foster/g, "stearns foster")
+    .replace(/stearns\s+and\s+foster/g, "stearns foster")
+    .replace(/sleepy'?s/g, "sleepys")
+    .replace(/beautyrest (black|select|world class)/g, "beautyrest")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function themeBrandMatches(theme: ThemeRecord, preferredBrands: string[]) {
+  if (!preferredBrands.length) return false;
+  const normalized = normalizeBrand(theme.brand ?? "");
+  return preferredBrands.some((brand) => normalized.includes(brand));
+}
+
 function scorePremiumIntent(theme: ThemeRecord) {
   let score = 0;
   const price = theme.priceRange?.min ?? 0;
@@ -111,12 +130,23 @@ function isSinky(theme: ThemeRecord) {
 }
 
 export function scoreCandidates(profile: ResolvedShopperProfile) {
-  return mattressThemes
-    .filter((theme) => {
-      if (!isMattressTheme(theme)) return false;
-      if (profile.size && !themeHasSize(theme, profile.size)) return false;
-      return true;
-    })
+  const eligibleThemes = mattressThemes.filter((theme) => {
+    if (!isMattressTheme(theme)) return false;
+    if (profile.size && !themeHasSize(theme, profile.size)) return false;
+    return true;
+  });
+
+  const brandMatchedThemes = profile.preferredBrands.length
+    ? eligibleThemes.filter((theme) => themeBrandMatches(theme, profile.preferredBrands))
+    : [];
+
+  const candidatePool = profile.brandMode === "require" && brandMatchedThemes.length > 0
+    ? brandMatchedThemes
+    : profile.rawSignals.mentionedMultipleBrands && brandMatchedThemes.length > 0
+      ? brandMatchedThemes
+      : eligibleThemes;
+
+  return candidatePool
     .map((theme) => {
       let score = 0;
       const reasons: string[] = [];
@@ -125,10 +155,15 @@ export function scoreCandidates(profile: ResolvedShopperProfile) {
       const support = supportScore(theme);
       const pressure = pressureScore(theme);
       const cooling = coolingScore(theme);
+      const brandMatch = themeBrandMatches(theme, profile.preferredBrands);
 
-      if (profile.preferredBrands.some((brand) => searchable.includes(brand))) {
-        score += 6;
+      if (brandMatch) {
+        if (profile.brandMode === "require") score += 18;
+        else if (profile.brandMode === "prefer") score += 16;
+        else if (profile.brandMode === "explore") score += 4;
         reasons.push("brand-match");
+      } else if (profile.brandMode === "prefer") {
+        score -= 6;
       }
 
       if (profile.firmnessPreference === "firm") {

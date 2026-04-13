@@ -23,6 +23,7 @@ export type FirmnessPreference = "soft" | "medium" | "medium-firm" | "firm" | nu
 export type FirmnessRigidity = "hard_requirement" | "strong_preference" | "flexible";
 export type WeightTier = "unknown" | "under_200" | "200_250" | "250_300" | "300_plus";
 export type SleepPosition = "side" | "back" | "stomach" | "combination" | "unknown";
+export type BrandMode = "none" | "explore" | "prefer" | "require";
 
 export type ResolvedShopperProfile = {
   size: string | null;
@@ -36,6 +37,7 @@ export type ResolvedShopperProfile = {
   supportPriority: boolean;
   budgetSensitivity: boolean;
   preferredBrands: string[];
+  brandMode: BrandMode;
   excludedComfortBands: string[];
   coupleContext: CoupleSetup;
   premiumIntent: boolean;
@@ -43,6 +45,7 @@ export type ResolvedShopperProfile = {
     mentionsSplit: boolean;
     mentionsWeight: boolean;
     mentionedOpenToMediumFirm: boolean;
+    mentionedMultipleBrands: boolean;
   };
 };
 

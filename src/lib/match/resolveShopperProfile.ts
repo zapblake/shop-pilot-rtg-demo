@@ -1,6 +1,20 @@
-import { CoupleSetup, FirmnessPreference, FirmnessRigidity, ResolvedShopperProfile, SleepPosition, WeightTier } from "./types";
+import { BrandMode, CoupleSetup, FirmnessPreference, FirmnessRigidity, ResolvedShopperProfile, SleepPosition, WeightTier } from "./types";
 
-const brandTerms = ["helix", "sealy", "tempur", "serta", "beautyrest", "purple", "sleepy's", "sleepys"];
+type BrandAlias = {
+  key: string;
+  aliases: string[];
+};
+
+const brandAliases: BrandAlias[] = [
+  { key: "helix", aliases: ["helix"] },
+  { key: "sealy", aliases: ["sealy", "posturepedic", "sealy posturepedic"] },
+  { key: "tempurpedic", aliases: ["tempur", "tempurpedic", "tempur-pedic"] },
+  { key: "purple", aliases: ["purple"] },
+  { key: "beautyrest", aliases: ["beautyrest", "beauty rest"] },
+  { key: "stearns & foster", aliases: ["stearns", "stearns and foster", "stearns & foster", "sterns and foster", "sterns & foster"] },
+  { key: "serta", aliases: ["serta"] },
+  { key: "sleepys", aliases: ["sleepys", "sleepy's"] },
+];
 
 const sizeAliases: Record<string, string[]> = {
   twin: ["twin"],
@@ -12,7 +26,17 @@ const sizeAliases: Record<string, string[]> = {
 };
 
 function normalizeText(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9+$\s-]/g, " ").replace(/\s+/g, " ").trim();
+  return value
+    .toLowerCase()
+    .replace(/tempur-pedic/g, "tempurpedic")
+    .replace(/stearns\s*&\s*foster/g, "stearns foster")
+    .replace(/stearns\s+and\s+foster/g, "stearns foster")
+    .replace(/sterns\s*&\s*foster/g, "stearns foster")
+    .replace(/sterns\s+and\s+foster/g, "stearns foster")
+    .replace(/sleepy'?s/g, "sleepys")
+    .replace(/[^a-z0-9+$\s-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function resolveSize(input: string) {
@@ -66,7 +90,7 @@ function resolveFirmnessPreference(input: string): { preference: FirmnessPrefere
   if (explicitSoft) {
     return {
       preference: rejectsSoft ? null : "soft",
-      rigidity: rejectsSoft ? "strong_preference" : "strong_preference",
+      rigidity: "strong_preference",
       mentionedOpenToMediumFirm,
     };
   }
@@ -80,6 +104,45 @@ function resolveWeightTier(input: string): WeightTier {
   if (/200|210|220|230|240|250 pounds|250 lbs/.test(input)) return "200_250";
   if (/under 200|180|190|185 pounds|185 lbs/.test(input)) return "under_200";
   return "unknown";
+}
+
+function resolveBrands(input: string) {
+  const found = brandAliases.filter((brand) => brand.aliases.some((alias) => input.includes(alias)));
+  return found.map((brand) => brand.key);
+}
+
+function resolveBrandMode(input: string, preferredBrands: string[]): BrandMode {
+  if (preferredBrands.length === 0) return "none";
+
+  const requirePatterns = [
+    /\bi want [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bshow me [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bi only want [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bi need this brand specifically\b/,
+    /\bkeep it to [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+  ];
+
+  const explorePatterns = [
+    /\bdo you carry\b/,
+    /\bis [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys) good\b/,
+    /\btell me about\b/,
+    /\bwhat brand is best\b/,
+    /\bwhat do you think about\b/,
+  ];
+
+  const preferPatterns = [
+    /\bi like [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bi(?:'ve| have) been looking at [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bi(?:'m| am) interested in [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bi tend to prefer [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+    /\bi prefer [a-z\s-]*?(sealy|tempurpedic|tempur|helix|purple|beautyrest|serta|stearns foster|sleepys)\b/,
+  ];
+
+  if (requirePatterns.some((pattern) => pattern.test(input))) return "require";
+  if (preferPatterns.some((pattern) => pattern.test(input))) return "prefer";
+  if (explorePatterns.some((pattern) => pattern.test(input))) return "explore";
+  if (preferredBrands.length > 0) return "explore";
+  return "none";
 }
 
 export function resolveShopperProfile({
@@ -108,7 +171,8 @@ export function resolveShopperProfile({
     || weightTier === "300_plus"
     || mobilityPriority;
   const budgetSensitivity = /budget|under\s*\$|under\s*\d+|value|affordable|cheapest/.test(combined);
-  const preferredBrands = brandTerms.filter((brand) => combined.includes(brand));
+  const preferredBrands = resolveBrands(combined);
+  const brandMode = resolveBrandMode(combined, preferredBrands);
   const size = resolveSize(combined);
   const sleepPosition = resolveSleepPosition(combined);
   const excludedComfortBands = new Set<string>();
@@ -138,6 +202,7 @@ export function resolveShopperProfile({
     supportPriority,
     budgetSensitivity,
     preferredBrands,
+    brandMode,
     excludedComfortBands: Array.from(excludedComfortBands),
     coupleContext: coupleSetup,
     premiumIntent,
@@ -145,6 +210,7 @@ export function resolveShopperProfile({
       mentionsSplit,
       mentionsWeight: weightTier !== "unknown",
       mentionedOpenToMediumFirm: firmness.mentionedOpenToMediumFirm,
+      mentionedMultipleBrands: preferredBrands.length > 1,
     },
   };
 }
