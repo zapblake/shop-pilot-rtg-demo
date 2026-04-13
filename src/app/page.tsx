@@ -1636,7 +1636,7 @@ export default function Home() {
                 {recommendationMode === "split" && splitRecommendation ? (
                   <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
-                      <h3>Split king recommendations</h3>
+                      <h3 className={styles.recommendationHeading}>Current Recommendations</h3>
                       <p>Individual Twin XL fits for each sleeper, with one shared setup</p>
                     </div>
                     <div className={styles.splitSummaryBanner}>
@@ -1691,7 +1691,7 @@ export default function Home() {
                 ) : (
                   <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
-                      <h3 className={styles.recommendationHeading}>Your best mattress shortlist</h3>
+                      <h3 className={styles.recommendationHeading}>Current Recommendations</h3>
                       <p>A clear lead recommendation, plus two smart backups if the shopper wants another direction.</p>
                     </div>
 
@@ -1851,8 +1851,6 @@ export default function Home() {
                     </div>
                   </section>
                 ) : null}
-
-                {comparisonNote ? <section className={styles.compareBanner}>{comparisonNote}</section> : null}
 
                 {recommendationMode === "standard" && compareThemes.length >= 2 ? (
                   <section className={styles.compareSection}>
