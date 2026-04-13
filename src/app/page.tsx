@@ -893,7 +893,14 @@ export default function Home() {
     if (!sizeCapturedViaPill) {
       setFirmnessAnswered(true);
       setSelectedSize(null);
+      await submitMessage(draftMessage);
+      return;
     }
+
+    if (!firmnessAnswered) {
+      return;
+    }
+
     await submitMessage(draftMessage);
   }
 
@@ -968,11 +975,11 @@ export default function Home() {
     }
 
     setFirmnessAnswered(true);
-    const combinedMessage = `${selectedSize}. I want a ${selectedFirmness.label} feel.`;
+    const combinedMessage = `Size: ${selectedSize}. Firmness: ${selectedFirmness.label}.`;
     const syntheticTranscript = [
       ...messages,
-      { id: `synthetic-size-${Date.now()}`, role: "user" as const, text: selectedSize },
-      { id: `synthetic-firmness-${Date.now()}`, role: "user" as const, text: `I want a ${selectedFirmness.label} feel.` },
+      { id: `synthetic-size-${Date.now()}`, role: "user" as const, text: `Size: ${selectedSize}.` },
+      { id: `synthetic-firmness-${Date.now()}`, role: "user" as const, text: `Firmness: ${selectedFirmness.label}.` },
     ];
     const nextSummary = buildMemorySummary(syntheticTranscript, matches);
     await submitMessage(combinedMessage, { overrideMemorySummary: nextSummary });
@@ -1381,8 +1388,11 @@ export default function Home() {
                           setCoupleSetup(defaultCoupleSetup);
                           setRecommendationMode("standard");
                           setSplitRecommendation(null);
+                          setMatches([]);
                           setShowOpeningOptions(false);
-                          void submitMessage(option);
+                          if (isNotSure) {
+                            void submitMessage(option);
+                          }
                         }
                       }}
                     >
@@ -1404,8 +1414,8 @@ export default function Home() {
                             setCoupleSetup(defaultCoupleSetup);
                             setRecommendationMode("standard");
                             setSplitRecommendation(null);
+                            setMatches([]);
                             setShowOpeningOptions(false);
-                            void submitMessage(size);
                           }}
                         >
                           {size}
@@ -1538,7 +1548,7 @@ export default function Home() {
               {shouldAskFirmness ? (
                 <section className={styles.firmnessPrompt}>
                   <div className={styles.firmnessPromptHeader}>
-                    <span>Next up</span>
+                    <span>{selectedSize ? `${selectedSize} selected` : "Next up"}</span>
                     <strong>What firmness feels best to you?</strong>
                   </div>
                   <div className={styles.firmnessSliderWrap}>
@@ -1571,7 +1581,7 @@ export default function Home() {
                     className={styles.openingChip}
                     onClick={() => {
                       setFirmnessAnswered(true);
-                      submitMessage("It’s complicated");
+                      void submitMessage(selectedSize ? `${selectedSize}. It’s complicated.` : "It’s complicated");
                     }}
                   >
                     Its complicated
