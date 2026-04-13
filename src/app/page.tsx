@@ -1082,26 +1082,49 @@ export default function Home() {
                   <button type="button" className={styles.pdpCartButton} onClick={() => setCurrentView("cart")}>View Cart</button>
                 </div>
                 <div className={styles.mockPdpGrid}>
-                  <div className={styles.mockPdpGallery}>
-                    {activeThemeRecord.heroImage ? (
-                      <Image src={activeThemeRecord.heroImage} alt={activeThemeRecord.displayName} fill unoptimized className={styles.productTileImage} />
-                    ) : (
-                      <div className={styles.productImagePlaceholder}><span>{activeThemeRecord.brand}</span></div>
-                    )}
+                  <div className={styles.mockPdpGalleryCol}>
+                    <div className={styles.mockPdpGallery}>
+                      {activeThemeRecord.heroImage ? (
+                        <Image src={activeThemeRecord.heroImage} alt={activeThemeRecord.displayName} fill unoptimized className={styles.pdpMainImage} />
+                      ) : (
+                        <div className={styles.productImagePlaceholder}><span>{activeThemeRecord.brand}</span></div>
+                      )}
+                    </div>
+                    {activeThemeRecord.altImage ? (
+                      <div className={styles.pdpThumbnailRow}>
+                        <button
+                          type="button"
+                          className={`${styles.pdpThumb} ${styles.pdpThumbActive}`}
+                          aria-label="Main image"
+                        >
+                          <Image src={activeThemeRecord.heroImage!} alt="" fill unoptimized className={styles.pdpThumbImg} />
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.pdpThumb}
+                          aria-label="Alt image"
+                        >
+                          <Image src={activeThemeRecord.altImage} alt="" fill unoptimized className={styles.pdpThumbImg} />
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                   <div className={styles.mockPdpSummary}>
                     <p className={styles.mockPdpBrand}>{activeThemeRecord.brand}</p>
                     <h2>{activeThemeRecord.displayName}</h2>
                     <div className={styles.tagRow}>
-                      <span>{activeThemeRecord.type || "Type TBD"}</span>
-                      <span>{activeThemeRecord.comfort || "Comfort TBD"}</span>
+                      {activeThemeRecord.type ? <span>{activeThemeRecord.type}</span> : null}
+                      {activeThemeRecord.comfort ? <span>{activeThemeRecord.comfort}</span> : null}
                     </div>
                     <strong className={styles.mockPdpPrice}>
                       {activeThemeRecord.priceRange?.min ? `From $${activeThemeRecord.priceRange.min.toLocaleString()}` : "Price TBD"}
                     </strong>
-                    <p className={styles.mockPdpReason}>
-                      {activeProduct?.reason ?? "Shop Pilot is carrying your recommendation context directly into this PDP."}
-                    </p>
+                    {activeProduct?.reason ? (
+                      <div className={styles.pdpReasonBanner}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                        <p>{activeProduct.reason}</p>
+                      </div>
+                    ) : null}
                     <div className={styles.mockPdpFeatureList}>
                       <div><span>Cooling</span><b>{activeThemeRecord.temperatureManagement?.label ?? "Balanced"}</b></div>
                       <div><span>Support</span><b>{activeThemeRecord.supportLevel?.label ?? "Supportive"}</b></div>
