@@ -1753,8 +1753,8 @@ export default function Home() {
                     {alternativeMatches.length ? (
                       <div className={styles.alternativeSection}>
                         <div className={styles.alternativeSectionHeader}>
-                          <h4>Alternative paths</h4>
-                          <p>Visible, but intentionally secondary so the shopper can choose with confidence.</p>
+                          <h4>Other options</h4>
+                          <p>Currently, these are your 2nd and 3rd ranked matches.</p>
                         </div>
                         <div className={styles.candidateScroller}>
                           <div className={styles.candidateList}>
