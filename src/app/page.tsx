@@ -891,6 +891,8 @@ export default function Home() {
     setCurrentTheme(themeId);
     setActiveProduct({ theme: themeId, source, reason });
     setCurrentView("pdp");
+    // Scroll the background site to the top so the PDP is immediately visible
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     const theme = mattressThemes.find((item) => item.theme === themeId);
     if (theme) {
