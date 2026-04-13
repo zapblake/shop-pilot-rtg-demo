@@ -271,6 +271,12 @@ function getFitReasons(match: MatchResult, summary: string) {
   if (lowerSummary.includes("side") && descriptor.match(/plush|medium/)) {
     reasons.push("Great for side sleeping");
   }
+  if (lowerSummary.includes("back") && descriptor.match(/firm|medium|hybrid/)) {
+    reasons.push("Steady back support");
+  }
+  if (lowerSummary.includes("motion") || lowerSummary.includes("partner")) {
+    reasons.push("Helps limit motion transfer");
+  }
   if (lowerSummary.includes("pressure") && descriptor.match(/foam|plush|medium/)) {
     reasons.push("Pressure-relief friendly");
   }
@@ -283,6 +289,37 @@ function getFitReasons(match: MatchResult, summary: string) {
   if (!reasons.length) reasons.push("Strong overall match");
 
   return reasons.slice(0, 3);
+}
+
+function getRecommendationTierLabel(index: number) {
+  if (index === 0) return "Best Match";
+  if (index === 1) return "Great Alternative";
+  return "Value Option";
+}
+
+function getRecommendationTierSubcopy(index: number) {
+  if (index === 0) return "The clearest fit based on the shopper's stated priorities.";
+  if (index === 1) return "A strong backup if they want a slightly different feel or finish.";
+  return "A more pragmatic path that still covers the core needs.";
+}
+
+function buildRecommendationWhy(match: MatchResult, summary: string, index: number) {
+  const lowerSummary = summary.toLowerCase();
+  const fitReasons = getFitReasons(match, summary);
+  const benefitLead = fitReasons[0] ?? "Strong overall match";
+
+  if (index === 0) {
+    if (lowerSummary.includes("side")) return `${benefitLead}, with a feel that should keep side-sleep pressure points calmer through the night.`;
+    if (lowerSummary.includes("back")) return `${benefitLead}, with the kind of support that keeps the shopper feeling more level and steady.`;
+    if (lowerSummary.includes("cool") || lowerSummary.includes("hot")) return `${benefitLead}, with a cooler, less stuffy sleep experience front and centre.`;
+    return `${benefitLead}, making this the most complete recommendation for the shopper's current brief.`;
+  }
+
+  if (index === 1) {
+    return `${benefitLead}, but with a slightly different comfort profile for shoppers who want another premium direction.`;
+  }
+
+  return `${benefitLead}, while keeping the recommendation set grounded in a more value-conscious option.`;
 }
 
 function getDynamicReplyPills(activeQuestionType: QuestionType, messages: ChatMessage[], summary: string, matches: MatchResult[], recommendationMode: RecommendationMode) {
@@ -862,6 +899,8 @@ export default function Home() {
 
   const comparisonNote = getComparisonNote(matches, conversationMode, recommendationMode);
   const compareThemes = useMemo(() => matches.slice(0, 2).map(getMatchTheme).filter(Boolean) as ThemeRecord[], [matches]);
+  const leadMatch = matches[0] ?? null;
+  const alternativeMatches = matches.slice(1, 3);
   const compareWinner = compareThemes[0] ?? null;
   const activeThemeRecord = useMemo(() => mattressThemes.find((theme) => theme.theme === (activeProduct?.theme ?? currentTheme)) ?? null, [activeProduct, currentTheme]);
   const shouldAskShopperMode = sizeCapturedViaPill && selectedSize === "King" && !coupleSetup.shopperMode;
@@ -1625,58 +1664,132 @@ export default function Home() {
                 ) : (
                   <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
-                      <h3 className={styles.recommendationHeading}>Current Recommendations</h3>
-                      <p>Keep chatting to refine options</p>
+                      <h3 className={styles.recommendationHeading}>Your best mattress shortlist</h3>
+                      <p>A clear lead recommendation, plus two smart backups if the shopper wants another direction.</p>
                     </div>
-                    <div className={styles.candidateScroller}>
-                      <div className={styles.candidateList}>
-                        {matches.map((match, index) => {
-                          const theme = getMatchTheme(match);
-                          const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
-                          const supportScore = getFeatureScore(theme?.supportLevel?.label);
-                          const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
 
-                          return (
-                            <article key={match.theme} className={styles.candidateCard}>
-                              <div className={styles.candidateImageWrap}>
-                                {theme?.heroImage ? (
-                                  <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
-                                ) : null}
+                    {leadMatch ? (() => {
+                      const theme = getMatchTheme(leadMatch);
+                      const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
+                      const supportScore = getFeatureScore(theme?.supportLevel?.label);
+                      const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
+                      return (
+                        <article className={`${styles.candidateCard} ${styles.candidateCardLead}`}>
+                          <div className={styles.candidateImageWrap}>
+                            {theme?.heroImage ? (
+                              <Image src={theme.heroImage} alt={leadMatch.displayName} fill unoptimized className={styles.candidateImage} />
+                            ) : null}
+                            <span className={styles.candidateHeroBadge}>Top recommendation</span>
+                          </div>
+                          <div className={styles.candidateCardBody}>
+                            <div className={styles.candidateTopRow}>
+                              <p>{leadMatch.brand}</p>
+                              <span className={styles.bestFitPill}>{getRecommendationTierLabel(0)}</span>
+                            </div>
+                            <div className={styles.recommendationHeroHeader}>
+                              <div>
+                                <h4>{leadMatch.displayName}</h4>
+                                <span className={styles.recommendationSubcopy}>{getRecommendationTierSubcopy(0)}</span>
                               </div>
-                              <div className={styles.candidateCardBody}>
-                                <div className={styles.candidateTopRow}>
-                                  <p>{match.brand}</p>
-                                  {index === 0 ? <span className={styles.bestFitPill}>Best fit</span> : null}
-                                </div>
-                                <h4>{match.displayName}</h4>
-                                {match.type || match.comfort ? (
-                                  <span>{[match.type, match.comfort].filter(Boolean).join(" · ")}</span>
-                                ) : null}
-                                {match.priceFrom ? <strong>{`From $${match.priceFrom.toLocaleString()}`}</strong> : null}
-                                <div className={styles.miniMetrics}>
-                                  {coolingScore ? <div><span>Cooling</span><b>{coolingScore}</b></div> : null}
-                                  {supportScore ? <div><span>Support</span><b>{supportScore}</b></div> : null}
-                                  {pressureScore ? <div><span>Relief</span><b>{pressureScore}</b></div> : null}
-                                </div>
-                                <div className={styles.reasonList}>
-                                  {getFitReasons(match, memorySummary).map((reason) => (
-                                    <em key={reason}>{reason}</em>
-                                  ))}
-                                </div>
-                                <div className={styles.recommendationCardActions}>
-                                  <button type="button" className={styles.pdpSecondaryButton} onClick={() => openProductDetail(match.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}>
-                                    View PDP
-                                  </button>
-                                  <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(match)}>
-                                    Add mattress to cart
-                                  </button>
-                                </div>
-                              </div>
-                            </article>
-                          );
-                        })}
+                              {leadMatch.priceFrom ? <strong>{`From $${leadMatch.priceFrom.toLocaleString()}`}</strong> : null}
+                            </div>
+                            {leadMatch.type || leadMatch.comfort ? (
+                              <span>{[leadMatch.type, leadMatch.comfort].filter(Boolean).join(" · ")}</span>
+                            ) : null}
+                            <div className={styles.recommendationWhyBlock}>
+                              <span>Why this is the fit</span>
+                              <p>{buildRecommendationWhy(leadMatch, memorySummary, 0)}</p>
+                            </div>
+                            <div className={styles.miniMetrics}>
+                              {coolingScore ? <div><span>Cooling</span><b>{coolingScore}</b></div> : null}
+                              {supportScore ? <div><span>Support</span><b>{supportScore}</b></div> : null}
+                              {pressureScore ? <div><span>Relief</span><b>{pressureScore}</b></div> : null}
+                            </div>
+                            <div className={styles.reasonList}>
+                              {getFitReasons(leadMatch, memorySummary).map((reason) => (
+                                <em key={reason}>{reason}</em>
+                              ))}
+                            </div>
+                            <div className={`${styles.recommendationCardActions} ${styles.recommendationCardActionsLead}`}>
+                              <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(leadMatch)}>
+                                Add best match to cart
+                              </button>
+                              <button type="button" className={styles.pdpSecondaryButton} onClick={() => openProductDetail(leadMatch.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}>
+                                View PDP
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      );
+                    })() : null}
+
+                    {alternativeMatches.length ? (
+                      <div className={styles.alternativeSection}>
+                        <div className={styles.alternativeSectionHeader}>
+                          <h4>Alternative paths</h4>
+                          <p>Visible, but intentionally secondary so the shopper can choose with confidence.</p>
+                        </div>
+                        <div className={styles.candidateScroller}>
+                          <div className={styles.candidateList}>
+                            {alternativeMatches.map((match, index) => {
+                              const tierIndex = index + 1;
+                              const theme = getMatchTheme(match);
+                              const coolingScore = getFeatureScore(theme?.temperatureManagement?.label);
+                              const supportScore = getFeatureScore(theme?.supportLevel?.label);
+                              const pressureScore = getFeatureScore(theme?.pressureRelief?.label);
+
+                              return (
+                                <article key={match.theme} className={`${styles.candidateCard} ${styles.candidateCardAlternative}`}>
+                                  <div className={styles.candidateImageWrap}>
+                                    {theme?.heroImage ? (
+                                      <Image src={theme.heroImage} alt={match.displayName} fill unoptimized className={styles.candidateImage} />
+                                    ) : null}
+                                  </div>
+                                  <div className={styles.candidateCardBody}>
+                                    <div className={styles.candidateTopRow}>
+                                      <p>{match.brand}</p>
+                                      <span className={styles.alternativePill}>{getRecommendationTierLabel(tierIndex)}</span>
+                                    </div>
+                                    <div className={styles.recommendationHeroHeader}>
+                                      <div>
+                                        <h4>{match.displayName}</h4>
+                                        <span className={styles.recommendationSubcopy}>{getRecommendationTierSubcopy(tierIndex)}</span>
+                                      </div>
+                                      {match.priceFrom ? <strong>{`From $${match.priceFrom.toLocaleString()}`}</strong> : null}
+                                    </div>
+                                    {match.type || match.comfort ? (
+                                      <span>{[match.type, match.comfort].filter(Boolean).join(" · ")}</span>
+                                    ) : null}
+                                    <div className={styles.recommendationWhyBlock}>
+                                      <span>Why someone would pick this</span>
+                                      <p>{buildRecommendationWhy(match, memorySummary, tierIndex)}</p>
+                                    </div>
+                                    <div className={styles.miniMetrics}>
+                                      {coolingScore ? <div><span>Cooling</span><b>{coolingScore}</b></div> : null}
+                                      {supportScore ? <div><span>Support</span><b>{supportScore}</b></div> : null}
+                                      {pressureScore ? <div><span>Relief</span><b>{pressureScore}</b></div> : null}
+                                    </div>
+                                    <div className={styles.reasonList}>
+                                      {getFitReasons(match, memorySummary).map((reason) => (
+                                        <em key={reason}>{reason}</em>
+                                      ))}
+                                    </div>
+                                    <div className={styles.recommendationCardActions}>
+                                      <button type="button" className={styles.pdpSecondaryButton} onClick={() => openProductDetail(match.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}>
+                                        View PDP
+                                      </button>
+                                      <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(match)}>
+                                        Add to cart
+                                      </button>
+                                    </div>
+                                  </div>
+                                </article>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : null}
                   </section>
                 )}
 
