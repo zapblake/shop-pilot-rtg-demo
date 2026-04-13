@@ -1,212 +1,30 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import mattressThemes from "@/data/mattressThemes.normalized.json";
 import { mattressSellingRules } from "../prompt-rules";
+import { resolveShopperProfile } from "@/lib/match/resolveShopperProfile";
+import { scoreCandidates, toMatchResult } from "@/lib/match/scoreCandidates";
+import { CoupleSetup, RankedCandidate } from "@/lib/match/types";
 
-const brandTerms = ["helix", "sealy", "tempur", "serta", "beautyrest", "purple", "sleepy's", "sleepys"];
 const MAX_CANDIDATES_FOR_AI = 12;
 
-type ThemeRecord = (typeof mattressThemes)[number];
-
-type RankedCandidate = {
-  theme: ThemeRecord;
-  score: number;
+type MatchRequestBody = {
+  message?: string;
+  memorySummary?: string;
+  coupleSetup?: CoupleSetup;
+  recommendationIntent?: "standard" | "split";
+  conversationTranscript?: { role?: string; text?: string }[];
 };
-
-type MatchResult = {
-  theme: string;
-  displayName: string;
-  brand: string;
-  type?: string | null;
-  comfort?: string | null;
-  priceFrom?: number | null;
-  score: number;
-};
-
-type CoupleSetup = {
-  shopperMode?: "single" | "two-similar" | "two-different" | null;
-  couplePath?: "compromise" | "split-king" | null;
-  sleeper1Firmness?: string | null;
-  sleeper2Firmness?: string | null;
-};
-
-function isMattressTheme(theme: ThemeRecord) {
-  const searchable = [theme.displayName, theme.brand, theme.type, theme.description, theme.themeSummary]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-
-  if (searchable.includes("pillow")) return false;
-  if (searchable.includes("ergo") || searchable.includes("adjustable base") || searchable.includes("base")) return false;
-  return true;
-}
-
-function scorePremiumIntent(theme: ThemeRecord) {
-  let score = 0;
-  const price = theme.priceRange?.min ?? 0;
-  const searchable = [theme.displayName, theme.brand, theme.type, theme.description, theme.themeSummary]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-
-  if (price >= 2500) score += 2;
-  if (price >= 3500) score += 1;
-  if (theme.supportLevel?.score) score += theme.supportLevel.score >= 4 ? 2 : 1;
-  if (theme.pressureRelief?.score) score += theme.pressureRelief.score >= 4 ? 2 : 1;
-  if (theme.temperatureManagement?.score) score += theme.temperatureManagement.score >= 4 ? 1 : 0;
-  if (searchable.includes("tempur")) score += 1;
-  if (searchable.includes("hybrid") || searchable.includes("breeze") || searchable.includes("luxe") || searchable.includes("proadapt")) score += 1;
-  if (price > 0 && price < 1200) score -= 3;
-  if (price >= 1800) score += 1;
-
-  return score;
-}
-
-function scoreValueBias(theme: ThemeRecord) {
-  const price = theme.priceRange?.min ?? 0;
-  let score = 0;
-
-  if (price > 0 && price < 1200) score += 2;
-  else if (price < 1800) score += 1;
-
-  return score;
-}
-
-const sizeAliases: Record<string, string[]> = {
-  twin: ["Twin", "Twin XL", "Twin,Twin Xl"],
-  "twin xl": ["Twin XL", "Twin,Twin Xl"],
-  full: ["Full", "Full,Twin"],
-  queen: ["Queen", "Split Head Queen"],
-  king: ["King", "Split King", "Split Head King", "California King,King", "California King,King,Queen"],
-  "california king": ["California King", "Split California King", "California King,King", "Split California King,Split King"],
-  "cal king": ["California King", "Split California King", "California King,King"],
-};
-
-function shopperSizeFromInput(input: string): string | null {
-  const lower = input.toLowerCase();
-  for (const alias of Object.keys(sizeAliases)) {
-    if (lower.includes(alias)) return alias;
-  }
-  return null;
-}
-
-function themeHasSize(theme: { availableSizes?: string[] | null }, requestedSize: string): boolean {
-  const sizes = theme.availableSizes ?? [];
-  if (sizes.length === 0) return true;
-
-  const acceptable = sizeAliases[requestedSize] ?? [];
-  const normalizedThemeSizes = sizes.map((s) => s.trim());
-
-  return normalizedThemeSizes.some(
-    (s) =>
-      s.toLowerCase().includes(requestedSize) ||
-      acceptable.some((a) => s.toLowerCase().includes(a.toLowerCase())),
-  );
-}
-
-function baseScoreThemes(
-  combinedInput: string,
-  requestedBrand?: string,
-  requestedSize?: string | null,
-  options?: { premiumIntent?: boolean; budgetIntent?: boolean },
-) {
-  const premiumIntent = options?.premiumIntent ?? false;
-  const budgetIntent = options?.budgetIntent ?? false;
-
-  return mattressThemes
-    .filter((theme) => {
-      if (!isMattressTheme(theme)) return false;
-      if (requestedSize && !themeHasSize(theme, requestedSize)) return false;
-      return true;
-    })
-    .map((theme) => {
-      let score = 0;
-      const haystack = [theme.displayName, theme.brand, theme.type, theme.comfort, theme.description, theme.themeSummary]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      if (requestedBrand && haystack.includes(requestedBrand)) score += 6;
-      if (combinedInput.includes("cool") || combinedInput.includes("hot")) {
-        if (haystack.includes("cool") || haystack.includes("foam") || haystack.includes("hybrid")) score += 2;
-      }
-      const wantsMedium = combinedInput.includes("medium");
-      const wantsPlush = combinedInput.includes("plush") || combinedInput.includes("soft");
-      const wantsFirm = combinedInput.includes("firm");
-      const hasExplicitFirmnessPreference = wantsMedium || wantsPlush || wantsFirm;
-
-      if (combinedInput.includes("side")) {
-        if (haystack.includes("plush") || haystack.includes("medium")) score += hasExplicitFirmnessPreference ? 0.75 : 2;
-      }
-      if (combinedInput.includes("back")) {
-        if (haystack.includes("medium") || haystack.includes("firm")) score += hasExplicitFirmnessPreference ? 0.5 : 1;
-      }
-      if (combinedInput.includes("stomach")) {
-        if (haystack.includes("firm")) score += hasExplicitFirmnessPreference ? 0.75 : 2;
-      }
-      if (wantsMedium) {
-        if (haystack.includes("medium")) score += 6;
-        else if (haystack.includes("medium-firm") || haystack.includes("medium plush")) score += 3;
-      }
-      if (wantsPlush) {
-        if (haystack.includes("plush") || haystack.includes("soft")) score += 8;
-        else if (haystack.includes("medium")) score += 3;
-      }
-      if (wantsFirm) {
-        if (haystack.includes("firm")) score += 8;
-        else if (haystack.includes("medium firm")) score += 4;
-      }
-      if (combinedInput.includes("pressure") || combinedInput.includes("hip") || combinedInput.includes("shoulder")) {
-        if (haystack.includes("foam") || haystack.includes("plush") || haystack.includes("medium")) score += 2;
-      }
-      if (combinedInput.includes("support")) {
-        if (theme.supportLevel?.score) score += theme.supportLevel.score / 2;
-      }
-      if (budgetIntent) {
-        score += scoreValueBias(theme);
-      }
-      if (combinedInput.includes("split king") || combinedInput.includes("twin xl")) {
-        if (themeHasSize(theme, "twin xl")) score += 2;
-        if (premiumIntent) score += scorePremiumIntent(theme) + 3;
-      }
-      if (premiumIntent) {
-        score += scorePremiumIntent(theme);
-      } else if (!budgetIntent) {
-        const price = theme.priceRange?.min ?? 0;
-        if (price > 0 && price < 900) score -= 2;
-        else if (price >= 1800) score += 1;
-      }
-
-      return { theme, score } satisfies RankedCandidate;
-    })
-    .sort((a, b) => {
-      const scoreDiff = b.score - a.score;
-      if (scoreDiff !== 0) return scoreDiff;
-      if (premiumIntent) return (b.theme.priceRange?.min ?? 0) - (a.theme.priceRange?.min ?? 0);
-      return (a.theme.priceRange?.min ?? 0) - (b.theme.priceRange?.min ?? 0);
-    });
-}
-
-function toMatchResult(theme: ThemeRecord, score: number): MatchResult {
-  return {
-    theme: theme.theme,
-    displayName: theme.displayName,
-    brand: theme.brand,
-    type: theme.type,
-    comfort: theme.comfort,
-    priceFrom: theme.priceRange?.min ?? null,
-    score,
-  };
-}
 
 async function rerankWithAi({
   candidates,
   shopperMessage,
   memorySummary,
+  profileSummary,
 }: {
   candidates: RankedCandidate[];
   shopperMessage: string;
   memorySummary: string;
+  profileSummary: string;
 }) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey || candidates.length === 0) {
@@ -242,11 +60,11 @@ async function rerankWithAi({
       model: "claude-sonnet-4-20250514",
       max_tokens: 500,
       system:
-        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. If the shopper is asking about split king or Twin XL for two sleepers, treat that as premium purchase intent and avoid cheap entry-level recommendations unless the shopper explicitly asks for budget/value. Never rank adjustable bases, pillows, or non-mattress products above mattresses. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
+        `You are a mattress matching engine for a premium retail demo. Your job is to rank candidates, not to chat. Use the resolved shopper profile, shopper message, transcript, and memory summary to choose the best 3 mattresses from the provided candidate list. Prioritize fit, not brand prestige. Respect size preference if present. If the shopper profile signals firm or medium-firm preference, do not let soft or plush options float to the top unless the profile clearly prefers softness. If the shopper profile signals higher body weight or mobility priority, reward stronger support and easier movement and avoid sinky options. If the shopper is asking about split king or Twin XL for two sleepers, treat that as premium purchase intent and avoid cheap entry-level recommendations unless the shopper explicitly asks for budget/value. Never rank adjustable bases, pillows, or non-mattress products above mattresses. Reply with strict JSON only in this shape: {"rankedThemes":[{"theme":string,"score":number,"reason":string}]}. Keep exactly 3 rankedThemes if possible. Scores should be 0-100. Reasons should be short.\n\n${mattressSellingRules}`,
       messages: [
         {
           role: "user",
-          content: `Shopper message: ${shopperMessage || "(empty)"}\nMemory summary: ${memorySummary || "None"}\nCandidates:\n${candidateBlock}`,
+          content: `Resolved shopper profile: ${profileSummary}\nShopper message: ${shopperMessage || "(empty)"}\nMemory summary: ${memorySummary || "None"}\nCandidates:\n${candidateBlock}`,
         },
       ],
     });
@@ -269,6 +87,7 @@ async function rerankWithAi({
         return {
           theme: found.theme,
           score: typeof entry.score === "number" ? entry.score : Math.max(1, found.score),
+          reasons: found.reasons,
         } satisfies RankedCandidate;
       })
       .filter(Boolean) as RankedCandidate[];
@@ -283,6 +102,25 @@ async function rerankWithAi({
   }
 }
 
+function buildProfileSummary(profile: ReturnType<typeof resolveShopperProfile>) {
+  return JSON.stringify({
+    size: profile.size,
+    sleepPosition: profile.sleepPosition,
+    firmnessPreference: profile.firmnessPreference,
+    firmnessRigidity: profile.firmnessRigidity,
+    weightTier: profile.weightTier,
+    mobilityPriority: profile.mobilityPriority,
+    pressureReliefPriority: profile.pressureReliefPriority,
+    coolingPriority: profile.coolingPriority,
+    supportPriority: profile.supportPriority,
+    budgetSensitivity: profile.budgetSensitivity,
+    preferredBrands: profile.preferredBrands,
+    excludedComfortBands: profile.excludedComfortBands,
+    premiumIntent: profile.premiumIntent,
+    coupleContext: profile.coupleContext,
+  });
+}
+
 async function buildSplitRecommendation({
   coupleSetup,
   memorySummary,
@@ -290,20 +128,27 @@ async function buildSplitRecommendation({
   coupleSetup: CoupleSetup;
   memorySummary: string;
 }) {
-  const sleeper1Prompt = `Twin XL. Sleeper 1 prefers ${coupleSetup.sleeper1Firmness ?? "medium"}. Split king setup. ${memorySummary}`;
-  const sleeper2Prompt = `Twin XL. Sleeper 2 prefers ${coupleSetup.sleeper2Firmness ?? "medium"}. Split king setup. ${memorySummary}`;
+  const sleeper1Profile = resolveShopperProfile({
+    shopperMessage: `Twin XL. Sleeper 1 prefers ${coupleSetup.sleeper1Firmness ?? "medium"}. Split king setup.`,
+    memorySummary,
+    conversationTranscript: [],
+    coupleSetup,
+  });
+  const sleeper2Profile = resolveShopperProfile({
+    shopperMessage: `Twin XL. Sleeper 2 prefers ${coupleSetup.sleeper2Firmness ?? "medium"}. Split king setup.`,
+    memorySummary,
+    conversationTranscript: [],
+    coupleSetup,
+  });
 
-  const sleeper1Candidates = baseScoreThemes(sleeper1Prompt.toLowerCase(), undefined, "twin xl", { premiumIntent: true });
-  const sleeper2Candidates = baseScoreThemes(sleeper2Prompt.toLowerCase(), undefined, "twin xl", { premiumIntent: true });
-
-  const sleeper1Top = sleeper1Candidates[0] ? toMatchResult(sleeper1Candidates[0].theme, sleeper1Candidates[0].score) : null;
-  const sleeper2Top = sleeper2Candidates[0] ? toMatchResult(sleeper2Candidates[0].theme, sleeper2Candidates[0].score) : null;
+  const sleeper1Top = scoreCandidates({ ...sleeper1Profile, premiumIntent: true })[0] ?? null;
+  const sleeper2Top = scoreCandidates({ ...sleeper2Profile, premiumIntent: true })[0] ?? null;
 
   return {
     mode: "split" as const,
     split: {
-      sleeper1: sleeper1Top,
-      sleeper2: sleeper2Top,
+      sleeper1: sleeper1Top ? toMatchResult(sleeper1Top.theme, sleeper1Top.score) : null,
+      sleeper2: sleeper2Top ? toMatchResult(sleeper2Top.theme, sleeper2Top.score) : null,
       explanation: "A split king keeps the shared king footprint while giving each sleeper their own Twin XL feel and support profile.",
     },
     trace: {
@@ -311,17 +156,20 @@ async function buildSplitRecommendation({
       invoked: true,
       requestedSize: "twin xl",
       usedAi: false,
-      reason: "Built separate Twin XL recommendations for each sleeper in a split-king flow",
+      reason: "Built separate Twin XL recommendations from resolved sleeper profiles for a split-king flow",
     },
   };
 }
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => ({}));
+  const body = (await request.json().catch(() => ({}))) as MatchRequestBody;
   const shopperInput = String(body?.message ?? "");
   const memorySummary = String(body?.memorySummary ?? "");
   const coupleSetup = (body?.coupleSetup ?? {}) as CoupleSetup;
   const recommendationIntent = body?.recommendationIntent === "split" ? "split" : "standard";
+  const conversationTranscript = Array.isArray(body?.conversationTranscript)
+    ? body.conversationTranscript
+    : [];
 
   if (
     recommendationIntent === "split" &&
@@ -332,39 +180,20 @@ export async function POST(request: Request) {
     return NextResponse.json(await buildSplitRecommendation({ coupleSetup, memorySummary }));
   }
 
-  const transcriptText = Array.isArray(body?.conversationTranscript)
-    ? body.conversationTranscript
-        .slice(-12)
-        .map((entry: { role?: string; text?: string }) => `${String(entry.role ?? "user")}: ${String(entry.text ?? "")}`)
-        .join(" ")
-    : "";
-  const combinedInput = `${shopperInput} ${memorySummary} ${transcriptText}`.toLowerCase().trim();
+  const profile = resolveShopperProfile({
+    shopperMessage: shopperInput,
+    memorySummary,
+    conversationTranscript,
+    coupleSetup,
+  });
 
-  const requestedBrand = brandTerms.find((brand) => combinedInput.includes(brand));
-  const requestedSize = shopperSizeFromInput(combinedInput);
-  const budgetIntent =
-    combinedInput.includes("budget") ||
-    combinedInput.includes("under") ||
-    combinedInput.includes("$") ||
-    combinedInput.includes("value") ||
-    combinedInput.includes("affordable") ||
-    combinedInput.includes("cheapest");
-  const premiumIntent =
-    !budgetIntent && (
-      recommendationIntent === "split" ||
-      coupleSetup?.couplePath === "split-king" ||
-      combinedInput.includes("split king") ||
-      combinedInput.includes("twin xl") ||
-      combinedInput.includes("luxury") ||
-      combinedInput.includes("premium")
-    );
-
-  const heuristicRanked = baseScoreThemes(combinedInput, requestedBrand, requestedSize, { premiumIntent, budgetIntent });
-  const topCandidates = heuristicRanked.slice(0, MAX_CANDIDATES_FOR_AI);
+  const ranked = scoreCandidates(profile);
+  const topCandidates = ranked.slice(0, MAX_CANDIDATES_FOR_AI);
   const { usedAi, reranked } = await rerankWithAi({
     candidates: topCandidates,
-    shopperMessage: `${String(body?.message ?? "")}\nRecent conversation: ${transcriptText}`,
-    memorySummary: String(body?.memorySummary ?? ""),
+    shopperMessage: `${shopperInput}\nRecent conversation: ${conversationTranscript.slice(-12).map((entry) => `${String(entry.role ?? "user")}: ${String(entry.text ?? "")}`).join(" ")}`,
+    memorySummary,
+    profileSummary: buildProfileSummary(profile),
   });
 
   const finalRanked = (usedAi ? reranked : topCandidates)
@@ -375,23 +204,16 @@ export async function POST(request: Request) {
     mode: "standard",
     matches: finalRanked,
     trace: {
-      agent: usedAi ? "ai-reranker" : "mattress-match",
+      agent: usedAi ? "ai-reranker" : "resolved-profile-matcher",
       invoked: true,
-      requestedSize,
-      requestedBrand,
+      requestedSize: profile.size,
+      requestedBrand: profile.preferredBrands[0] ?? null,
       usedAi,
       candidateCount: topCandidates.length,
+      profile,
       reason: usedAi
-        ? "Heuristic pre-filter followed by AI reranking"
-        : requestedSize
-          ? `Filtered to ${requestedSize} availability and ranked heuristically`
-          : requestedBrand
-            ? `Shopper asked about ${requestedBrand}; ranked heuristically`
-            : budgetIntent
-              ? "Budget-aware heuristic ranking"
-              : premiumIntent
-                ? "Premium-intent heuristic ranking"
-                : "Heuristic ranking only",
+        ? "Resolved shopper profile, deterministic candidate scoring, then optional AI reranking"
+        : "Resolved shopper profile with deterministic scoring",
     },
   });
 }
