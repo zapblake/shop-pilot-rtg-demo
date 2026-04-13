@@ -1342,20 +1342,8 @@ export default function Home() {
                           setCoupleSetup(defaultCoupleSetup);
                           setRecommendationMode("standard");
                           setSplitRecommendation(null);
-                          if (isNotSure) {
-                            submitMessage(option);
-                          } else {
-                            setMessages((current) => [
-                              ...current,
-                              {
-                                id: `user-${Date.now()}`,
-                                role: "user",
-                                text: option,
-                              },
-                            ]);
-                            setDraftMessage("");
-                            setShowOpeningOptions(false);
-                          }
+                          setShowOpeningOptions(false);
+                          void submitMessage(option);
                         }
                       }}
                     >
@@ -1377,16 +1365,8 @@ export default function Home() {
                             setCoupleSetup(defaultCoupleSetup);
                             setRecommendationMode("standard");
                             setSplitRecommendation(null);
-                            setMessages((current) => [
-                              ...current,
-                              {
-                                id: `user-${Date.now()}`,
-                                role: "user",
-                                text: size,
-                              },
-                            ]);
-                            setDraftMessage("");
                             setShowOpeningOptions(false);
+                            void submitMessage(size);
                           }}
                         >
                           {size}
