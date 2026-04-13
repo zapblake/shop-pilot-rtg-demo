@@ -461,7 +461,9 @@ export default function Home() {
   const [currentView, setCurrentView] = useState<DemoView>(storedSession?.currentView ?? "plp");
   const [activeProduct, setActiveProduct] = useState<ActiveProductContext | null>(storedSession?.activeProduct ?? null);
   const [activeQuestionType, setActiveQuestionType] = useState<QuestionType>(storedSession?.activeQuestionType ?? "size");
-  const [lastAssistantMeta, setLastAssistantMeta] = useState<{ reply: string; questionText: string | null; questionType: QuestionType | null } | null>(null);
+  const [lastAssistantMeta, setLastAssistantMeta] = useState<{ turnId: string; reply: string; questionText: string | null; questionType: QuestionType | null } | null>(null);
+  const [easyRepliesLocked, setEasyRepliesLocked] = useState(false);
+  const [currentAssistantTurnId, setCurrentAssistantTurnId] = useState<string | null>(null);
   const [draftMessage, setDraftMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<MatchResult[]>(storedSession?.matches ?? starterMatches);
@@ -587,6 +589,10 @@ export default function Home() {
     return undefined;
   }, [messages]);
 
+  function lockEasyReplies() {
+    setEasyRepliesLocked(true);
+  }
+
   async function processMessage(messageText: string, options?: MessageOptions) {
     const trimmed = messageText.trim();
     const isSiteContextOnly = options?.siteContextOnly ?? false;
@@ -604,6 +610,7 @@ export default function Home() {
       setDraftMessage("");
     }
     setIsLoading(true);
+    lockEasyReplies();
 
     const runBackgroundMatch = () => {
       if (options?.skipBackgroundMatch) return;
@@ -678,9 +685,12 @@ export default function Home() {
       const payload = await response.json();
       const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
       const questionText = extractFinalQuestion(fullReply);
+      const assistantTurnId = `assistant-turn-${Date.now()}`;
       setConversationMode(payload.mode ?? "guided-discovery");
       setActiveQuestionType(payload.questionType ?? null);
-      setLastAssistantMeta({ reply: fullReply, questionText, questionType: payload.questionType ?? null });
+      setCurrentAssistantTurnId(assistantTurnId);
+      setLastAssistantMeta({ turnId: assistantTurnId, reply: fullReply, questionText, questionType: payload.questionType ?? null });
+      setEasyRepliesLocked(false);
 
       if (!options?.skipAssistantReply) {
         const assistantId = `assistant-${Date.now()}`;
@@ -744,6 +754,8 @@ export default function Home() {
   async function submitMessage(messageText: string, options?: MessageOptions) {
     const trimmed = messageText.trim();
     if (!trimmed) return;
+
+    lockEasyReplies();
 
     if (isLoading) {
       queuedMessagesRef.current.push(trimmed);
@@ -838,6 +850,12 @@ export default function Home() {
     conversationTranscript: messages.map(({ role, text }) => ({ role, text })),
     recommendationMode,
   }), [lastAssistantMeta, effectiveQuestionType, currentView, shoppingPhase, memorySummary, matches, messages, recommendationMode]);
+  const easyRepliesReady = !isLoading
+    && !easyRepliesLocked
+    && !!lastAssistantMeta
+    && !!currentAssistantTurnId
+    && lastAssistantMeta.turnId === currentAssistantTurnId
+    && dynamicReplyPills.length > 0;
 
   useEffect(() => {
     scrollChatWithPeek();
@@ -1488,12 +1506,12 @@ export default function Home() {
 
             {showDynamicSections ? (
               <>
-                {recommendationMode !== "split" ? (
+                {recommendationMode !== "split" && easyRepliesReady ? (
                   <section className={styles.suggestedSection} ref={suggestedSectionRef}>
                     <span className={styles.suggestedLabel}>Easy Reply</span>
                     <div className={styles.chipsSection}>
                       {dynamicReplyPills.map((pill) => (
-                        <button key={pill.label} type="button" onClick={() => submitMessage(pill.message)}>{pill.label}</button>
+                        <button key={pill.label} type="button" disabled={isLoading || easyRepliesLocked} onClick={() => submitMessage(pill.message)}>{pill.label}</button>
                       ))}
                     </div>
                   </section>
