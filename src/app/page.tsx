@@ -830,7 +830,6 @@ export default function Home() {
       setFirmnessAnswered(true);
     }
   }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
-  const isPostCartAccessoryMode = shoppingPhase === "post-cart-accessories" && !!cartContext.mattress;
   const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
   const effectiveQuestionType: QuestionType = showOpeningOptions
     ? "size"
@@ -919,11 +918,6 @@ export default function Home() {
     setShoppingPhase("post-cart-accessories");
     setCurrentView("cart");
     setActiveProduct({ theme: match.theme, source: "recommendation", reason: "Added from recommendation flow" });
-    setMessages([]);
-    setEasyRepliesLocked(true);
-    setCurrentAssistantTurnId(null);
-    setLastAssistantMeta(null);
-    setDraftMessage("");
 
     const setupType = coupleSetup.couplePath === "split-king" ? "split-king" : "standard";
 
@@ -939,6 +933,10 @@ export default function Home() {
       setAccessoryRecommendations([]);
     }
 
+    await submitMessage(
+      `Site action: shopper added ${match.displayName} to cart. Help complete the sleep setup.`,
+      { skipBackgroundMatch: true, siteContextOnly: true },
+    );
   }
 
   function handleAddAccessoryToCart(recommendation: AccessoryRecommendation) {
@@ -1244,35 +1242,33 @@ export default function Home() {
             </div>
 
             <section className={styles.chatSurface}>
-              {!isPostCartAccessoryMode ? (
-                <div className={styles.messageList}>
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
-                    >
-                      {message.role === "assistant" ? (
-                        <Image
-                          src="/assets/rtg-chat-logo.png"
-                          alt="Shop Pilot avatar"
-                          width={40}
-                          height={40}
-                          className={styles.chatAvatar}
-                        />
-                      ) : null}
-                      <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
-                        <p>{renderMessageText(message.text)}</p>
-                      </div>
+              <div className={styles.messageList}>
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
+                  >
+                    {message.role === "assistant" ? (
+                      <Image
+                        src="/assets/rtg-chat-logo.png"
+                        alt="Shop Pilot avatar"
+                        width={40}
+                        height={40}
+                        className={styles.chatAvatar}
+                      />
+                    ) : null}
+                    <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
+                      <p>{renderMessageText(message.text)}</p>
                     </div>
-                  ))}
-                  {isLoading ? (
-                    <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
-                      <p>Considering…</p>
-                    </div>
-                  ) : null}
-                  <div ref={chatBottomRef} />
-                </div>
-              ) : null}
+                  </div>
+                ))}
+                {isLoading ? (
+                  <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
+                    <p>Considering…</p>
+                  </div>
+                ) : null}
+                <div ref={chatBottomRef} />
+              </div>
 
               {showOpeningOptions ? (
                 <section className={styles.openingOptions}>
@@ -1494,25 +1490,23 @@ export default function Home() {
                 </section>
               ) : null}
 
-              {!isPostCartAccessoryMode ? (
-                <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
-                  <input
-                    ref={inputRef}
-                    value={draftMessage}
-                    onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
-                    placeholder="What matters most to you?"
-                    aria-label="Message Shop Pilot"
-                  />
-                  <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
-                    {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
-                  </button>
-                </form>
-              ) : null}
+              <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
+                <input
+                  ref={inputRef}
+                  value={draftMessage}
+                  onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
+                  placeholder="What matters most to you?"
+                  aria-label="Message Shop Pilot"
+                />
+                <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
+                  {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
+                </button>
+              </form>
             </section>
 
             {showDynamicSections ? (
               <>
-                {!isPostCartAccessoryMode && recommendationMode !== "split" && easyRepliesReady ? (
+                {recommendationMode !== "split" && easyRepliesReady ? (
                   <section className={styles.suggestedSection} ref={suggestedSectionRef}>
                     <span className={styles.suggestedLabel}>Easy Reply</span>
                     <div className={styles.chipsSection}>
