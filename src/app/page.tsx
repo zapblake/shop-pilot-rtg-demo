@@ -1401,6 +1401,7 @@ export default function Home() {
                             setRecommendationMode("standard");
                             setSplitRecommendation(null);
                           }
+                          void submitMessage(option.value === "two-different" ? "Two sleepers with different preferences." : option.value === "two-similar" ? "Two sleepers." : "Just me.");
                         }}
                       >
                         {option.label}
@@ -1432,7 +1433,10 @@ export default function Home() {
                           if (option.value === "compromise") {
                             setRecommendationMode("standard");
                             setSplitRecommendation(null);
+                            void submitMessage("We want one mattress that works for both of us.");
+                            return;
                           }
+                          void submitMessage("We want to explore a split king / Twin XL setup.");
                         }}
                       >
                         {option.label}
@@ -1456,6 +1460,7 @@ export default function Home() {
                         className={styles.openingChip}
                         onClick={() => {
                           setCoupleSetup((current) => ({ ...current, sleeper1Firmness: option }));
+                          void submitMessage(`Two sleepers with different preferences. Split king. Sleeper 1 wants ${option}.`);
                         }}
                       >
                         {option}
