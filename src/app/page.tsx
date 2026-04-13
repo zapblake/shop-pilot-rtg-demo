@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import mattressThemes from "@/data/mattressThemes.normalized.json";
+import { extractFinalQuestion } from "@/lib/easyReplies/extractFinalQuestion";
+import { selectEasyReplies } from "@/lib/easyReplies/selectEasyReplies";
 import styles from "./page.module.css";
 
 type ConversationMode =
@@ -322,154 +324,6 @@ function buildRecommendationWhy(match: MatchResult, summary: string, index: numb
   return `${benefitLead}, while keeping the recommendation set grounded in a more value-conscious option.`;
 }
 
-function getDynamicReplyPills(activeQuestionType: QuestionType, messages: ChatMessage[], summary: string, matches: MatchResult[], recommendationMode: RecommendationMode) {
-  const userText = messages
-    .filter((message) => message.role === "user")
-    .map((message) => message.text)
-    .join(" ")
-    .toLowerCase();
-  const latestAssistantText = [...messages].reverse().find((message) => message.role === "assistant")?.text.toLowerCase() ?? "";
-  if (recommendationMode === "split") {
-    return [
-      { label: "More pressure relief", message: "We want more pressure relief on one side." },
-      { label: "More support", message: "One sleeper needs stronger support." },
-      { label: "Adjustable base", message: "We also want to know if this works with an adjustable base." },
-    ];
-  }
-
-  if (activeQuestionType === "size") {
-    return [
-      { label: "Queen", message: "I’m looking for a queen." },
-      { label: "King", message: "I’m looking for a king." },
-      { label: "Not sure", message: "I’m not sure on size yet." },
-    ];
-  }
-
-  if (activeQuestionType === "shopper-mode") {
-    return [
-      { label: "Just me", message: "Just me." },
-      { label: "Two sleepers", message: "Two sleepers." },
-      { label: "Different preferences", message: "Two sleepers with different preferences." },
-    ];
-  }
-
-  if (activeQuestionType === "king-path") {
-    return [
-      { label: "One mattress", message: "We want one mattress that works for both of us." },
-      { label: "Split king", message: "We want to explore a split king / Twin XL setup." },
-      { label: "Not sure yet", message: "We are not sure yet." },
-    ];
-  }
-
-  if (activeQuestionType === "firmness") {
-    return [
-      { label: "Plush", message: "I want a plush feel." },
-      { label: "Medium", message: "I want a medium feel." },
-      { label: "Firm", message: "I want a firm feel." },
-    ];
-  }
-
-  if (activeQuestionType === "sleep-position") {
-    return [
-      { label: "Side sleeper", message: "I’m a side sleeper." },
-      { label: "Back sleeper", message: "I’m a back sleeper." },
-      { label: "Stomach sleeper", message: "I’m a stomach sleeper." },
-    ];
-  }
-
-  if (activeQuestionType === "cooling") {
-    return [
-      { label: "Yes, I sleep hot", message: "Yes, I sleep hot at night." },
-      { label: "Somewhat", message: "Somewhat, cooling matters to me." },
-      { label: "Not really", message: "No, temperature is not a big factor." },
-    ];
-  }
-
-  if (activeQuestionType === "pressure-relief") {
-    return [
-      { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
-      { label: "Hip pressure", message: "I need pressure relief at my hips." },
-      { label: "Lower back", message: "Lower back support matters most to me." },
-    ];
-  }
-
-  if (activeQuestionType === "budget") {
-    return [
-      { label: "Best value", message: "I care most about getting the best value." },
-      { label: "Mid-range", message: "I want something solid in the middle." },
-      { label: "Premium", message: "I’m open to premium options if the fit is better." },
-    ];
-  }
-
-  if (activeQuestionType === "compare-refine") {
-    return [
-      { label: "More support", message: "I want something with stronger support." },
-      { label: "Softer feel", message: "I want a softer feel." },
-      { label: "Cooling", message: "Cooling matters most to me." },
-    ];
-  }
-
-  const wantsSoft = /soft|plush/.test(userText);
-  const knowsPosition = /side|back|stomach/.test(userText);
-  const knowsCooling = /hot|cool|cooling/.test(userText);
-  const knowsWeight = /\b(under 180|180|230|over 230|heavy|heavier|light|medium weight|300lb|300 lbs|250lb|250 lbs)\b/.test(userText);
-  const knowsPain = /back pain|lower back|shoulder pain|hip pain|pressure/.test(userText);
-
-  if (!knowsPosition) {
-    return [
-      { label: "Side sleeper", message: "I’m a side sleeper." },
-      { label: "Back sleeper", message: "I’m a back sleeper." },
-      { label: "Stomach sleeper", message: "I’m a stomach sleeper." },
-    ];
-  }
-
-  if (wantsSoft && !knowsWeight) {
-    return [
-      { label: "Under 180 lbs", message: "I want a plush feel and I’m under 180 lbs." },
-      { label: "180–230 lbs", message: "I want a plush feel and I’m between 180 and 230 lbs." },
-      { label: "Over 230 lbs", message: "I want a plush feel and I’m over 230 lbs." },
-    ];
-  }
-
-  if (/cooling|sleep hot|temperature|cooler sleep/.test(latestAssistantText)) {
-    return [
-      { label: "Yes, I sleep hot", message: "Yes, I sleep hot at night." },
-      { label: "Somewhat", message: "Somewhat, cooling matters to me." },
-      { label: "Not really", message: "No, temperature is not a big factor." },
-    ];
-  }
-
-  if (/pressure relief|shoulder|hip|back pain|easy movement|support/.test(latestAssistantText)) {
-    return [
-      { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
-      { label: "Hip pressure", message: "I need pressure relief at my hips." },
-      { label: "Lower back", message: "Lower back support matters most to me." },
-    ];
-  }
-
-  if (!knowsCooling) {
-    return [
-      { label: "I sleep hot", message: "I sleep hot at night." },
-      { label: "Cooling matters", message: "Cooling matters most to me." },
-      { label: "Temp not important", message: "Temperature does not matter much to me." },
-    ];
-  }
-
-  if (!knowsPain) {
-    return [
-      { label: "Lower back pain", message: "Lower back support matters to me." },
-      { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
-      { label: "Hip pressure", message: "I need pressure relief at my hips." },
-    ];
-  }
-
-  return [
-    { label: "Pressure relief", message: "Pressure relief matters most to me." },
-    { label: "Cooling", message: "Cooling matters most to me." },
-    { label: "Easy movement", message: "I want it to be easy to move around on." },
-  ];
-}
-
 function getComparisonNote(matches: MatchResult[], mode: ConversationMode, recommendationMode: RecommendationMode) {
   if (recommendationMode === "split") return "Each sleeper now has an individual Twin XL recommendation while keeping one shared split-king setup.";
   if (mode !== "comparison" || matches.length < 2) return null;
@@ -607,6 +461,7 @@ export default function Home() {
   const [currentView, setCurrentView] = useState<DemoView>(storedSession?.currentView ?? "plp");
   const [activeProduct, setActiveProduct] = useState<ActiveProductContext | null>(storedSession?.activeProduct ?? null);
   const [activeQuestionType, setActiveQuestionType] = useState<QuestionType>(storedSession?.activeQuestionType ?? "size");
+  const [lastAssistantMeta, setLastAssistantMeta] = useState<{ reply: string; questionText: string | null; questionType: QuestionType | null } | null>(null);
   const [draftMessage, setDraftMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<MatchResult[]>(storedSession?.matches ?? starterMatches);
@@ -821,12 +676,14 @@ export default function Home() {
       });
 
       const payload = await response.json();
+      const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
+      const questionText = extractFinalQuestion(fullReply);
       setConversationMode(payload.mode ?? "guided-discovery");
       setActiveQuestionType(payload.questionType ?? null);
+      setLastAssistantMeta({ reply: fullReply, questionText, questionType: payload.questionType ?? null });
 
       if (!options?.skipAssistantReply) {
         const assistantId = `assistant-${Date.now()}`;
-        const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
 
         setMessages((current) => [
           ...current,
@@ -971,7 +828,16 @@ export default function Home() {
         : shouldAskSplitSleeper1 || shouldAskSplitSleeper2 || shouldAskFirmness
           ? "firmness"
           : activeQuestionType;
-  const dynamicReplyPills = useMemo(() => getDynamicReplyPills(effectiveQuestionType, messages, memorySummary, matches, recommendationMode), [effectiveQuestionType, messages, memorySummary, matches, recommendationMode]);
+  const dynamicReplyPills = useMemo(() => selectEasyReplies({
+    questionType: lastAssistantMeta?.questionType ?? effectiveQuestionType,
+    questionText: lastAssistantMeta?.questionText ?? null,
+    currentView,
+    shoppingPhase,
+    memorySummary,
+    matches,
+    conversationTranscript: messages.map(({ role, text }) => ({ role, text })),
+    recommendationMode,
+  }), [lastAssistantMeta, effectiveQuestionType, currentView, shoppingPhase, memorySummary, matches, messages, recommendationMode]);
 
   useEffect(() => {
     scrollChatWithPeek();

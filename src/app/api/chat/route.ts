@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { extractFinalQuestion } from "@/lib/easyReplies/extractFinalQuestion";
 import { mattressSellingRules } from "../prompt-rules";
 
 type MatchResult = {
@@ -91,24 +92,31 @@ function buildCartFallbackReply(cartMattressName?: string | null, accessoryCount
 function inferQuestionType(text: string, message: string, matches: MatchResult[]): QuestionType {
   const lowerText = text.toLowerCase();
   const lowerMessage = message.toLowerCase();
-  const boldQuestionMatch = text.match(/\*\*(.*?)\*\*/);
-  const questionText = (boldQuestionMatch?.[1] ?? text).toLowerCase();
+  const priorityOptionCount = [
+    /cooling|cooler sleep|temperature|sleep hot/.test(lowerText),
+    /pressure relief|shoulder|hip/.test(lowerText),
+    /support|back pain|alignment/.test(lowerText),
+    /feel|firmness|plush|medium|firm|soft/.test(lowerText),
+    /value|budget|premium|price/.test(lowerText),
+    /easy movement|move around|easier movement/.test(lowerText),
+  ].filter(Boolean).length;
 
-  if (/what size|which size|size mattress/.test(questionText)) return "size";
-  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(questionText)) return "shopper-mode";
-  if (/how would you like to shop this king setup|compromise|split king/.test(questionText)) return "king-path";
-  if (/what firmness|feel best to you/.test(questionText)) return "firmness";
-  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(questionText)) return "sleep-position";
-  if (/sleep hot|cooling|temperature|cooler sleep/.test(questionText)) return "cooling";
-  if (/pressure relief|shoulder|hip|back pain|easy movement/.test(questionText)) return "pressure-relief";
-  if (/budget|price range|under \$|value|premium options/.test(questionText)) return "budget";
-  if (/which one sounds better|compare|top options|best fit|narrow on first|what matters more|what would you like to evaluate first/.test(questionText)) return "compare-refine";
+  if (/what size|which size|size mattress/.test(lowerText)) return "size";
+  if (/who are we shopping for|one sleeper or two|just me|two sleepers/.test(lowerText)) return "shopper-mode";
+  if (/how would you like to shop this king setup|compromise|split king/.test(lowerText)) return "king-path";
+  if (/what firmness|feel best to you/.test(lowerText)) return "firmness";
+  if (/sleep position|side sleeper|back sleeper|stomach sleeper/.test(lowerText)) return "sleep-position";
+  if (/(what matters (most|more)|what should we prioritize|next step|narrow on first|what would you like to narrow on first|what would you like to evaluate first)/.test(lowerText) && priorityOptionCount >= 2) return "compare-refine";
+  if (/which one sounds better|compare|top options|best fit/.test(lowerText)) return "compare-refine";
+  if (/sleep hot|cooling|temperature|cooler sleep/.test(lowerText)) return "cooling";
+  if (/pressure relief|shoulder|hip|back pain/.test(lowerText)) return "pressure-relief";
+  if (/budget|price range|under \$|value|premium options/.test(lowerText)) return "budget";
 
+  if (/(what matters (most|more)|what should we prioritize|next step|narrow on first)/.test(lowerMessage) && matches.length > 0) return "compare-refine";
   if (/sleep hot|cooling|temperature|cooler sleep/.test(lowerMessage)) return "cooling";
   if (/pressure relief|shoulder|hip|back pain|easy movement/.test(lowerMessage)) return "pressure-relief";
   if (/budget|price|value|premium/.test(lowerMessage)) return "budget";
   if (lowerMessage.includes("compare") && matches.length > 1) return "compare-refine";
-  if (/plush|medium|firm/.test(lowerText) && /feel/.test(lowerText)) return "firmness";
 
   return "generic-refine";
 }
@@ -238,10 +246,13 @@ ${mattressSellingRules}`,
       .join("\n")
       .trim();
 
+    const finalReply = text || fallback.reply;
+    const finalQuestionText = extractFinalQuestion(finalReply);
+
     return NextResponse.json({
-      reply: text || fallback.reply,
+      reply: finalReply,
       mode: /compare/i.test(message) && matches.length > 1 ? "comparison" : fallback.mode,
-      questionType: inferQuestionType(text || fallback.reply, message, matches),
+      questionType: inferQuestionType(finalQuestionText ?? finalReply, message, matches),
       liveModel: true,
     });
   } catch {
