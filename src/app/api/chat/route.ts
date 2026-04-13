@@ -129,11 +129,21 @@ function buildFallbackReply(message: string, matches: MatchResult[]) {
     };
   }
 
+  if (matches.length > 0) {
+    return {
+      reply: emphasizeQuestion(
+        "You can scroll down now to see your current recommendations. I can keep refining them based on how you sleep. What matters more for the next step, cooler sleep, pressure relief, or easier movement?",
+      ),
+      mode: "product-evaluation",
+      questionType: "compare-refine" as QuestionType,
+    };
+  }
+
   return {
     reply: emphasizeQuestion(
       "You can scroll down now to see your current recommendations. I can keep refining them based on how you sleep. What matters more for the next step, cooler sleep, pressure relief, or easier movement?",
     ),
-    mode: matches.length ? "product-evaluation" : "guided-discovery",
+    mode: "guided-discovery",
     questionType: "generic-refine" as QuestionType,
   };
 }
