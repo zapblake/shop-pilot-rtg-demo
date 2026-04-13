@@ -1025,6 +1025,8 @@ export default function Home() {
           </header>
 
           <section className={styles.generatedPage}>
+            {currentView === "plp" ? (
+            <>
             <div className={styles.breadcrumbs}>
               <span>Home</span>
               <span>›</span>
@@ -1075,7 +1077,42 @@ export default function Home() {
               </div>
             </section>
 
-            {currentView === "pdp" && activeThemeRecord ? (
+            <div className={styles.resultsMeta}>
+              <strong>Shop Mattresses</strong>
+              <span>Scrape-derived shell with RTG-category visuals and structure</span>
+            </div>
+            <div className={styles.productGrid}>
+              {featuredThemes.map((theme) => (
+                <article
+                  key={theme.theme}
+                  className={`${styles.productTile} ${currentTheme === theme.theme ? styles.productTileActive : ""}`}
+                  onClick={() => openProductDetail(theme.theme, "featured", "Opened from the category browsing experience.")}
+                >
+                  <div className={styles.productTileImageWrap}>
+                    {theme.heroImage ? (
+                      <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.productTileImage} />
+                    ) : (
+                      <div className={styles.productImagePlaceholder}><span>{theme.brand}</span></div>
+                    )}
+                  </div>
+                  <div className={styles.productTileBody}>
+                    <p>{theme.brand}</p>
+                    <h3>{theme.displayName}</h3>
+                    <div className={styles.tagRow}>
+                      <span>{theme.type || "Type TBD"}</span>
+                      <span>{theme.comfort || "Comfort TBD"}</span>
+                    </div>
+                    <strong>
+                      {theme.priceRange?.min
+                        ? `From $${theme.priceRange.min.toLocaleString()}`
+                        : "Price TBD"}
+                    </strong>
+                  </div>
+                </article>
+              ))}
+            </div>
+            </>
+            ) : currentView === "pdp" && activeThemeRecord ? (
               <section className={styles.mockPdpSection}>
                 <div className={styles.mockPdpHeaderRow}>
                   <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView("plp")}>← Back to results</button>
@@ -1188,45 +1225,7 @@ export default function Home() {
                   </div>
                 </div>
               </section>
-            ) : (
-              <>
-                <div className={styles.resultsMeta}>
-                  <strong>Shop Mattresses</strong>
-                  <span>Scrape-derived shell with RTG-category visuals and structure</span>
-                </div>
-
-                <div className={styles.productGrid}>
-                  {featuredThemes.map((theme) => (
-                    <article
-                      key={theme.theme}
-                      className={`${styles.productTile} ${currentTheme === theme.theme ? styles.productTileActive : ""}`}
-                      onClick={() => openProductDetail(theme.theme, "featured", "Opened from the category browsing experience.")}
-                    >
-                      <div className={styles.productTileImageWrap}>
-                        {theme.heroImage ? (
-                          <Image src={theme.heroImage} alt={theme.displayName} fill unoptimized className={styles.productTileImage} />
-                        ) : (
-                          <div className={styles.productImagePlaceholder}><span>{theme.brand}</span></div>
-                        )}
-                      </div>
-                      <div className={styles.productTileBody}>
-                        <p>{theme.brand}</p>
-                        <h3>{theme.displayName}</h3>
-                        <div className={styles.tagRow}>
-                          <span>{theme.type || "Type TBD"}</span>
-                          <span>{theme.comfort || "Comfort TBD"}</span>
-                        </div>
-                        <strong>
-                          {theme.priceRange?.min
-                            ? `From $${theme.priceRange.min.toLocaleString()}`
-                            : "Price TBD"}
-                        </strong>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </>
-            )}
+            ) : null}
           </section>
         </section>
 
