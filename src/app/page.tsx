@@ -1619,10 +1619,16 @@ export default function Home() {
                             </div>
                             <div className={`${styles.recommendationCardActions} ${styles.recommendationCardActionsLead}`}>
                               <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(leadMatch)}>
-                                Add best match to cart
+                                Add to Cart
                               </button>
-                              <button type="button" className={styles.pdpSecondaryButton} onClick={() => openProductDetail(leadMatch.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}>
-                                View PDP
+                              <button
+                                type="button"
+                                aria-label={`View ${leadMatch.displayName} details`}
+                                title="View PDP"
+                                className={styles.pdpIconButton}
+                                onClick={() => openProductDetail(leadMatch.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}
+                              >
+                                <span aria-hidden="true">👁</span>
                               </button>
                             </div>
                           </div>
@@ -1682,11 +1688,17 @@ export default function Home() {
                                       ))}
                                     </div>
                                     <div className={styles.recommendationCardActions}>
-                                      <button type="button" className={styles.pdpSecondaryButton} onClick={() => openProductDetail(match.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}>
-                                        View PDP
-                                      </button>
                                       <button type="button" className={styles.addToCartButton} onClick={() => handleAddMattressToCart(match)}>
-                                        Add to cart
+                                        Add to Cart
+                                      </button>
+                                      <button
+                                        type="button"
+                                        aria-label={`View ${match.displayName} details`}
+                                        title="View PDP"
+                                        className={styles.pdpIconButton}
+                                        onClick={() => openProductDetail(match.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}
+                                      >
+                                        <span aria-hidden="true">👁</span>
                                       </button>
                                     </div>
                                   </div>
