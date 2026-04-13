@@ -1765,23 +1765,50 @@ export default function Home() {
                       <p>{cartContext.mattress?.displayName}</p>
                     </div>
                     <div className={styles.accessoryGrid}>
-                      {accessoryRecommendations.map((recommendation) => (
-                        <article key={recommendation.category} className={styles.accessoryCard}>
-                          <div className={styles.candidateTopRow}>
-                            <p>{recommendation.category.replace(/-/g, " ")}</p>
-                            <span className={styles.bestFitPill}>Recommended</span>
-                          </div>
-                          <h4>{recommendation.primary?.displayName ?? "No recommendation yet"}</h4>
-                          {recommendation.primary?.brand ? <span>{recommendation.primary.brand}</span> : null}
-                          {recommendation.primary?.priceFrom ? <strong>{`From $${recommendation.primary.priceFrom.toLocaleString()}`}</strong> : null}
-                          {recommendation.explanation ? <div className={styles.reasonList}><em>{recommendation.explanation}</em></div> : null}
-                          {recommendation.primary ? (
-                            <button type="button" className={styles.addToCartButton} onClick={() => handleAddAccessoryToCart(recommendation)}>
-                              Add to cart
-                            </button>
-                          ) : null}
-                        </article>
-                      ))}
+                      {accessoryRecommendations.map((recommendation) => {
+                        const catIcons: Record<string, string> = {
+                          protector: "🛡️",
+                          sheets: "🛏️",
+                          pillow: "💤",
+                          base: "🔩",
+                          "adjustable-base": "⚙️",
+                        };
+                        const icon = catIcons[recommendation.category] ?? "📦";
+                        const alreadyInCart = cartContext.accessories.some(
+                          (item) => item.kind === recommendation.category
+                        );
+                        return (
+                          <article key={recommendation.category} className={styles.accessoryCard}>
+                            <div className={styles.accessoryCardIcon}>{icon}</div>
+                            <div className={styles.accessoryCardContent}>
+                              <span className={styles.accessoryCategoryLabel}>
+                                {recommendation.category.replace(/-/g, " ")}
+                              </span>
+                              <strong className={styles.accessoryName}>
+                                {recommendation.primary?.displayName ?? "No recommendation yet"}
+                              </strong>
+                              {recommendation.primary?.priceFrom ? (
+                                <span className={styles.accessoryPrice}>
+                                  {`From $${recommendation.primary.priceFrom.toLocaleString()}`}
+                                </span>
+                              ) : null}
+                            </div>
+                            {recommendation.primary ? (
+                              alreadyInCart ? (
+                                <span className={styles.accessoryInCartBadge}>✓ In Cart</span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className={styles.accessoryAddButton}
+                                  onClick={() => handleAddAccessoryToCart(recommendation)}
+                                >
+                                  Add
+                                </button>
+                              )
+                            ) : null}
+                          </article>
+                        );
+                      })}
                     </div>
                   </section>
                 ) : null}
