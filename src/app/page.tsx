@@ -1874,40 +1874,109 @@ export default function Home() {
                 </>
               ) : currentView === "cart" ? (
                 <>
-                  <div className={styles.pdpFloatHeader}>
+                  <div className={styles.cartFloatHeader}>
                     <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView(cartContext.mattress ? "pdp" : "plp")}>← Continue shopping</button>
+                    <h2 className={styles.cartFloatTitle}>Your Cart ({(cartContext.mattress ? 1 : 0) + cartContext.accessories.length})</h2>
                   </div>
-                  <div className={styles.pdpFloatScroll}>
-                    <div className={styles.mockCartShell}>
-                      <div className={styles.mockCartItems}>
-                        <h2>Cart</h2>
-                        {cartContext.mattress ? (
-                          <article className={styles.mockCartItem}>
-                            <div>
-                              <p>Mattress</p>
-                              <h3>{cartContext.mattress.displayName}</h3>
-                              <span>{cartContext.mattress.size ?? selectedSize ?? "Size not selected"}</span>
+                  <div className={styles.cartFloatBody}>
+                    <div className={styles.cartFloatItems}>
+                      {!cartContext.mattress && cartContext.accessories.length === 0 ? (
+                        <div className={styles.cartEmptyState}>
+                          <div className={styles.cartEmptyIcon}>🛒</div>
+                          <p>Your cart is empty.</p>
+                          <button type="button" className={styles.pdpSecondaryButton} onClick={() => setCurrentView("plp")}>Browse mattresses</button>
+                        </div>
+                      ) : null}
+                      {cartContext.mattress ? (() => {
+                        const rec = mattressThemes.find(t => t.theme === cartContext.mattress!.theme);
+                        return (
+                          <article className={styles.cartLineItem}>
+                            <div className={styles.cartLineThumb}>
+                              {rec?.heroImage ? (
+                                <Image src={rec.heroImage} alt={cartContext.mattress.displayName} fill unoptimized className={styles.cartLineThumbImg} />
+                              ) : (
+                                <div className={styles.cartLineThumbPlaceholder}>🛏️</div>
+                              )}
                             </div>
-                            <strong>{cartContext.mattress.priceFrom ? `From $${cartContext.mattress.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
-                          </article>
-                        ) : (
-                          <div className={styles.mockCartEmpty}>No mattress in cart yet.</div>
-                        )}
-                        {cartContext.accessories.map((item) => (
-                          <article key={`${item.kind}-${item.theme}`} className={styles.mockCartItem}>
-                            <div>
-                              <p>{item.kind.replace(/-/g, " ")}</p>
-                              <h3>{item.displayName}</h3>
+                            <div className={styles.cartLineInfo}>
+                              <p className={styles.cartLineBrand}>{rec?.brand ?? "Mattress"}</p>
+                              <h3 className={styles.cartLineName}>{cartContext.mattress.displayName}</h3>
+                              <div className={styles.cartLineMeta}>
+                                <span>Size: {cartContext.mattress.size ?? selectedSize ?? "Queen"}</span>
+                                {rec?.comfort ? <span>· {rec.comfort}</span> : null}
+                              </div>
+                              <div className={styles.cartLineQtyRow}>
+                                <div className={styles.cartQtyControl}>
+                                  <button type="button" className={styles.cartQtyBtn} aria-label="Decrease">−</button>
+                                  <span>1</span>
+                                  <button type="button" className={styles.cartQtyBtn} aria-label="Increase">+</button>
+                                </div>
+                                <button type="button" className={styles.cartRemoveBtn} onClick={() => setCartContext(c => ({ ...c, mattress: null }))}>Remove</button>
+                              </div>
                             </div>
-                            <strong>{item.priceFrom ? `From $${item.priceFrom.toLocaleString()}` : "Included"}</strong>
+                            <div className={styles.cartLinePrice}>
+                              {cartContext.mattress.priceFrom ? `$${cartContext.mattress.priceFrom.toLocaleString()}` : "—"}
+                            </div>
                           </article>
-                        ))}
+                        );
+                      })() : null}
+                      {cartContext.accessories.map((item) => (
+                        <article key={`${item.kind}-${item.theme}`} className={styles.cartLineItem}>
+                          <div className={styles.cartLineThumb}>
+                            <div className={styles.cartLineThumbPlaceholder}>
+                              {item.kind === "pillow" ? "🛌" : item.kind === "protector" ? "🛡️" : item.kind === "sheets" ? "🛏️" : "🔧"}
+                            </div>
+                          </div>
+                          <div className={styles.cartLineInfo}>
+                            <p className={styles.cartLineBrand}>{item.kind.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</p>
+                            <h3 className={styles.cartLineName}>{item.displayName}</h3>
+                            <div className={styles.cartLineQtyRow}>
+                              <div className={styles.cartQtyControl}>
+                                <button type="button" className={styles.cartQtyBtn} aria-label="Decrease">−</button>
+                                <span>1</span>
+                                <button type="button" className={styles.cartQtyBtn} aria-label="Increase">+</button>
+                              </div>
+                              <button type="button" className={styles.cartRemoveBtn} onClick={() => setCartContext(c => ({ ...c, accessories: c.accessories.filter(a => !(a.kind === item.kind && a.theme === item.theme)) }))}>Remove</button>
+                            </div>
+                          </div>
+                          <div className={styles.cartLinePrice}>
+                            {item.priceFrom ? `$${item.priceFrom.toLocaleString()}` : "—"}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+
+                    <div className={styles.cartFloatSummary}>
+                      <div className={styles.cartSummaryPromo}>
+                        <input className={styles.cartPromoInput} type="text" placeholder="Promo code" />
+                        <button type="button" className={styles.cartPromoApply}>Apply</button>
                       </div>
-                      <div className={styles.mockCartSummaryBox}>
-                        <h3>Summary</h3>
-                        <p>Shop Pilot stays aware of what's already in the cart and shifts into completion mode.</p>
-                        <button type="button" className={styles.addToCartButton} onClick={() => setIsOpen(true)}>Ask Shop Pilot for next best add-ons</button>
+                      <div className={styles.cartSummaryLines}>
+                        <div className={styles.cartSummaryLine}>
+                          <span>Subtotal</span>
+                          <span>${(
+                            (cartContext.mattress?.priceFrom ?? 0) +
+                            cartContext.accessories.reduce((s, a) => s + (a.priceFrom ?? 0), 0)
+                          ).toLocaleString()}</span>
+                        </div>
+                        <div className={styles.cartSummaryLine}>
+                          <span>Delivery</span>
+                          <span className={styles.cartFreeText}>FREE</span>
+                        </div>
+                        <div className={styles.cartSummaryLine}>
+                          <span>Sales tax</span>
+                          <span className={styles.cartFreeText}>$0</span>
+                        </div>
+                        <div className={`${styles.cartSummaryLine} ${styles.cartSummaryTotal}`}>
+                          <span>Estimated total</span>
+                          <span>${(
+                            (cartContext.mattress?.priceFrom ?? 0) +
+                            cartContext.accessories.reduce((s, a) => s + (a.priceFrom ?? 0), 0)
+                          ).toLocaleString()}</span>
+                        </div>
                       </div>
+                      <button type="button" className={styles.cartCheckoutBtn}>Proceed to checkout</button>
+                      <button type="button" className={styles.cartAskPilotBtn} onClick={() => { setCurrentView("plp"); setIsOpen(true); }}>💬 Ask Shop Pilot for add-on suggestions</button>
                     </div>
                   </div>
                 </>
