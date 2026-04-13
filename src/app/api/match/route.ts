@@ -56,6 +56,18 @@ function scorePremiumIntent(theme: ThemeRecord) {
   if (theme.temperatureManagement?.score) score += theme.temperatureManagement.score >= 4 ? 1 : 0;
   if (searchable.includes("tempur")) score += 1;
   if (searchable.includes("hybrid") || searchable.includes("breeze") || searchable.includes("luxe") || searchable.includes("proadapt")) score += 1;
+  if (price > 0 && price < 1200) score -= 3;
+  if (price >= 1800) score += 1;
+
+  return score;
+}
+
+function scoreValueBias(theme: ThemeRecord) {
+  const price = theme.priceRange?.min ?? 0;
+  let score = 0;
+
+  if (price > 0 && price < 1200) score += 2;
+  else if (price < 1800) score += 1;
 
   return score;
 }
@@ -96,9 +108,10 @@ function baseScoreThemes(
   combinedInput: string,
   requestedBrand?: string,
   requestedSize?: string | null,
-  options?: { premiumIntent?: boolean },
+  options?: { premiumIntent?: boolean; budgetIntent?: boolean },
 ) {
   const premiumIntent = options?.premiumIntent ?? false;
+  const budgetIntent = options?.budgetIntent ?? false;
 
   return mattressThemes
     .filter((theme) => {
@@ -132,8 +145,8 @@ function baseScoreThemes(
         if (haystack.includes("firm")) score += hasExplicitFirmnessPreference ? 0.75 : 2;
       }
       if (wantsMedium) {
-        if (haystack.includes("medium")) score += 8;
-        else if (haystack.includes("medium-firm") || haystack.includes("medium plush")) score += 4;
+        if (haystack.includes("medium")) score += 6;
+        else if (haystack.includes("medium-firm") || haystack.includes("medium plush")) score += 3;
       }
       if (wantsPlush) {
         if (haystack.includes("plush") || haystack.includes("soft")) score += 8;
@@ -149,8 +162,8 @@ function baseScoreThemes(
       if (combinedInput.includes("support")) {
         if (theme.supportLevel?.score) score += theme.supportLevel.score / 2;
       }
-      if (!premiumIntent && (combinedInput.includes("budget") || combinedInput.includes("under") || combinedInput.includes("$") || combinedInput.includes("value"))) {
-        if ((theme.priceRange?.min ?? 999999) < 2000) score += 1;
+      if (budgetIntent) {
+        score += scoreValueBias(theme);
       }
       if (combinedInput.includes("split king") || combinedInput.includes("twin xl")) {
         if (themeHasSize(theme, "twin xl")) score += 2;
@@ -158,6 +171,10 @@ function baseScoreThemes(
       }
       if (premiumIntent) {
         score += scorePremiumIntent(theme);
+      } else if (!budgetIntent) {
+        const price = theme.priceRange?.min ?? 0;
+        if (price > 0 && price < 900) score -= 2;
+        else if (price >= 1800) score += 1;
       }
 
       return { theme, score } satisfies RankedCandidate;
@@ -325,13 +342,24 @@ export async function POST(request: Request) {
 
   const requestedBrand = brandTerms.find((brand) => combinedInput.includes(brand));
   const requestedSize = shopperSizeFromInput(combinedInput);
+  const budgetIntent =
+    combinedInput.includes("budget") ||
+    combinedInput.includes("under") ||
+    combinedInput.includes("$") ||
+    combinedInput.includes("value") ||
+    combinedInput.includes("affordable") ||
+    combinedInput.includes("cheapest");
   const premiumIntent =
-    recommendationIntent === "split" ||
-    coupleSetup?.couplePath === "split-king" ||
-    combinedInput.includes("split king") ||
-    combinedInput.includes("twin xl");
+    !budgetIntent && (
+      recommendationIntent === "split" ||
+      coupleSetup?.couplePath === "split-king" ||
+      combinedInput.includes("split king") ||
+      combinedInput.includes("twin xl") ||
+      combinedInput.includes("luxury") ||
+      combinedInput.includes("premium")
+    );
 
-  const heuristicRanked = baseScoreThemes(combinedInput, requestedBrand, requestedSize, { premiumIntent });
+  const heuristicRanked = baseScoreThemes(combinedInput, requestedBrand, requestedSize, { premiumIntent, budgetIntent });
   const topCandidates = heuristicRanked.slice(0, MAX_CANDIDATES_FOR_AI);
   const { usedAi, reranked } = await rerankWithAi({
     candidates: topCandidates,
@@ -359,7 +387,11 @@ export async function POST(request: Request) {
           ? `Filtered to ${requestedSize} availability and ranked heuristically`
           : requestedBrand
             ? `Shopper asked about ${requestedBrand}; ranked heuristically`
-            : "Heuristic ranking only",
+            : budgetIntent
+              ? "Budget-aware heuristic ranking"
+              : premiumIntent
+                ? "Premium-intent heuristic ranking"
+                : "Heuristic ranking only",
     },
   });
 }
