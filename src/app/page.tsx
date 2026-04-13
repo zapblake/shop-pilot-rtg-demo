@@ -155,7 +155,7 @@ const starterMessages: ChatMessage[] = [
   {
     id: "assistant-1",
     role: "assistant",
-    text: "👋 Hi, I’m Shop Pilot. I can help you narrow things down without making this feel like homework. **What size mattress are you looking for?**",
+    text: "👋 Hi, I'm Shop Pilot. I can help you narrow things down without making this feel like homework. **What size mattress are you looking for?**",
   },
 ];
 const starterMatches: MatchResult[] = [];
@@ -684,7 +684,7 @@ export default function Home() {
       });
 
       const payload = await response.json();
-      const fullReply = payload.reply ?? "I’ve got enough to keep refining the recommendation.";
+      const fullReply = payload.reply ?? "I've got enough to keep refining the recommendation.";
       const questionText = extractFinalQuestion(fullReply);
       const assistantTurnId = `assistant-turn-${Date.now()}`;
       setConversationMode(payload.mode ?? "guided-discovery");
@@ -733,7 +733,7 @@ export default function Home() {
         {
           id: `assistant-error-${Date.now()}`,
           role: "assistant",
-          text: "Minor snag on the backend stub. The front-end flow is intact, but I’d retry the match request once the route settles.",
+          text: "Minor snag on the backend stub. The front-end flow is intact, but I'd retry the match request once the route settles.",
         },
       ]);
     } finally {
@@ -1112,119 +1112,6 @@ export default function Home() {
               ))}
             </div>
             </>
-            ) : currentView === "pdp" && activeThemeRecord ? (
-              <section className={styles.mockPdpSection}>
-                <div className={styles.mockPdpHeaderRow}>
-                  <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView("plp")}>← Back to results</button>
-                  <button type="button" className={styles.pdpCartButton} onClick={() => setCurrentView("cart")}>View Cart</button>
-                </div>
-                <div className={styles.mockPdpGrid}>
-                  <div className={styles.mockPdpGalleryCol}>
-                    <div className={styles.mockPdpGallery}>
-                      {activeThemeRecord.heroImage ? (
-                        <Image src={activeThemeRecord.heroImage} alt={activeThemeRecord.displayName} fill unoptimized className={styles.pdpMainImage} />
-                      ) : (
-                        <div className={styles.productImagePlaceholder}><span>{activeThemeRecord.brand}</span></div>
-                      )}
-                    </div>
-                    {activeThemeRecord.altImage ? (
-                      <div className={styles.pdpThumbnailRow}>
-                        <button
-                          type="button"
-                          className={`${styles.pdpThumb} ${styles.pdpThumbActive}`}
-                          aria-label="Main image"
-                        >
-                          <Image src={activeThemeRecord.heroImage!} alt="" fill unoptimized className={styles.pdpThumbImg} />
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.pdpThumb}
-                          aria-label="Alt image"
-                        >
-                          <Image src={activeThemeRecord.altImage} alt="" fill unoptimized className={styles.pdpThumbImg} />
-                        </button>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className={styles.mockPdpSummary}>
-                    <p className={styles.mockPdpBrand}>{activeThemeRecord.brand}</p>
-                    <h2>{activeThemeRecord.displayName}</h2>
-                    <div className={styles.tagRow}>
-                      {activeThemeRecord.type ? <span>{activeThemeRecord.type}</span> : null}
-                      {activeThemeRecord.comfort ? <span>{activeThemeRecord.comfort}</span> : null}
-                    </div>
-                    <strong className={styles.mockPdpPrice}>
-                      {activeThemeRecord.priceRange?.min ? `From $${activeThemeRecord.priceRange.min.toLocaleString()}` : "Price TBD"}
-                    </strong>
-                    {activeProduct?.reason ? (
-                      <div className={styles.pdpReasonBanner}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-                        <p>{activeProduct.reason}</p>
-                      </div>
-                    ) : null}
-                    <div className={styles.mockPdpFeatureList}>
-                      <div><span>Cooling</span><b>{activeThemeRecord.temperatureManagement?.label ?? "Balanced"}</b></div>
-                      <div><span>Support</span><b>{activeThemeRecord.supportLevel?.label ?? "Supportive"}</b></div>
-                      <div><span>Pressure relief</span><b>{activeThemeRecord.pressureRelief?.label ?? "Responsive"}</b></div>
-                    </div>
-                    <div className={styles.mockPdpActions}>
-                      <button
-                        type="button"
-                        className={styles.addToCartButton}
-                        onClick={() => handleAddMattressToCart({
-                          theme: activeThemeRecord.theme,
-                          displayName: activeThemeRecord.displayName,
-                          brand: activeThemeRecord.brand,
-                          type: activeThemeRecord.type,
-                          comfort: activeThemeRecord.comfort,
-                          priceFrom: activeThemeRecord.priceRange?.min ?? null,
-                          score: 0,
-                        })}
-                      >
-                        Add to cart
-                      </button>
-                      <button type="button" className={styles.pdpSecondaryButton} onClick={() => setCurrentView("plp")}>Back to compare</button>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            ) : currentView === "cart" ? (
-              <section className={styles.mockCartSection}>
-                <div className={styles.mockPdpHeaderRow}>
-                  <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView(cartContext.mattress ? "pdp" : "plp")}>← Continue shopping</button>
-                </div>
-                <div className={styles.mockCartShell}>
-                  <div className={styles.mockCartItems}>
-                    <h2>Mock Cart</h2>
-                    {cartContext.mattress ? (
-                      <article className={styles.mockCartItem}>
-                        <div>
-                          <p>Mattress</p>
-                          <h3>{cartContext.mattress.displayName}</h3>
-                          <span>{cartContext.mattress.size ?? selectedSize ?? "Size not selected"}</span>
-                        </div>
-                        <strong>{cartContext.mattress.priceFrom ? `From $${cartContext.mattress.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
-                      </article>
-                    ) : (
-                      <div className={styles.mockCartEmpty}>No mattress in cart yet.</div>
-                    )}
-                    {cartContext.accessories.map((item) => (
-                      <article key={`${item.kind}-${item.theme}`} className={styles.mockCartItem}>
-                        <div>
-                          <p>{item.kind.replace(/-/g, " ")}</p>
-                          <h3>{item.displayName}</h3>
-                        </div>
-                        <strong>{item.priceFrom ? `From $${item.priceFrom.toLocaleString()}` : "Included"}</strong>
-                      </article>
-                    ))}
-                  </div>
-                  <div className={styles.mockCartSummaryBox}>
-                    <h3>Summary</h3>
-                    <p>Shop Pilot stays aware of what’s already in the cart and shifts into completion mode.</p>
-                    <button type="button" className={styles.addToCartButton} onClick={() => setIsOpen(true)}>Ask Shop Pilot for next best add-ons</button>
-                  </div>
-                </div>
-              </section>
             ) : null}
           </section>
         </section>
@@ -1290,7 +1177,7 @@ export default function Home() {
                         { label: "Add a pillow", message: "Show me the best pillow recommendation." },
                         { label: "Add a protector", message: "Show me the best mattress protector." },
                         { label: "Show adjustable base", message: "Show me the best adjustable base." },
-                        { label: "I’m done", message: "I am done with accessories." },
+                        { label: "I'm done", message: "I am done with accessories." },
                       ].map((pill) => (
                         <button key={pill.label} type="button" onClick={() => submitMessage(pill.message)}>{pill.label}</button>
                       ))}
@@ -1321,7 +1208,7 @@ export default function Home() {
                     ))}
                     {isLoading ? (
                       <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
-                        <p>Considering…</p>
+                        <p>Considering...</p>
                       </div>
                     ) : null}
                     <div ref={chatBottomRef} />
@@ -1539,7 +1426,7 @@ export default function Home() {
                         className={styles.openingChip}
                         onClick={() => {
                           setFirmnessAnswered(true);
-                          void submitMessage(selectedSize ? `${selectedSize}. It’s complicated.` : "It’s complicated");
+                          void submitMessage(selectedSize ? `${selectedSize}. It's complicated.` : "It's complicated");
                         }}
                       >
                         Its complicated
@@ -1556,7 +1443,7 @@ export default function Home() {
                       aria-label="Message Shop Pilot"
                     />
                     <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
-                      {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
+                      {isLoading ? <span className={styles.sendDots}>...</span> : <span className={styles.sendArrow}>↑</span>}
                     </button>
                   </form>
                 </>
@@ -1881,7 +1768,7 @@ export default function Home() {
                                 {theme.pressureRelief?.label ? <em>Pressure relief: {theme.pressureRelief.label}</em> : null}
                               </div>
                               {compareWinner?.theme === theme.theme ? (
-                                <div className={styles.compareWinnerNote}>Best current fit based on the shopper’s stated priorities.</div>
+                                <div className={styles.compareWinnerNote}>Best current fit based on the shopper's stated priorities.</div>
                               ) : null}
                             </div>
                           </article>
@@ -1914,6 +1801,121 @@ export default function Home() {
             </button>
           ) : null}
         </aside>
+
+        {/* PDP / Cart floating panel — sits to the left of the chat drawer */}
+        {(currentView === "pdp" || currentView === "cart") && (
+          <div className={`${styles.pdpFloatPanel} ${isOpen ? styles.pdpFloatPanelWithChat : ""}`}>
+            <div className={styles.pdpFloatInner}>
+              {currentView === "pdp" && activeThemeRecord ? (
+                <>
+                  <div className={styles.pdpFloatHeader}>
+                    <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView("plp")}>← Back to results</button>
+                    <button type="button" className={styles.pdpCartButton} onClick={() => setCurrentView("cart")}>View Cart</button>
+                  </div>
+                  <div className={styles.pdpFloatScroll}>
+                    <div className={styles.pdpFloatGallery}>
+                      {activeThemeRecord.heroImage ? (
+                        <Image src={activeThemeRecord.heroImage} alt={activeThemeRecord.displayName} fill unoptimized className={styles.pdpMainImage} />
+                      ) : (
+                        <div className={styles.productImagePlaceholder}><span>{activeThemeRecord.brand}</span></div>
+                      )}
+                    </div>
+                    {activeThemeRecord.altImage ? (
+                      <div className={styles.pdpThumbnailRow}>
+                        <button type="button" className={`${styles.pdpThumb} ${styles.pdpThumbActive}`} aria-label="Main image">
+                          <Image src={activeThemeRecord.heroImage!} alt="" fill unoptimized className={styles.pdpThumbImg} />
+                        </button>
+                        <button type="button" className={styles.pdpThumb} aria-label="Alt image">
+                          <Image src={activeThemeRecord.altImage} alt="" fill unoptimized className={styles.pdpThumbImg} />
+                        </button>
+                      </div>
+                    ) : null}
+                    <div className={styles.pdpFloatBody}>
+                      <p className={styles.mockPdpBrand}>{activeThemeRecord.brand}</p>
+                      <h2 className={styles.pdpFloatTitle}>{activeThemeRecord.displayName}</h2>
+                      <div className={styles.tagRow}>
+                        {activeThemeRecord.type ? <span>{activeThemeRecord.type}</span> : null}
+                        {activeThemeRecord.comfort ? <span>{activeThemeRecord.comfort}</span> : null}
+                      </div>
+                      <strong className={styles.mockPdpPrice}>
+                        {activeThemeRecord.priceRange?.min ? `From $${activeThemeRecord.priceRange.min.toLocaleString()}` : "Price TBD"}
+                      </strong>
+                      {activeProduct?.reason ? (
+                        <div className={styles.pdpReasonBanner}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                          <p>{activeProduct.reason}</p>
+                        </div>
+                      ) : null}
+                      <div className={styles.mockPdpFeatureList}>
+                        <div><span>Cooling</span><b>{activeThemeRecord.temperatureManagement?.label ?? "Balanced"}</b></div>
+                        <div><span>Support</span><b>{activeThemeRecord.supportLevel?.label ?? "Supportive"}</b></div>
+                        <div><span>Pressure relief</span><b>{activeThemeRecord.pressureRelief?.label ?? "Responsive"}</b></div>
+                      </div>
+                      <div className={styles.mockPdpActions}>
+                        <button
+                          type="button"
+                          className={styles.addToCartButton}
+                          onClick={() => handleAddMattressToCart({
+                            theme: activeThemeRecord.theme,
+                            displayName: activeThemeRecord.displayName,
+                            brand: activeThemeRecord.brand,
+                            type: activeThemeRecord.type,
+                            comfort: activeThemeRecord.comfort,
+                            priceFrom: activeThemeRecord.priceRange?.min ?? null,
+                            score: 0,
+                          })}
+                        >
+                          Add to cart
+                        </button>
+                        <button type="button" className={styles.pdpSecondaryButton} onClick={() => setCurrentView("plp")}>Back to compare</button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : currentView === "cart" ? (
+                <>
+                  <div className={styles.pdpFloatHeader}>
+                    <button type="button" className={styles.pdpBackButton} onClick={() => setCurrentView(cartContext.mattress ? "pdp" : "plp")}>← Continue shopping</button>
+                  </div>
+                  <div className={styles.pdpFloatScroll}>
+                    <div className={styles.mockCartShell}>
+                      <div className={styles.mockCartItems}>
+                        <h2>Cart</h2>
+                        {cartContext.mattress ? (
+                          <article className={styles.mockCartItem}>
+                            <div>
+                              <p>Mattress</p>
+                              <h3>{cartContext.mattress.displayName}</h3>
+                              <span>{cartContext.mattress.size ?? selectedSize ?? "Size not selected"}</span>
+                            </div>
+                            <strong>{cartContext.mattress.priceFrom ? `From $${cartContext.mattress.priceFrom.toLocaleString()}` : "Price TBD"}</strong>
+                          </article>
+                        ) : (
+                          <div className={styles.mockCartEmpty}>No mattress in cart yet.</div>
+                        )}
+                        {cartContext.accessories.map((item) => (
+                          <article key={`${item.kind}-${item.theme}`} className={styles.mockCartItem}>
+                            <div>
+                              <p>{item.kind.replace(/-/g, " ")}</p>
+                              <h3>{item.displayName}</h3>
+                            </div>
+                            <strong>{item.priceFrom ? `From $${item.priceFrom.toLocaleString()}` : "Included"}</strong>
+                          </article>
+                        ))}
+                      </div>
+                      <div className={styles.mockCartSummaryBox}>
+                        <h3>Summary</h3>
+                        <p>Shop Pilot stays aware of what's already in the cart and shifts into completion mode.</p>
+                        <button type="button" className={styles.addToCartButton} onClick={() => setIsOpen(true)}>Ask Shop Pilot for next best add-ons</button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );
