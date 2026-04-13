@@ -1628,7 +1628,10 @@ export default function Home() {
                                 className={styles.pdpIconButton}
                                 onClick={() => openProductDetail(leadMatch.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}
                               >
-                                <span aria-hidden="true">👁</span>
+                                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" />
+                                  <circle cx="12" cy="12" r="3" />
+                                </svg>
                               </button>
                             </div>
                           </div>
@@ -1698,7 +1701,10 @@ export default function Home() {
                                         className={styles.pdpIconButton}
                                         onClick={() => openProductDetail(match.theme, "recommendation", `Shop Pilot recommended this because it aligns with the shopper's current priorities.`)}
                                       >
-                                        <span aria-hidden="true">👁</span>
+                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" />
+                                          <circle cx="12" cy="12" r="3" />
+                                        </svg>
                                       </button>
                                     </div>
                                   </div>
