@@ -1691,8 +1691,8 @@ export default function Home() {
                 ) : (
                   <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
-                      <h3 className={styles.recommendationHeading}>Current Recommendations</h3>
-                      <p>A clear lead recommendation, plus two smart backups if the shopper wants another direction.</p>
+                      <h3 className={styles.recommendationHeading}>Current Recommendation</h3>
+                      <p>Keep chatting to add more detail. The best match can still change as we learn more.</p>
                     </div>
 
                     {leadMatch ? (() => {
