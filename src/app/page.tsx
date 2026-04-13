@@ -830,6 +830,7 @@ export default function Home() {
       setFirmnessAnswered(true);
     }
   }, [sizeCapturedViaPill, selectedSize, coupleSetup.couplePath, firmnessAnswered, messages]);
+  const isPostCartAccessoryMode = shoppingPhase === "post-cart-accessories" && !!cartContext.mattress;
   const showDynamicSections = ((recommendationMode === "standard" && matches.length > 0 && !isSplitKingJourney) || (recommendationMode === "split" && !!splitRecommendation)) && !shouldAskFirmness && !shouldAskShopperMode && !shouldAskCouplePath && !shouldAskSplitSleeper1 && !shouldAskSplitSleeper2;
   const effectiveQuestionType: QuestionType = showOpeningOptions
     ? "size"
@@ -1242,271 +1243,304 @@ export default function Home() {
             </div>
 
             <section className={styles.chatSurface}>
-              <div className={styles.messageList}>
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
-                  >
-                    {message.role === "assistant" ? (
-                      <Image
-                        src="/assets/rtg-chat-logo.png"
-                        alt="Shop Pilot avatar"
-                        width={40}
-                        height={40}
-                        className={styles.chatAvatar}
-                      />
-                    ) : null}
-                    <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
-                      <p>{renderMessageText(message.text)}</p>
-                    </div>
-                  </div>
-                ))}
-                {isLoading ? (
-                  <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
-                    <p>Considering…</p>
-                  </div>
-                ) : null}
-                <div ref={chatBottomRef} />
-              </div>
+              {isPostCartAccessoryMode ? (
+                <div className={styles.postCartShell}>
+                  <section className={styles.postCartIntro}>
+                    <span className={styles.postCartLabel}>Accessory Mode</span>
+                    <h3>Complete your sleep setup</h3>
+                    <p>Your mattress is locked in. Now we can focus entirely on the best add-ons.</p>
+                  </section>
 
-              {showOpeningOptions ? (
-                <section className={styles.openingOptions}>
-                  {startingSizeOptions.map((option, index) => (
-                    <button
-                      key={option}
-                      type="button"
-                      className={`${styles.openingChip}${showOtherSizes && option === "Other" ? ` ${styles.openingChipActive}` : ""}`}
-                      style={{ animationDelay: `${index * 60}ms` }}
-                      onClick={() => {
-                        if (option === "Other") {
-                          setShowOtherSizes((v) => !v);
-                        } else {
-                          const isNotSure = option === "Not Sure";
-                          setSelectedSize(option);
-                          setSizeCapturedViaPill(!isNotSure);
-                          setFirmnessAnswered(false);
-                          setCoupleSetup(defaultCoupleSetup);
-                          setRecommendationMode("standard");
-                          setSplitRecommendation(null);
-                          setMatches([]);
-                          setShowOpeningOptions(false);
-                          if (isNotSure) {
-                            void submitMessage(option);
-                          }
-                        }
-                      }}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                  {showOtherSizes ? (
-                    <div className={styles.otherSizesRow}>
-                      {otherSizeOptions.map((size, index) => (
-                        <button
-                          key={size}
-                          type="button"
-                          className={styles.openingChip}
-                          style={{ animationDelay: `${index * 50}ms` }}
-                          onClick={() => {
-                            setSelectedSize(size);
-                            setSizeCapturedViaPill(true);
-                            setFirmnessAnswered(false);
-                            setCoupleSetup(defaultCoupleSetup);
-                            setRecommendationMode("standard");
-                            setSplitRecommendation(null);
-                            setMatches([]);
-                            setShowOpeningOptions(false);
-                          }}
-                        >
-                          {size}
-                        </button>
+                  <section className={styles.postCartSummaryCard}>
+                    <span className={styles.postCartSummaryLabel}>In Cart</span>
+                    <strong>{cartContext.mattress?.displayName}</strong>
+                    <p>{cartContext.mattress?.size ?? selectedSize ?? "Size not selected"}</p>
+                    {cartContext.mattress?.priceFrom ? <b>{`From $${cartContext.mattress.priceFrom.toLocaleString()}`}</b> : null}
+                  </section>
+
+                  <section className={styles.suggestedSection}>
+                    <span className={styles.suggestedLabel}>Easy Reply</span>
+                    <div className={styles.chipsSection}>
+                      {[
+                        { label: "Add a pillow", message: "Show me the best pillow recommendation." },
+                        { label: "Add a protector", message: "Show me the best mattress protector." },
+                        { label: "Show adjustable base", message: "Show me the best adjustable base." },
+                        { label: "I’m done", message: "I am done with accessories." },
+                      ].map((pill) => (
+                        <button key={pill.label} type="button" onClick={() => submitMessage(pill.message)}>{pill.label}</button>
                       ))}
                     </div>
+                  </section>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.messageList}>
+                    {messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={message.role === "assistant" ? styles.messageAssistantRow : styles.messageUserRow}
+                      >
+                        {message.role === "assistant" ? (
+                          <Image
+                            src="/assets/rtg-chat-logo.png"
+                            alt="Shop Pilot avatar"
+                            width={40}
+                            height={40}
+                            className={styles.chatAvatar}
+                          />
+                        ) : null}
+                        <div className={message.role === "assistant" ? styles.messageAssistant : styles.messageUser}>
+                          <p>{renderMessageText(message.text)}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading ? (
+                      <div className={`${styles.messageAssistant} ${styles.messageThinking}`}>
+                        <p>Considering…</p>
+                      </div>
+                    ) : null}
+                    <div ref={chatBottomRef} />
+                  </div>
+
+                  {showOpeningOptions ? (
+                    <section className={styles.openingOptions}>
+                      {startingSizeOptions.map((option, index) => (
+                        <button
+                          key={option}
+                          type="button"
+                          className={`${styles.openingChip}${showOtherSizes && option === "Other" ? ` ${styles.openingChipActive}` : ""}`}
+                          style={{ animationDelay: `${index * 60}ms` }}
+                          onClick={() => {
+                            if (option === "Other") {
+                              setShowOtherSizes((v) => !v);
+                            } else {
+                              const isNotSure = option === "Not Sure";
+                              setSelectedSize(option);
+                              setSizeCapturedViaPill(!isNotSure);
+                              setFirmnessAnswered(false);
+                              setCoupleSetup(defaultCoupleSetup);
+                              setRecommendationMode("standard");
+                              setSplitRecommendation(null);
+                              setMatches([]);
+                              setShowOpeningOptions(false);
+                              if (isNotSure) {
+                                void submitMessage(option);
+                              }
+                            }
+                          }}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                      {showOtherSizes ? (
+                        <div className={styles.otherSizesRow}>
+                          {otherSizeOptions.map((size, index) => (
+                            <button
+                              key={size}
+                              type="button"
+                              className={styles.openingChip}
+                              style={{ animationDelay: `${index * 50}ms` }}
+                              onClick={() => {
+                                setSelectedSize(size);
+                                setSizeCapturedViaPill(true);
+                                setFirmnessAnswered(false);
+                                setCoupleSetup(defaultCoupleSetup);
+                                setRecommendationMode("standard");
+                                setSplitRecommendation(null);
+                                setMatches([]);
+                                setShowOpeningOptions(false);
+                              }}
+                            >
+                              {size}
+                            </button>
+                          ))}
+                        </div>
+                      ) : null}
+                    </section>
                   ) : null}
-                </section>
-              ) : null}
 
-              {shouldAskShopperMode ? (
-                <section className={styles.openingOptions}>
-                  <div className={styles.firmnessPromptHeader}>
-                    <span>Next up</span>
-                    <strong>Who are we shopping for?</strong>
-                  </div>
-                  <div className={styles.otherSizesRow}>
-                    {shopperModeOptions.map((option) => (
+                  {shouldAskShopperMode ? (
+                    <section className={styles.openingOptions}>
+                      <div className={styles.firmnessPromptHeader}>
+                        <span>Next up</span>
+                        <strong>Who are we shopping for?</strong>
+                      </div>
+                      <div className={styles.otherSizesRow}>
+                        {shopperModeOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            className={styles.openingChip}
+                            onClick={() => {
+                              setCoupleSetup((current) => ({
+                                ...current,
+                                shopperMode: option.value,
+                                couplePath: option.value === "two-different" ? null : null,
+                                sleeper1Firmness: null,
+                                sleeper2Firmness: null,
+                              }));
+                              if (option.value !== "two-different") {
+                                setRecommendationMode("standard");
+                                setSplitRecommendation(null);
+                              }
+                              void submitMessage(option.value === "two-different" ? "Two sleepers with different preferences." : option.value === "two-similar" ? "Two sleepers." : "Just me.");
+                            }}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {shouldAskCouplePath ? (
+                    <section className={styles.openingOptions}>
+                      <div className={styles.firmnessPromptHeader}>
+                        <span>Couples setup</span>
+                        <strong>How would you like to shop this king setup?</strong>
+                      </div>
+                      <div className={styles.otherSizesRow}>
+                        {couplePathOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            className={styles.openingChip}
+                            onClick={() => {
+                              setCoupleSetup((current) => ({
+                                ...current,
+                                couplePath: option.value,
+                                sleeper1Firmness: null,
+                                sleeper2Firmness: null,
+                              }));
+                              if (option.value === "compromise") {
+                                setRecommendationMode("standard");
+                                setSplitRecommendation(null);
+                                void submitMessage("We want one mattress that works for both of us.");
+                                return;
+                              }
+                              void submitMessage("We want to explore a split king / Twin XL setup.");
+                            }}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {shouldAskSplitSleeper1 ? (
+                    <section className={styles.openingOptions}>
+                      <div className={styles.firmnessPromptHeader}>
+                        <span>Split king setup</span>
+                        <strong>What firmness does sleeper 1 prefer?</strong>
+                      </div>
+                      <div className={styles.otherSizesRow}>
+                        {splitFirmnessOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            className={styles.openingChip}
+                            onClick={() => {
+                              setCoupleSetup((current) => ({ ...current, sleeper1Firmness: option }));
+                              void submitMessage(`Two sleepers with different preferences. Split king. Sleeper 1 wants ${option}.`);
+                            }}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {shouldAskSplitSleeper2 ? (
+                    <section className={styles.openingOptions}>
+                      <div className={styles.firmnessPromptHeader}>
+                        <span>Split king setup</span>
+                        <strong>What firmness does sleeper 2 prefer?</strong>
+                      </div>
+                      <div className={styles.otherSizesRow}>
+                        {splitFirmnessOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            className={styles.openingChip}
+                            onClick={() => {
+                              const nextSetup = { ...coupleSetup, sleeper2Firmness: option };
+                              setCoupleSetup(nextSetup);
+                              setFirmnessAnswered(true);
+                              void submitMessage(`Two sleepers with different preferences. Split king. Sleeper 1 wants ${nextSetup.sleeper1Firmness}. Sleeper 2 wants ${option}.`);
+                            }}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {shouldAskFirmness ? (
+                    <section className={styles.firmnessPrompt}>
+                      <div className={styles.firmnessPromptHeader}>
+                        <span>{selectedSize ? `${selectedSize} selected` : "Next up"}</span>
+                        <strong>What firmness feels best to you?</strong>
+                      </div>
+                      <div className={styles.firmnessSliderWrap}>
+                        <div className={styles.firmnessScaleLabels}>
+                          <span>Plush</span>
+                          <span>Firm</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          step="1"
+                          value={selectedFirmnessValue}
+                          onChange={(event) => setSelectedFirmnessValue(Number(event.target.value))}
+                          className={styles.firmnessSlider}
+                          aria-label="Firmness preference"
+                        />
+                        <div className={styles.firmnessSelected}>{selectedFirmness.label}</div>
+                        <button type="button" className={styles.firmnessSubmit} onClick={submitFirmness}>
+                          Use {selectedFirmness.label}
+                        </button>
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {shouldAskFirmness ? (
+                    <section className={styles.firmnessAltOption}>
                       <button
-                        key={option.value}
                         type="button"
                         className={styles.openingChip}
                         onClick={() => {
-                          setCoupleSetup((current) => ({
-                            ...current,
-                            shopperMode: option.value,
-                            couplePath: option.value === "two-different" ? null : null,
-                            sleeper1Firmness: null,
-                            sleeper2Firmness: null,
-                          }));
-                          if (option.value !== "two-different") {
-                            setRecommendationMode("standard");
-                            setSplitRecommendation(null);
-                          }
-                          void submitMessage(option.value === "two-different" ? "Two sleepers with different preferences." : option.value === "two-similar" ? "Two sleepers." : "Just me.");
-                        }}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-
-              {shouldAskCouplePath ? (
-                <section className={styles.openingOptions}>
-                  <div className={styles.firmnessPromptHeader}>
-                    <span>Couples setup</span>
-                    <strong>How would you like to shop this king setup?</strong>
-                  </div>
-                  <div className={styles.otherSizesRow}>
-                    {couplePathOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={styles.openingChip}
-                        onClick={() => {
-                          setCoupleSetup((current) => ({
-                            ...current,
-                            couplePath: option.value,
-                            sleeper1Firmness: null,
-                            sleeper2Firmness: null,
-                          }));
-                          if (option.value === "compromise") {
-                            setRecommendationMode("standard");
-                            setSplitRecommendation(null);
-                            void submitMessage("We want one mattress that works for both of us.");
-                            return;
-                          }
-                          void submitMessage("We want to explore a split king / Twin XL setup.");
-                        }}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-
-              {shouldAskSplitSleeper1 ? (
-                <section className={styles.openingOptions}>
-                  <div className={styles.firmnessPromptHeader}>
-                    <span>Split king setup</span>
-                    <strong>What firmness does sleeper 1 prefer?</strong>
-                  </div>
-                  <div className={styles.otherSizesRow}>
-                    {splitFirmnessOptions.map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        className={styles.openingChip}
-                        onClick={() => {
-                          setCoupleSetup((current) => ({ ...current, sleeper1Firmness: option }));
-                          void submitMessage(`Two sleepers with different preferences. Split king. Sleeper 1 wants ${option}.`);
-                        }}
-                      >
-                        {option}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-
-              {shouldAskSplitSleeper2 ? (
-                <section className={styles.openingOptions}>
-                  <div className={styles.firmnessPromptHeader}>
-                    <span>Split king setup</span>
-                    <strong>What firmness does sleeper 2 prefer?</strong>
-                  </div>
-                  <div className={styles.otherSizesRow}>
-                    {splitFirmnessOptions.map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        className={styles.openingChip}
-                        onClick={() => {
-                          const nextSetup = { ...coupleSetup, sleeper2Firmness: option };
-                          setCoupleSetup(nextSetup);
                           setFirmnessAnswered(true);
-                          void submitMessage(`Two sleepers with different preferences. Split king. Sleeper 1 wants ${nextSetup.sleeper1Firmness}. Sleeper 2 wants ${option}.`);
+                          void submitMessage(selectedSize ? `${selectedSize}. It’s complicated.` : "It’s complicated");
                         }}
                       >
-                        {option}
+                        Its complicated
                       </button>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
+                    </section>
+                  ) : null}
 
-              {shouldAskFirmness ? (
-                <section className={styles.firmnessPrompt}>
-                  <div className={styles.firmnessPromptHeader}>
-                    <span>{selectedSize ? `${selectedSize} selected` : "Next up"}</span>
-                    <strong>What firmness feels best to you?</strong>
-                  </div>
-                  <div className={styles.firmnessSliderWrap}>
-                    <div className={styles.firmnessScaleLabels}>
-                      <span>Plush</span>
-                      <span>Firm</span>
-                    </div>
+                  <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
                     <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      step="1"
-                      value={selectedFirmnessValue}
-                      onChange={(event) => setSelectedFirmnessValue(Number(event.target.value))}
-                      className={styles.firmnessSlider}
-                      aria-label="Firmness preference"
+                      ref={inputRef}
+                      value={draftMessage}
+                      onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
+                      placeholder="What matters most to you?"
+                      aria-label="Message Shop Pilot"
                     />
-                    <div className={styles.firmnessSelected}>{selectedFirmness.label}</div>
-                    <button type="button" className={styles.firmnessSubmit} onClick={submitFirmness}>
-                      Use {selectedFirmness.label}
+                    <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
+                      {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
                     </button>
-                  </div>
-                </section>
-              ) : null}
-
-              {shouldAskFirmness ? (
-                <section className={styles.firmnessAltOption}>
-                  <button
-                    type="button"
-                    className={styles.openingChip}
-                    onClick={() => {
-                      setFirmnessAnswered(true);
-                      void submitMessage(selectedSize ? `${selectedSize}. It’s complicated.` : "It’s complicated");
-                    }}
-                  >
-                    Its complicated
-                  </button>
-                </section>
-              ) : null}
-
-              <form className={styles.composer} onSubmit={handleSubmit} onMouseDown={resetInactivityTimer}>
-                <input
-                  ref={inputRef}
-                  value={draftMessage}
-                  onChange={(event) => { setDraftMessage(event.target.value); resetInactivityTimer(); }}
-                  placeholder="What matters most to you?"
-                  aria-label="Message Shop Pilot"
-                />
-                <button type="submit" className={styles.sendBtn} disabled={isLoading} aria-label="Send">
-                  {isLoading ? <span className={styles.sendDots}>…</span> : <span className={styles.sendArrow}>↑</span>}
-                </button>
-              </form>
+                  </form>
+                </>
+              )}
             </section>
 
             {showDynamicSections ? (
               <>
-                {recommendationMode !== "split" && easyRepliesReady ? (
+                {!isPostCartAccessoryMode && recommendationMode !== "split" && easyRepliesReady ? (
                   <section className={styles.suggestedSection} ref={suggestedSectionRef}>
                     <span className={styles.suggestedLabel}>Easy Reply</span>
                     <div className={styles.chipsSection}>
@@ -1718,15 +1752,15 @@ export default function Home() {
                   </section>
                 )}
 
-                {shoppingPhase === "post-cart-accessories" && cartContext.mattress ? (
+                {isPostCartAccessoryMode ? (
                   <section className={styles.recommendationSection}>
                     <div className={styles.sectionHeader}>
                       <h3>Complete your sleep setup</h3>
-                      <p>{cartContext.mattress.displayName} is already in the cart. These are the best next adds.</p>
+                      <p>{cartContext.mattress?.displayName} is already in the cart. These are the best next adds.</p>
                     </div>
                     <div className={styles.splitSummaryBanner}>
                       <strong>In cart</strong>
-                      <p>{cartContext.mattress.displayName}</p>
+                      <p>{cartContext.mattress?.displayName}</p>
                     </div>
                     <div className={styles.accessoryGrid}>
                       {accessoryRecommendations.map((recommendation) => (
