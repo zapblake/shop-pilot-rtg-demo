@@ -690,6 +690,17 @@
   text-shadow: none;
 }
 
+.currentRecommendationHeading {
+  font-size: 52px;
+  line-height: 0.95;
+}
+
+.currentRecommendationSubcopy {
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 34ch;
+}
+
 .sectionHeader p {
   color: #6b7280;
   font-size: 14px;

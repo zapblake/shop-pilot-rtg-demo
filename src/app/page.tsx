@@ -1691,8 +1691,12 @@ export default function Home() {
                 ) : (
                   <section ref={recommendationSectionRef} className={`${styles.recommendationSection} ${showUpdatedPulse ? styles.recommendationSectionPulse : ""}`}>
                     <div className={styles.sectionHeader}>
-                      <h3 className={styles.recommendationHeading}>Current Recommendation</h3>
-                      <p>Keep chatting to add more detail. The best match can still change as we learn more.</p>
+                      <h3 className={`${styles.recommendationHeading} ${styles.currentRecommendationHeading}`}>Current Recommendation</h3>
+                      <p className={styles.currentRecommendationSubcopy}>
+                        Keep chatting to add more detail.
+                        <br />
+                        The best match can still change as we learn more.
+                      </p>
                     </div>
 
                     {leadMatch ? (() => {
