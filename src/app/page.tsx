@@ -328,6 +328,7 @@ function getDynamicReplyPills(activeQuestionType: QuestionType, messages: ChatMe
     .map((message) => message.text)
     .join(" ")
     .toLowerCase();
+  const latestAssistantText = [...messages].reverse().find((message) => message.role === "assistant")?.text.toLowerCase() ?? "";
   if (recommendationMode === "split") {
     return [
       { label: "More pressure relief", message: "We want more pressure relief on one side." },
@@ -427,6 +428,22 @@ function getDynamicReplyPills(activeQuestionType: QuestionType, messages: ChatMe
       { label: "Under 180 lbs", message: "I want a plush feel and I’m under 180 lbs." },
       { label: "180–230 lbs", message: "I want a plush feel and I’m between 180 and 230 lbs." },
       { label: "Over 230 lbs", message: "I want a plush feel and I’m over 230 lbs." },
+    ];
+  }
+
+  if (/cooling|sleep hot|temperature|cooler sleep/.test(latestAssistantText)) {
+    return [
+      { label: "Yes, I sleep hot", message: "Yes, I sleep hot at night." },
+      { label: "Somewhat", message: "Somewhat, cooling matters to me." },
+      { label: "Not really", message: "No, temperature is not a big factor." },
+    ];
+  }
+
+  if (/pressure relief|shoulder|hip|back pain|easy movement|support/.test(latestAssistantText)) {
+    return [
+      { label: "Shoulder pressure", message: "I need pressure relief at my shoulders." },
+      { label: "Hip pressure", message: "I need pressure relief at my hips." },
+      { label: "Lower back", message: "Lower back support matters most to me." },
     ];
   }
 
