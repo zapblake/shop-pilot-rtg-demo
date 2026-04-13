@@ -691,14 +691,21 @@
 }
 
 .currentRecommendationHeading {
-  font-size: 52px;
-  line-height: 0.95;
+  font-size: 80px;
+  line-height: 0.88;
+  letter-spacing: -0.07em;
 }
 
 .currentRecommendationSubcopy {
+  display: grid;
+  gap: 4px;
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.5;
   max-width: 34ch;
+}
+
+.currentRecommendationSubcopy p {
+  margin: 0;
 }
 
 .sectionHeader p {
