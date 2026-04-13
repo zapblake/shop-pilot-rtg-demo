@@ -1780,45 +1780,47 @@ export default function Home() {
                         );
                         return (
                           <article key={recommendation.category} className={styles.accessoryCard}>
-                            <div className={styles.accessoryCardIcon}>
+                            <div className={styles.accessoryCardImgWrap}>
                               {recommendation.primary?.heroImage ? (
                                 <Image
                                   src={recommendation.primary.heroImage}
-                                  alt={recommendation.primary.displayName}
+                                  alt={recommendation.primary?.displayName ?? ""}
                                   fill
                                   unoptimized
-                                  className={styles.accessoryCardImage}
+                                  className={styles.accessoryCardImg}
                                 />
                               ) : (
-                                icon
+                                <span className={styles.accessoryCardFallbackIcon}>{icon}</span>
                               )}
                             </div>
-                            <div className={styles.accessoryCardContent}>
+                            <div className={styles.accessoryCardBody}>
                               <span className={styles.accessoryCategoryLabel}>
                                 {recommendation.category.replace(/-/g, " ")}
                               </span>
-                              <strong className={styles.accessoryName}>
+                              <p className={styles.accessoryName}>
                                 {recommendation.primary?.displayName ?? "No recommendation yet"}
-                              </strong>
-                              {recommendation.primary?.priceFrom ? (
-                                <span className={styles.accessoryPrice}>
-                                  {`From $${recommendation.primary.priceFrom.toLocaleString()}`}
-                                </span>
-                              ) : null}
+                              </p>
+                              <div className={styles.accessoryCardFooter}>
+                                {recommendation.primary?.priceFrom ? (
+                                  <span className={styles.accessoryPrice}>
+                                    {`From $${recommendation.primary.priceFrom.toLocaleString()}`}
+                                  </span>
+                                ) : <span />}
+                                {recommendation.primary ? (
+                                  alreadyInCart ? (
+                                    <span className={styles.accessoryInCartBadge}>✓ Added</span>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      className={styles.accessoryAddButton}
+                                      onClick={() => handleAddAccessoryToCart(recommendation)}
+                                    >
+                                      + Add
+                                    </button>
+                                  )
+                                ) : null}
+                              </div>
                             </div>
-                            {recommendation.primary ? (
-                              alreadyInCart ? (
-                                <span className={styles.accessoryInCartBadge}>✓ In Cart</span>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className={styles.accessoryAddButton}
-                                  onClick={() => handleAddAccessoryToCart(recommendation)}
-                                >
-                                  Add
-                                </button>
-                              )
-                            ) : null}
                           </article>
                         );
                       })}
